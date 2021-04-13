@@ -4,5 +4,5 @@ lpcc/
 mfcc/
 gmm/
 Makefile/
-
-!src/gmm
+.DS_Store
+!src/gmm 
