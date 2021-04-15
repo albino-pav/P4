@@ -4,4 +4,6 @@ lpcc/
 mfcc/
 gmm/
 
+MAKEFILE
+
 !src/gmm
