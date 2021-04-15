@@ -3,6 +3,7 @@ lp/
 lpcc/
 mfcc/
 gmm/
+bin/
 
 MAKEFILE
 
