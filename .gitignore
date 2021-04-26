@@ -5,6 +5,6 @@ mfcc/
 gmm/
 Makefile
 .DS_Store
-SPTK-3.11
+SPTK-3.11/
 
 !src/gmm
