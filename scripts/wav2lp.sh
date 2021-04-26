@@ -24,7 +24,7 @@ inputfile=$2
 outputfile=$3
 
 UBUNTU_SPTK=1
-if [[ $UBUNTU_SPTK == 1 ]]; then
+if [[ $UBUNTU_SPTK == 0 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
    FRAME="sptk frame"
