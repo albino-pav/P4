@@ -3,5 +3,6 @@ lp/
 lpcc/
 mfcc/
 gmm/
-
-!src/gmm
+Makefile/
+.DS_Store
+!src/gmm 
