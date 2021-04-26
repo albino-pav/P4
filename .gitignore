@@ -7,3 +7,4 @@ gmm/
 !src/gmm
 .DS_Store
 Makefile
+bin/
