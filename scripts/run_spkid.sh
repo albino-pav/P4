@@ -93,6 +93,21 @@ compute_lp() {
     done
 }
 
+compute_lpcc(){
+    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+        EXEC="wav2lpcc 8 25 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        echo $EXEC && $EXEC || exit 1
+    done
+}
+
+compute_mfcc(){
+    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT" # Ponemos Q=13 ya que en las transparencias indica que son los que se usan para reconocimiento de voz
+        echo $EXEC && $EXEC || exit 1
+    done
+}
 
 #  Set the name of the feature (not needed for feature extraction itself)
 if [[ ! -n "$FEAT" && $# > 0 && "$(type -t compute_$1)" = function ]]; then

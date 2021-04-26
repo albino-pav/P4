@@ -19,7 +19,7 @@ if [[ $# != 3 ]]; then #
    exit 1
 fi
 
-lpc_order=$1 # orden del analisis
+mfcc_order=$1 # orden del analisis
 inputfile=$2
 outputfile=$3
 
@@ -29,25 +29,26 @@ if [[ $UBUNTU_SPTK == 1 ]]; then
    X2X="sptk x2x"
    FRAME="sptk frame"
    WINDOW="sptk window"
-   LPC="sptk lpc"
+   MFCC="sptk mfcc"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
-   LPC="lpc"
+   MFCC="mfcc"
 fi
 
-# Main command for feature extration / 240 muestras son 30 ms, 80 muestras son 10 ms
+# Main command for feature extration 
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$LPC -l 240 -m $lpc_order > $base.lp
+	$MFCC -l 240 -m $mfcc_order -s 8 -w 1 -n 40 > $base.mfcc
+# Sin ventana (-w 1) y con 40 Mel-filters (-n 40)
 
 # Our array files need a header with the number of cols and rows:
-ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
-nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'` # transforma de real a texto el fichero temporal, obtenemos el numero de tramas
-# habran p+1*num_tramas filas; al dividir entre p+1 obtenemos num_tramas
+ncol=$((mfcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+nrow=`$X2X +fa < $base.mfcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
-echo $nrow $ncol | $X2X +aI > $outputfile # convertir de ascii a enteros de 4 bytes (unsigned long)
-cat $base.lp >> $outputfile # se añade a continuacion
+echo $nrow $ncol | $X2X +aI > $outputfile
+cat $base.mfcc >> $outputfile
 
 exit

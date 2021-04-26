@@ -52,6 +52,9 @@ ejercicios indicados.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+    > Para el caso de la parametrización con MFCC, y un fichero de audio en concreto:
+    > wav2mfcc 13 spk_8mu/speecon/BLOCK00/SES000/SA000S01.wav hola1.mfcc
+    > fmatrix_show hola1.mfcc > hola1_mfcc.txt
   + ¿Cuál de ellas le parece que contiene más información?
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
