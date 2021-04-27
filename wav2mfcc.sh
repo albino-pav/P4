@@ -20,9 +20,8 @@ if [[ $# != 3 ]]; then
 fi
 
 mfcc_order=$1
-bank_size=$2
-inputfile=$3
-outputfile=$4
+inputfile=$2
+outputfile=$3
 
 if [[ $UBUNTU_SPTK == 1 ]]; then
    # In case you install SPTK using debian package (apt-get)

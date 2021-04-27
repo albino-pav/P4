@@ -6,6 +6,6 @@ gmm/
 Makefile/
 .DS_Store
 !src/gmm 
-/build
+/bin
 /__MAC*
 .vscode
