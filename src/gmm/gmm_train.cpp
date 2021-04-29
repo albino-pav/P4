@@ -55,7 +55,8 @@ int main(int argc, const char *argv[]) {
   /// Other alternatives are: vq, em_split... See the options of the program and place each
   /// initicialization accordingly.
   switch (init_method) {
-  case 0:
+  case 0:   //random init
+        gmm.random_init(data, nmix);
     break;
   case 1:
     break;
