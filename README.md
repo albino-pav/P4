@@ -32,7 +32,7 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
-  >***sox*** -> Sirve para cambiar el formato de una señal de entrada a uno de salida que nos convenga. Para saber las características de sox, escribimos sox -h en el terminal. En nuestro caso, al utilizar *-t raw* estamos diciendo que queremos un fichero tipo raw. Con *-e signed* definimos una codificación signed integer. Por último, *-b 16* nos dice que queremos 16 bits.
+  >***sox*** --> Sirve para cambiar el formato de una señal de entrada a uno de salida que nos convenga. Para saber las características de sox, escribimos sox -h en el terminal. En nuestro caso, al utilizar *-t raw* estamos diciendo que queremos un fichero tipo raw. Con *-e signed* definimos una codificación signed integer. Por último, *-b 16* nos dice que queremos 16 bits.
  
   >***X2X*** -> Programa de sptk que sirve para transformar datos input a otro formato output. La manera de utilizar este comando en el terminal es la siguiente: **x2x [+type1 [+type2][–r] [–o] [%format]**. En nuestro caso, *+sf* transforma los datos a short int format. 
   
