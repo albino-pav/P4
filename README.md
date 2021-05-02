@@ -44,9 +44,12 @@ ejercicios indicados.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  
+  >El número de columnas del fichero es el orden de los coeficientes LPC + 1, hacemos esto porque el primer coeficiente contiene la información de la ganancia. El número de filas es el número de frames de la señal, y guardaremos los datos en ascii, ya que hacemos *+fa* (de float a ascii). 
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
+  > Es conveniente usar este formato porque así es más fácil acceder a los datos porque estan diferenciadoa para cada frame. Luego los podremos utilizar en otros programas o mostrarlos gráficamente.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
