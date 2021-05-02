@@ -33,9 +33,13 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
   >***sox*** -> Sirve para cambiar el formato de una señal de entrada a uno de salida que nos convenga. Para saber las características de sox, escribimos sox -h en el terminal. En nuestro caso, al utilizar *-t raw* estamos diciendo que queremos un fichero tipo raw. Con *-e signed* definimos una codificación signed integer. Por último, *-b 16* nos dice que queremos 16 bits.
+ 
   >***X2X*** -> Programa de sptk que sirve para transformar datos input a otro formato output. La manera de utilizar este comando en el terminal es la siguiente: **x2x [+type1 [+type2][–r] [–o] [%format]**. En nuestro caso, *+sf* transforma los datos a short int format. 
+  
   >***FRAME*** -> Extrae el frame de la secuencia de datos. *-l* indica la longitud del frame, y *-p* indica el periodo del frame.
+  
   >***WINDOW*** -> Enventanado de ventana. *-l* indica la longitud de frames del input. *-L* indica la longitud de frames del output.
+  
   >***LPC*** -> Calcula los coeficientes de predicción lineal. *-l* indica la longitud de frames, y *-m* indica el orden de coeficientes LPC. 
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
