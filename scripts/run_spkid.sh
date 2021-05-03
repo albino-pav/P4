@@ -84,6 +84,7 @@ fi
 # \TODO
 # Create your own features with the name compute_$FEAT(), where $FEAT is the name of the feature.
 # - Select (or change) different features, options, etc. Make you best choice and try several options.
+# \DONE
 
 compute_lp() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do

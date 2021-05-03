@@ -38,7 +38,7 @@ fi
 
 # Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 180 -p 100 | $WINDOW -l 180 -L 180 |
-	$LPC -l 180 -m $lpc_order | $LPC2C -m $lpc_order -M $lpcc_order > $base.lpcc
+	$LPC2C -l 180 -m $lpcc_order | $LPC2C -m $lpcc_order -M $lpcc_order > $base.lpcc
 
 # Our array files need a header with the number of cols and rows:
 ncol=$((lpcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
