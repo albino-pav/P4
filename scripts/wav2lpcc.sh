@@ -19,20 +19,18 @@ lpcc_order=$2
 inputfile=$3
 outputfile=$4
 
-UBUNTU_SPTK=1
+
 if [[ $UBUNTU_SPTK == 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
    FRAME="sptk frame"
    WINDOW="sptk window"
-   LPC="sptk lpc"
    LPCC="sptk lpcc"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
-   LPC="lpc"
    LPCC="lpcc"
 fi
 
