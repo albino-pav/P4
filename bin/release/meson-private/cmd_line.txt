@@ -1,7 +1,0 @@
-[options]
-prefix = /mnt/c/Users/USER/Desktop/Dani/3er/PAV/
-libdir = lib
-buildtype = release
-
-[properties]
-
