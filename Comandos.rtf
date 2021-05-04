@@ -28,4 +28,26 @@ pearson work/lp/BLOCK00/SES001/SA001S01.lp\
 \
 pearson work/lp/BLOCK00/SES001/SA001S01.lp | less\
 \
+\
+\
+Martes 27 abril:\
+\
+fmatrix_cut -f 2,3,4 work/mfcc/BLOCK01/SES010/SA010S01.mfcc | head\
+\
+fmatrix_cut -f $(echo $(seq 2 13) | sed -e "s/ /,/g") work/mfcc/BLOCK01/SES010/SA010S01.mfcc out2\
+\
+gmm_show work/gmm/mfcc/SES001.gmm\
+\
+FEAT=mfcc run_spkid train\
+\
+FEAT=mfcc run_spkid test \
+\
+FEAT=mfcc run_spkid classerr\
+\
+source ../../../Enviroments/TresOcho/bin/activate\
+\
+plot_gmm_feat work/gmm/mfcc/SES000.gmm \
+\
+plot_gmm_feat work/gmm/mfcc/SES000.gmm work/mfcc/BLOCK00/SES001/*  \
+\
 }
