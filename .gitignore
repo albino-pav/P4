@@ -6,5 +6,6 @@ gmm/
 Makefile
 .DS_Store
 SPTK-3.11/
+scripts/plot_gmm_feat.py
 
 !src/gmm

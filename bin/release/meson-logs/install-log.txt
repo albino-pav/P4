@@ -1,0 +1,10 @@
+# List of files installed by Meson
+# Does not contain files installed by custom scripts.
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/lib/libpav.a
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/gmm_classify
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/gmm_show
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/gmm_train
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/gmm_verify
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/pearson
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/fmatrix_cut
+/mnt/c/Users/USER/Desktop/Dani/3er/PAV/bin/fmatrix_show
