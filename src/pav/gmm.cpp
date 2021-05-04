@@ -101,6 +101,7 @@ namespace upc {
   }
 
   /// \TODO Compute the logprob for the whole input data.
+  /// \DONE
   float GMM::logprob(const fmatrix &data) const {    
 
     if (nmix == 0 or vector_size == 0 or vector_size != data.ncol())
@@ -111,6 +112,7 @@ namespace upc {
 
     for (n=0; n<data.nrow(); ++n) {
       /// \TODO Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
+      /// \DONE
       lprob += gmm_logprob(data[n]);
     }    
     return lprob/n;
@@ -204,6 +206,7 @@ namespace upc {
     fmatrix weights(data.nrow(), nmix);
     for (iteration=0; iteration<max_it; ++iteration) {
       /// \TODO
+      /// \DONE
 	  // Complete the loop in order to perform EM, and implement the stopping criterion.
 	  //
 	  // EM loop: em_expectation + em_maximization.
