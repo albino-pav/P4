@@ -35,6 +35,7 @@ int classify(const vector<GMM> &vgmm, const fmatrix &dat, float &maxlprob)
       maxind = ind;
     }
   }
+  ///DONE maxind assigned
   return maxind;
 }
 
