@@ -112,17 +112,17 @@ fi
 # ---------------------------------
 
 
-for cmd in $*; do
+for cmd in $*; do # Para cada argumento en la línea del comando
    echo `date`: $cmd '---';
 
-   if [[ $cmd == train ]]; then
+   if [[ $cmd == train ]]; then # Si el comando es train, para cada locutor
        ## @file
 	   # \TODO
 	   # Select (or change) good parameters for gmm_train
        for dir in $db/BLOCK*/SES* ; do
-           name=${dir/*\/}
+           name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -N5 -m 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -N5 -m 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
