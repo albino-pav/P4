@@ -11,7 +11,7 @@ cleanup() {
    \rm -f $base.*
 }
 
-if [[ $# != 3 ]]; then
+if [[ $# != 5 ]]; then
    echo "$0 sampling_freq mfcc_order melbank_order input.wav output.mfcc"
    exit 1
 fi
