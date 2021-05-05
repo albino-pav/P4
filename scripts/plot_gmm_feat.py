@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #! /usr/bin/python3
+=======
+#! /usr/bin/env python3
+>>>>>>> 1fc53314fce7fdeb390afdef4af75c29e05fd2f3
 
 import struct
 
