@@ -18,11 +18,7 @@ cleanup() {
 }
 
 if [[ $# != 3 ]]; then
-<<<<<<< HEAD
    echo "$0 mfcc_order input.wav output.mfcc"
-=======
-   echo "$0 mfcc_order input.wav output.lp"
->>>>>>> c1de2e004711e8f0cdc88483746960d663e0ac61
    exit 1
 fi
 
