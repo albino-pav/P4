@@ -140,7 +140,16 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -N5 -m 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.0001 -N 21 -m 5 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           # options:
+            # -v int : Bit code to control "verbosity" -> 1
+            # -T thr : Logprob threshold of final EM iterations -> 0.001 o menor
+            # -N ite : number final iterations of EM -> mayor que 20
+            # -m mix : number of mixtures -> (1, 5)
+            # -d dir : directory of input files -> $w/$FEAT
+            # -e ext : extension of the input files -> (lp, mfcc, ...) -> lo que hagamos indicado en FEAT
+            # -g name : name of output GMM file -> $w/gmm/$FEAT/$name.gmm
+           # list_of_train_files -> $lists/class/$name.train
            echo
        done
    elif [[ $cmd == test ]]; then
