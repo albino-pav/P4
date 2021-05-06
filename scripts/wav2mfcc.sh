@@ -13,7 +13,7 @@ cleanup() {
 }
 
 if [[ $# != 3 ]]; then
-   echo "$0 lpc_order input.wav output.lp"
+   echo "$0 mfcc_order input.wav output.mfcc"
    exit 1
 fi
 
@@ -28,15 +28,13 @@ if [[ $UBUNTU_SPTK == 1 ]]; then
    X2X="sptk x2x"
    FRAME="sptk frame"
    WINDOW="sptk window"
-   LPC="sptk lpc"
    MFCC="sptk mfcc"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
-   LPC="lpc"
-   LPCC="mfcc"
+   MFCC="mfcc"
 fi
 
 # Main command for feature extration
