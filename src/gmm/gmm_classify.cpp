@@ -30,7 +30,7 @@ int classify(const vector<GMM> &vgmm, const fmatrix &dat, float &maxlprob) {
   maxind = 0;
   for (unsigned int ind = 0; ind < vgmm.size(); ind++)
   { lprob=vgmm[ind].logprob(dat);
-    if(lprob>maxlprob){
+    if(lprob>maxlprob){  //igual es menor o igual vigilar
       maxlprob=lprob;
       maxind=ind;
     }
