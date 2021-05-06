@@ -59,7 +59,7 @@ ejercicios indicados.
 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] | 0.189785 |      |0.189785      |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
