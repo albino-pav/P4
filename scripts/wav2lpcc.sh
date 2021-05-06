@@ -18,11 +18,7 @@ cleanup() {
 }
 
 if [[ $# != 3 ]]; then
-<<<<<<< HEAD
    echo "$0 lpc_order input.wav output.lpcc"
-=======
-   echo "$0 lpc_order cepstrum_order input.wav output.lp"
->>>>>>> c1de2e004711e8f0cdc88483746960d663e0ac61
    exit 1
 fi
 
@@ -31,7 +27,6 @@ cepstrum_order=$2 #GOOD VALUE = 13
 inputfile=$3
 outputfile=$4
 
-UBUNTU_SPTK=1
 if [[ $UBUNTU_SPTK == 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
