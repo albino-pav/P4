@@ -2,8 +2,7 @@
 
 ## \file
 ## \TODO This file implements a very trivial feature extraction; use it as a template for other front ends.
-## 
-## Please, read SPTK documentation and some papers in order to implement more advanced front ends.
+## /DONE Implemented mfcc calculus 
 
 # Base name for temporary files
    #basename te da el nombre del fichero con su extensión
@@ -17,8 +16,8 @@ cleanup() {
    \rm -f $base.*
 }
 
-if [[ $# != 3 ]]; then
-   echo "$0 lpc_order input.wav output.lpcc"
+if [[ $# != 4 ]]; then
+   echo "$0 lpc_order cepstrum_order input.wav output.lpcc"
    exit 1
 fi
 
@@ -33,14 +32,14 @@ if [[ $UBUNTU_SPTK == 1 ]]; then
    FRAME="sptk frame"
    WINDOW="sptk window"
    LPC="sptk lpc"
-   LPC2C = "sptk lpc2c"
+   LPCC="sptk lpc2c"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
    LPC="lpc"
-   LPC2C = "lpc2c"
+   LPCC="lpc2c"
 fi
 
 # Main command for feature extration
@@ -53,7 +52,7 @@ sox $inputfile -t raw -e signed -b 16 - | #convert (-t) wav file to raw file
                                           #-l frame length input, -L frame length output
 	$LPC -l 240 -m $lpc_order |           #calculates lpc  of -l length framed windowed data
                                           #performs order -m LPC 
-   $LPC2C -m $lpc_order -M $cepstrum_order > $base.cep  #computes LPC cepstral coeffs from LPC
+   $LPCC -m $lpc_order -M $cepstrum_order > $base.lpcc  #computes LPC cepstral coeffs from LPC
 
 # Our array files need a header with the number of cols and rows:
 #Esto se hace para que haga match con el formato fmatrix
@@ -64,13 +63,13 @@ ncol=$((cepstrum_order)) #gives cepstrum_order coefficients as output
    #perl -ne es un while que recorre lineas y te printea en el fichero base.cep
       #el número correspondiente para cada    
 
-nrow=`$X2X +fa < $base.cep | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 #x2x +aI conversión de auscii a unsigned int (4bytes) de los valores de fila y columna
 echo $nrow $ncol | $X2X +aI > $outputfile
 # cat - Copy standard input to standard output.-> copia el fichero base.cep
    #al final de outputfile (<<) sin cambiar nada. 
-cat $base.cep >> $outputfile
+cat $base.lpcc >> $outputfile
 
 exit
