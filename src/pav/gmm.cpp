@@ -79,8 +79,8 @@ namespace upc {
       w[k] = w[last];
       unsigned int i;
       for (i=0; i<vector_size; ++i) {
-	mu[k][i] = mu[last][i];
-	inv_sigma[k][i] = inv_sigma[last][i];
+        mu[k][i] = mu[last][i];
+        inv_sigma[k][i] = inv_sigma[last][i];
       }
     }
     resize(nmix-1, vector_size);     
