@@ -15,7 +15,7 @@ cleanup() {
 }
 
 if [[ $# != 4 ]]; then
-   echo "$0 mfcc_order number_filters input.wav output.mcp"
+   echo "$0 mfcc_order number_filters input.wav output.mfcc"
    exit 1
 fi
 
@@ -39,15 +39,15 @@ else
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 400 -p 80 | $WINDOW -l 400 -L 400 |
-	$MFCC -l 400 -m $mfcc_order -n $number_filters > $base.mcp
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
 
 # Our array files need a header with the number of cols and rows:
 ncol=$((mfcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
-nrow=`$X2X +fa < $base.mcp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+nrow=`$X2X +fa < $base.mfcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 echo $nrow $ncol | $X2X +aI > $outputfile
-cat $base.mcp >> $outputfile
+cat $base.mfcc >> $outputfile
 
 exit
