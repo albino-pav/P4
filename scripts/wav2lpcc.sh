@@ -35,7 +35,7 @@ else
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 180 -p 100 | $WINDOW -l 180 -L 180 |
 	$LPCC -l 180 -m $lpcc_order | $LPCC -m $lpcc_order -M $lpcc_order > $base.lpcc
 
 # Our array files need a header with the number of cols and rows:

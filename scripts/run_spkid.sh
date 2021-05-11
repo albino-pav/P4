@@ -12,10 +12,12 @@
 # - w:        a working directory for temporary files
 # - name_exp: name of the experiment
 # - db:       directory of the speecon database 
+# \DONE
 lists=lists
 w=work
 name_exp=one
 db=spk_8mu/speecon
+db_verif=spk_8mu/sr_test
 world=users
 
 # ------------------------
@@ -95,18 +97,22 @@ compute_lp() {
     done
 }
 
-compute_lpcc() {
+compute_lpcc () {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lpcc 8 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2lpcc 10 15 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
 
 compute_mfcc() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    dir_db=$1
+    shift
+    listas=$*
+    echo $listas
+    for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 13 40 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 12 18 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -162,7 +168,8 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 0.001 -N20 -m 10 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       # \DONE
+       gmm_train  -v 1 -T 1e-6 -N20 -m 50 -i 0 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
        echo "Implement the trainworld option ..."
    elif [[ $cmd == verify ]]; then
@@ -174,9 +181,10 @@ for cmd in $*; do
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
+       # \DONE
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/verif/all.test $lists/verif/all.test.candidates |
          tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
-       echo "Implement the verify option ..."
+       #echo "Implement the verify option ..."
 
    elif [[ $cmd == verif_err ]]; then
        if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then
@@ -202,13 +210,19 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-       echo "To be implemented ..."
+       # compute_$FEAT $db_verif $lists/final/verif.test
+       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/final/verif.test $lists/final/verif.test.candidates |
+         tee $w/verif_test.res) || exit 1
+         perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 2.2918176858281) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
+         tee verif_test.log
+        
+       #echo "To be implemented ..."
    
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
    elif [[ "$(type -t compute_$cmd)" = function ]]; then
 	   FEAT=$cmd
-       compute_$FEAT       
+       compute_$FEAT $db $lists/class/all.train $lists/class/all.test  #tenemos distintas db i distintas listas   
    else
        echo "undefined command $cmd" && exit 1
    fi

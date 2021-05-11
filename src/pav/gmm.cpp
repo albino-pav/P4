@@ -219,7 +219,7 @@ namespace upc {
       old_prob=new_prob;
 
       if (verbose & 01)
-	cout << "GMM nmix=" << nmix << "\tite=" << iteration << "\tlog(prob)=" << new_prob << "\tinc=" << inc_prob << endl;
+	      cout << "GMM nmix=" << nmix << "\tite=" << iteration << "\tlog(prob)=" << new_prob << "\tinc=" << inc_prob << endl;
     }
     return 0;
   }
