@@ -16,6 +16,7 @@ lists=lists
 w=work
 name_exp=one
 db=spk_8mu/speecon
+db_test=spk_8mu/sr_test
 world=users #other, users_other
 
 
@@ -104,15 +105,20 @@ compute_lpcc() {
         echo $EXEC && $EXEC || exit 1
     done
 }
+#8 10
 
 #mel frequency cepstral coeficients
 compute_mfcc() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    db=$1
+    shift
+    listas=$*
+    for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2mfcc 13 26 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
+#12 20?
 
 #  Set the name of the feature (not needed for feature extraction itself)
 if [[ ! -n "$FEAT" && $# > 0 && "$(type -t compute_$1)" = function ]]; then
@@ -205,15 +211,19 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-        compute_$FEAT $final $lists/final/verif.test
+        compute_$FEAT $db_test $lists/final/verif.test
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/final/verif.test $lists/final/verif.test.candidates | 
-            tee $w/verif_test.log) || exit 1
+            tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
+        perl -ane 'print "$F[0]\t$F[1]\t";
+            if ($F[2] > CAMBIAR Y PONER EL UMBRAL OPTIMO) {print "1\n"} 
+            else {print "0\n"}' $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
+        
 
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
    elif [[ "$(type -t compute_$cmd)" = function ]]; then
 	   FEAT=$cmd
-       compute_$FEAT       
+       compute_$FEAT $db $lists/class/all.train $lists/class/all.test      
    else
        echo "undefined command $cmd" && exit 1
    fi
