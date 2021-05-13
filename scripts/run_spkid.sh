@@ -16,6 +16,7 @@ lists=lists
 w=work
 name_exp=one
 db=spk_8mu/speecon
+db_test=spk_8mu/sr_test
 world=users #other, users_other
 
 # ------------------------
