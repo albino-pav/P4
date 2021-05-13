@@ -65,6 +65,7 @@ int main(int argc, const char *argv[]) {
   default:
     ;
   }
+  /// \DONE
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
   gmm.em(data, em_iterations, em_threshold, verbose);

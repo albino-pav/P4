@@ -1,0 +1,14 @@
+{
+  "python.pythonPath": "/bin/python3",
+  "files.associations": {
+    "bitset": "cpp",
+    "algorithm": "cpp",
+    "fstream": "cpp",
+    "iostream": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "sstream": "cpp",
+    "streambuf": "cpp",
+    "regex": "cpp"
+  }
+}

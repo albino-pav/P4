@@ -37,6 +37,7 @@ int classify(const vector<GMM> &vgmm, const fmatrix &dat, float &maxlprob) {
   }
 
   return maxind;
+  /// \DONE
 }
 
 int main(int argc, const char *argv[]) {

@@ -111,10 +111,12 @@ namespace upc {
 
     for (n=0; n<data.nrow(); ++n) {
       /// \TODO Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
-      lprob += gmm_logprob(data[n]);   
+      lprob += gmm_logprob(data[n]);
+      /// \DONE   
     }    
     return lprob/n;
   }
+  /// \DONE
 
 
   int GMM::centroid(const upc::fmatrix &data) {
@@ -218,6 +220,7 @@ namespace upc {
 
       if (verbose & 01)
 	      cout << "GMM nmix=" << nmix << "\tite=" << iteration << "\tlog(prob)=" << new_prob << "\tinc=" << inc_prob << endl;
+      /// \DONE
     }
     return 0;
   }
