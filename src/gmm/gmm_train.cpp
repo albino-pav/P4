@@ -57,11 +57,14 @@ int main(int argc, const char *argv[]) {
   switch (init_method) {
   case 0: //aleatoria
     gmm.random_init(data,nmix);
-  case 1: //vq
     break;
+  case 1: //vq
+    gmm.vq_lbg(data,nmix,init_iterations,init_threshold,verbose);
   case 2: //splitting
+    gmm.em_split(data,nmix,init_iterations,init_threshold,verbose);
     break;
   default:
+    gmm.vq_lbg(data,nmix,init_iterations,init_threshold,verbose);
     ;
   }
 
