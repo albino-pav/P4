@@ -30,7 +30,7 @@ int main(int argc, const char *argv[])
   Directory input_dir;
   Ext input_ext(DEF_INPUT_EXT);
   vector<string> filenames;
-  unsigned int nmix = DEF_NMIXTURES, verbose = 1;
+  unsigned int nmix = DEF_NMIXTURES, verbose = 0;
   Filename gmm_filename(DEF_GMMFILE);
   unsigned int init_iterations = DEF_ITERATIONS, em_iterations = DEF_ITERATIONS;
   float init_threshold = DEF_THR, em_threshold = DEF_THR;
@@ -60,16 +60,18 @@ int main(int argc, const char *argv[])
   case 0: //inicialiciación aleatoria
     gmm.random_init(data, nmix);
   case 1: //inicialiciación vq
+    gmm.vq_lbg(data, nmix, init_iterations, init_threshold, verbose);
     break;
   case 2: //inicialicación em_split
+    gmm.em_split(data, nmix, init_iterations, init_threshold, verbose);
     break;
   default:;
   }
-  /// \DONE Random initialization GMM
+  /// \DONE Random, vq_lbg, em_split.
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
   gmm.em(data, em_iterations, em_threshold, verbose);
-  /// \DONE EM applied
+  /// \DONE EM applied.
 
   //Create directory, if it is needed
   gmm_filename.checkDir();

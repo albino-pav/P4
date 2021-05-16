@@ -33,7 +33,7 @@ if [[ $# < 1 ]]; then
    echo "      FEAT: where FEAT is the name of a feature (eg. lp, lpcc or mfcc)."
    echo "            - A function with the name compute_FEAT() must be defined."
    echo "            - Initially, only compute_lp() exists and can be used."
-   echo "            - Edit this file to add your own features."
+   echo "            - Edit: added compute_lpcc() and compute_mfcc()."
    echo ""
    echo "     train: train GMM for speaker recognition and/or verification"
    echo "      test: test GMM in speaker recognition"
@@ -143,10 +143,11 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        ## @file
 	   # \TODO
 	   # Select (or change) good parameters for gmm_train
+       # \DONE selected actual values
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -N 21 -m 20 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 1e-6 -N 100 -m 16 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            # options:
             # -v int : Bit code to control "verbosity" -> 1
             # -T thr : Logprob threshold of final EM iterations -> 0.001 o menor
@@ -176,13 +177,15 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        ## @file
 	   # \TODO
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
+       # \DONE 'trainworld' implemented
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 0.0001 -N 20 -m 20 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 1e-6 -N 100 -m 16 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
    elif [[ $cmd == verify ]]; then
        ## @file
 	   # \TODO 
 	   # Implement 'verify' in order to perform speaker verification
+       # \DONE 'verify' implemented
 	   #
 	   # - The standard output of gmm_verify must be redirected to file $w/verif_${FEAT}_${name_exp}.log.
 	   #   For instance:
@@ -219,7 +222,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
 
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > CAMBIA PENDEJO CAMBIA) {print "1\n"}
+            if ($F[2] > CANVIAR A VALOR OPTIM) {print "1\n"}
             else {print "0\n"}'  $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
    
    # If the command is not recognize, check if it is the name

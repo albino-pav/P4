@@ -32,9 +32,15 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+  - 'sox': convierte las señales codificadas en ley mu de 8 bits a señales raw de 16 bits con signo.
+  - '$X2X': convierte la señal de short a float.
+  - '$FRAME': separa la señal en tramos de 240 muestras y separación de 80 muestras.
+  - '$WINDOW': enventana la señal de entrado con ventanas de 240 muestras y la convierte en una señal de salida con frames de 240 muestras.
+  - '$LPC': devuelve la ganancia de la predicción lineal más el número indicado de coeficientes, a partir de la señal de entrada.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  Se elige como número de columnas el número de coeficientes de salida del SPTK, y el numero de filas como el número de tramas. La variable `nrow` lee todas las líneas del fichero que contiene los coeficientes y los almacena línea por línea en formato ascii. Finalmente, convierte el conjunto `ncol` y `nrow` a enteros sin signo de 4 bytes y los añade al fichero de salida, concatenando después el fichero de coeficientes sin cambio de formato.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.

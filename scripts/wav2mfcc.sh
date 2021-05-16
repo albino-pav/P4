@@ -1,8 +1,6 @@
 #!/bin/bash
 
 ## \file
-## \TODO This file implements a very trivial feature extraction; use it as a template for other front ends.
-## /DONE Implemented mfcc calculus 
 
 # Base name for temporary files
    #basename te da el nombre del fichero con su extensión
@@ -43,10 +41,10 @@ fi
 # Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | #convert (-t) wav file to raw file 
                                           #encode (-e) as signed with 16b
-    $X2X +sf |                            #convert from short to float (4bytes)
-    $FRAME -l 240 -p 80 |                 #divide la señal en tramas de 240 muestras
+   $X2X +sf |                             #convert from short to float (4bytes)
+   $FRAME -l 240 -p 80 |                  #divide la señal en tramas de 240 muestras
                                           #con desplazamiento de 80 muestras
-    $WINDOW -l 240 -L 240 |               #enventana con Blackman longitud 240
+   $WINDOW -l 240 -L 240 -w 1 |           #enventana con Hamming longitud 240
                                           #-l frame length input, -L frame length output
 	$MFCC -m $mfcc_order -l 240 > $base.mfcc  #computes LPC cepstral coeffs from LPC
 
