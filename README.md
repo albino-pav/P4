@@ -40,7 +40,8 @@ ejercicios indicados.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
-  Se elige como número de columnas el número de coeficientes de salida del SPTK, y el numero de filas como el número de tramas. La variable `nrow` lee todas las líneas del fichero que contiene los coeficientes y los almacena línea por línea en formato ascii. Finalmente, convierte el conjunto `ncol` y `nrow` a enteros sin signo de 4 bytes y los añade al fichero de salida, concatenando después el fichero de coeficientes sin cambio de formato.
+
+    Se elige como número de columnas el número de coeficientes de salida del SPTK, y el numero de filas como el número de tramas. La variable `nrow` lee todas las líneas del fichero que contiene los coeficientes y los almacena línea por línea en formato ascii. Finalmente, convierte el conjunto `ncol` y `nrow` a enteros sin signo de 4 bytes y los añade al fichero de salida, concatenando después el fichero de coeficientes sin cambio de formato.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
