@@ -49,7 +49,7 @@ int usage(const char *progname, int err);
 int read_options(int ArgC, const char *ArgV[], vector<string> &filenames,
                  Filename &cov_filename, Filename &covnorm_filename, 
 		 bool &binary);
-
+ 
 
 bool compare_corr(pair<int, float> a, pair<int, float> b) { 
   return fabs(a.second) > fabs(b.second);
