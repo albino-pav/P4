@@ -90,7 +90,10 @@ fi
 # \DONE
 
 compute_lp() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    dir_db=$1
+    shift
+    listas=$*
+    for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lp 8 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -98,7 +101,10 @@ compute_lp() {
 }
 
 compute_lpcc () {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    dir_db=$1
+    shift
+    listas=$*
+    for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lpcc 10 15 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -112,7 +118,7 @@ compute_mfcc() {
     echo $listas
     for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 12 18 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 18 39 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -201,7 +207,11 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-       echo "To be implemented ..."
+       compute_$FEAT $final $lists/final/class.test
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | 
+       tee $w/class_test.res) || exit 1 #filtro tee
+       tee class_test.log
+       #echo "To be implemented ..."
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
@@ -210,7 +220,7 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-       # compute_$FEAT $db_verif $lists/final/verif.test
+       compute_$FEAT $db_verif $lists/final/verif.test
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/final/verif.test $lists/final/verif.test.candidates |
          tee $w/verif_test.res) || exit 1
          perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 2.2918176858281) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
