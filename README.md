@@ -70,12 +70,19 @@ ejercicios indicados.
     parametrizadas.
     >LP
     ><img width="765" alt="comando lp" src="https://user-images.githubusercontent.com/79308448/118698554-d6f06b80-b810-11eb-9a89-f804c1655e24.PNG">
-    >
+
+<img width="958" alt="lp grafica" src="https://user-images.githubusercontent.com/79308448/118700688-3a7b9880-b813-11eb-8d15-0cad3cf62bc4.PNG">
+
     >LPCC
     ><img width="795" alt="lpcc comando" src="https://user-images.githubusercontent.com/79308448/118698578-dce64c80-b810-11eb-8923-1cab5efd443a.PNG">
-    >
+
+<img width="929" alt="lpcc grafica" src="https://user-images.githubusercontent.com/79308448/118700724-436c6a00-b813-11eb-858d-aeefcfcdd825.PNG">
+
     >MFCC
     ><img width="798" alt="comando mfcc" src="https://user-images.githubusercontent.com/79308448/118698591-e1ab0080-b810-11eb-9c33-cb11068cad41.PNG">
+
+<img width="891" alt="mfcc grafica" src="https://user-images.githubusercontent.com/79308448/118700753-4a937800-b813-11eb-81ef-ac457fa16530.PNG">
+
   + ¿Cuál de ellas le parece que contiene más información?
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
