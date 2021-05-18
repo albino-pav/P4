@@ -70,8 +70,10 @@ ejercicios indicados.
     parametrizadas.
     >LP
     ><img width="765" alt="comando lp" src="https://user-images.githubusercontent.com/79308448/118698554-d6f06b80-b810-11eb-9a89-f804c1655e24.PNG">
+    >
     >LPCC
     ><img width="795" alt="lpcc comando" src="https://user-images.githubusercontent.com/79308448/118698578-dce64c80-b810-11eb-8923-1cab5efd443a.PNG">
+    >
     >MFCC
     ><img width="798" alt="comando mfcc" src="https://user-images.githubusercontent.com/79308448/118698591-e1ab0080-b810-11eb-9c33-cb11068cad41.PNG">
   + ¿Cuál de ellas le parece que contiene más información?
