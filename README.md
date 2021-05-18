@@ -1,31 +1,6 @@
 PAV - P4: reconocimiento y verificación del locutor
 ===================================================
 
-Obtenga su copia del repositorio de la práctica accediendo a [Práctica 4](https://github.com/albino-pav/P4)
-y pulsando sobre el botón `Fork` situado en la esquina superior derecha. A continuación, siga las
-instrucciones de la [Práctica 2](https://github.com/albino-pav/P2) para crear una rama con el apellido de
-los integrantes del grupo de prácticas, dar de alta al resto de integrantes como colaboradores del proyecto
-y crear la copias locales del repositorio.
-
-También debe descomprimir, en el directorio `PAV/P4`, el fichero [db_8mu.tgz](https://atenea.upc.edu/pluginfile.php/3145524/mod_assign/introattachment/0/spk_8mu.tgz?forcedownload=1)
-con la base de datos oral que se utilizará en la parte experimental de la práctica.
-
-Como entrega deberá realizar un *pull request* con el contenido de su copia del repositorio. Recuerde
-que los ficheros entregados deberán estar en condiciones de ser ejecutados con sólo ejecutar:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
-  make release
-  run_spkid mfcc train test classerr verify verifyerr
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Recuerde que, además de los trabajos indicados en esta parte básica, también deberá realizar un proyecto
-de ampliación, del cual deberá subir una memoria explicativa a Atenea y los ficheros correspondientes al
-repositorio de la práctica.
-
-A modo de memoria de la parte básica, complete, en este mismo documento y usando el formato *markdown*, los
-ejercicios indicados.
-
-## Ejercicios.
 
 ### SPTK, Sox y los scripts de extracción de características.
 
@@ -33,25 +8,58 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
-- Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
-  salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  > 
+  >```bash
+  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
+  >```
+  >
+  >**sox**: Es un programa que sirve para generar una señal del formato adecuado a partir de una señal con otro formato. También se suele usar para convertir la frecuencia de muestreo de un archivo de audio de un valor a otro. La opción **-t** se usa para indicar el tipo de archivo de audio usado. **-e** sirve para indicar el tipo de codificación y **-b** para establecer el tamaño de muestras codificadas en bits.
+  >
+  >**$X2X (sptk x2x)**: Es el programa de SPTK que permite la conversión entre distintos formatos de datos. La opción **+sf** indica el formato del input como short y el output como float.
+  >
+  >**$FRAME (sptk frame)**: Es un programa al que se le entrega una señal y te devuelve a la salida los mismos datos divididos en tramas de **-l** muestras tomadas con un desplazamiento de **-p** muestras.
+  >
+  >**$WINDOW (sptk window)**: Este programa multiplica los L vectores de entrada de un archivo por una determinada ventana. **-l** indica el tamaño de muestras del input (menor o igual a 2048), y **-L** la cantidad de muestras del output.
+  >
+  >**$LPC (sptk lpc)**: Es el programa que calcula los coeﬁcientes de predicción lineal de orden **-m** de una trama de tamaño **-l**.
 
-  * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
-    entrada y cuál es el de resultado.
+- Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
 
-- Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
-  (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
+  >```bash
+  >ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+  >nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  >```
+  >Primero se establece el valor del número de columnas de la fmatrix, que equivale al orden de la codificación de predicción lineal más 1, porque en el primer elemento del vector se encuentra la ganancia de la señal en cuestión. 
+  >
+  >El procedimiento para encontrar el número de filas depende de la longitud de la señal, la longitud y desplazamiento de la ventana por lo que es mejor extraer esa información del ﬁchero obtenido en el comando de la pregunta anterior. Con **sptk x2x +fa** cambiamos de float a ASCII, con **wc -l** contamos el número de lineas y con perl imprimimos las lineas con el formato fmatrix. 
+
+  * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de entrada y cuál es el de resultado.
+    >
+    >Usar este formato es útil para ver más intuitivamente los contenidos del archivo, a parte de poder seleccionar filas o columnas de la matriz para escoger coeficientes o tramas del codificador de predicción lineal.
+
+- Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
+
+  >```bash
+  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
+  >```
+  > El programa LPC2C transforma los coeficientes de predicción lineal a coeficientes cepstrales de predicción lineal, con el mismo orden LPC y el orden de cepstrum pasado por parámetro de wav2lp. Finalmente la salida se escribe en el archivo **base.lpcc**.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+  
+  >```bash
+  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -l 240 -w 1 -s 8.0 -m $mfcc_order -n $mel_filter_order > $base.mfcc
+  >```
+  > En este comando en vez de utilizar el **sptk lp** usamos el **sptk mfcc** que calcula el mel-frequency cepstrum pasando como parámetros el orden de mfcc, el orden del banco de filtros, frecuencia de muestreo (**-s** 8KHz), tamaño de la trama (**-l**) e indicando el tipo de ventana a usar (**-w 1** ⇒ Rectangular).
 
 ### Extracción de características.
 
-- Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
-  para todas las señales de un locutor.
+- Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones para todas las señales de un locutor.
+  >
+  >
+  >
   
-  + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
-    parametrizadas.
+  + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales parametrizadas.
   + ¿Cuál de ellas le parece que contiene más información?
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
