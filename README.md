@@ -114,6 +114,9 @@ Complete el código necesario para entrenar modelos GMM.
   del modelado GMM para diferenciar las señales de uno y otro.
 ![locutores](https://user-images.githubusercontent.com/79308448/118772585-36d42a00-b884-11eb-818b-35c5d9df5087.jpg)
 
+>En la gráfica podemos ver las regiones con el 90% y 50% de la masa de probabilidad para los GMM de los locutores SES098 (en rojo, arriba) y SES099 (en azul, abajo); también se muestra la población del usuario SES098 (en rojo, abajo izquierda) y SES099 (en azul, arriba derecha).
+>Para poder diferenciar si un locutor es impostor o legítimo, podemos verlo gráficamente. En el caso de la gráfica de abajo a la izquierda o de arriba a la derecha, podemos ver que las áreas del locutor y la población no coinciden, por tanto se trataría de locutores impostores. En cambio, en el caso de la gráfica de arriba a la izquierda o de abajo a la derecha, podemos ver que el área de la población coincide con el área del locutor, por lo tanto se trataría de locutores legítimos. 
+
 ### Reconocimiento del locutor.
 
 Complete el código necesario para realizar reconociminto del locutor y optimice sus parámetros.
