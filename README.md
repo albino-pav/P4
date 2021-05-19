@@ -107,6 +107,7 @@ Complete el código necesario para entrenar modelos GMM.
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+![locutores](https://user-images.githubusercontent.com/79308448/118772585-36d42a00-b884-11eb-818b-35c5d9df5087.jpg)
 
 ### Reconocimiento del locutor.
 
@@ -114,6 +115,15 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+>LP
+<img width="392" alt="lp porcentaje" src="https://user-images.githubusercontent.com/79308448/118772670-4d7a8100-b884-11eb-913f-6aa9668ddab3.PNG">
+
+>LPCC
+<img width="399" alt="lpcc porcentaje" src="https://user-images.githubusercontent.com/79308448/118772698-54a18f00-b884-11eb-838d-978c8da18cfc.PNG">
+
+>MFCC
+<img width="402" alt="mfcc porcentaje" src="https://user-images.githubusercontent.com/79308448/118772727-59fed980-b884-11eb-970a-cb1857c15245.PNG">
+
 
 ### Verificación del locutor.
 
