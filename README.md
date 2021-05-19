@@ -145,6 +145,8 @@ Complete el código necesario para realizar verificación del locutor y optimice
   >MFCC
   
   <img width="343" alt="costdetection_mfcc" src="https://user-images.githubusercontent.com/79308448/118773019-aba76400-b884-11eb-8b63-cfa0baa0bd93.PNG">
+  
+  >Nuestro mejor sistema de verificación es el que usa coeficientes LPCC: 
 
 |                        | Umbral óptimo  | Nº Falsas Alarmas| Nº pérdidas | Score |
   |------------------------|:----:|:----:|:----:|:----:|
