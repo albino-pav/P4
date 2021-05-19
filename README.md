@@ -124,6 +124,7 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 >MFCC
 <img width="402" alt="mfcc porcentaje" src="https://user-images.githubusercontent.com/79308448/118772727-59fed980-b884-11eb-970a-cb1857c15245.PNG">
 
+>En nuestro caso, el mejor sistema de reconocimiento sería usando coeficientes LPCC puesto que su tasa de error es la más baja de los 3.
 
 ### Verificación del locutor.
 
@@ -133,6 +134,15 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  >LP
+  <img width="355" alt="costdetection_lp" src="https://user-images.githubusercontent.com/79308448/118772964-9f230b80-b884-11eb-8ea4-d476ab8738a9.PNG">
+
+  >LPCC
+ <img width="359" alt="costdetection_lpcc" src="https://user-images.githubusercontent.com/79308448/118772998-a77b4680-b884-11eb-8001-2c6e10f38a3d.PNG">
+
+  >MFCC
+ <img width="343" alt="costdetection_mfcc" src="https://user-images.githubusercontent.com/79308448/118773019-aba76400-b884-11eb-8b63-cfa0baa0bd93.PNG">
+
  
 ### Test final
 
