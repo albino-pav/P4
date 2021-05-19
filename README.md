@@ -84,7 +84,8 @@ ejercicios indicados.
 <img width="891" alt="mfcc grafica" src="https://user-images.githubusercontent.com/79308448/118700753-4a937800-b813-11eb-81ef-ac457fa16530.PNG">
 
   + ¿Cuál de ellas le parece que contiene más información?
-
+ >Para que una parametrización contenga más información que otra, debe tener los coeficientes más incorrelados entre sí porque no queremos información redundante. Por tanto, gráficamente podemos observar que los coeficientes más incorrelados son los que se encuentran más dispersos, en nuestro caso los coeficientes LPCC.  
+  
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
@@ -93,8 +94,12 @@ ejercicios indicados.
   | &rho;<sub>x</sub>[2,3] |-0.562927|0.351929|-0.622987|
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
-  
+  >Para observar si los coeficientes son correlados o incorrelados nos tenemos que fijar en el valor absoluto de los coeficientes de correlación normalizada obtenidos en el apartado anterior. Cuanto más se aproximen a 1 más correlados serán, por lo tanto podemos decir que los coeficientes LPCC son los más incorrelados. Vemos que el resultado obtenido gráficamente con el obtenido a partir del programa pearson coincide. 
+ 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+> Según la teoría sabemos que el número de filtros de MFCC puede variar entre 24 y 40 y el número de coeficientes que usamos para el reconocimiento de voz normalmente es 13. 
+> En el caso de LPCC podemos usar 13 coeficientes. 
+> En nuestro caso, para MFCC hemos usado 19 filtros y 30 coeficientes. Para el caso de LPCC hemos usado 35 filtros y 24 coeficientes.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -102,10 +107,15 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-  
+  <img width="958" alt="gmm 2 coefs" src="https://user-images.githubusercontent.com/79308448/118771533-f32cf080-b882-11eb-9cb4-41cb3720a694.PNG">
+
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+![locutores](https://user-images.githubusercontent.com/79308448/118772585-36d42a00-b884-11eb-818b-35c5d9df5087.jpg)
+
+>En la gráfica podemos ver las regiones con el 90% y 50% de la masa de probabilidad para los GMM de los locutores SES098 (en rojo, arriba) y SES099 (en azul, abajo); también se muestra la población del usuario SES098 (en rojo, abajo izquierda) y SES099 (en azul, arriba derecha).
+>Para poder diferenciar si un locutor es impostor o legítimo, podemos verlo gráficamente. En el caso de la gráfica de abajo a la izquierda o de arriba a la derecha, podemos ver que las áreas del locutor y la población no coinciden, por tanto se trataría de locutores impostores. En cambio, en el caso de la gráfica de arriba a la izquierda o de abajo a la derecha, podemos ver que el área de la población coincide con el área del locutor, por lo tanto se trataría de locutores legítimos. 
 
 ### Reconocimiento del locutor.
 
@@ -113,6 +123,16 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+>LP
+<img width="392" alt="lp porcentaje" src="https://user-images.githubusercontent.com/79308448/118772670-4d7a8100-b884-11eb-913f-6aa9668ddab3.PNG">
+
+>LPCC
+<img width="399" alt="lpcc porcentaje" src="https://user-images.githubusercontent.com/79308448/118772698-54a18f00-b884-11eb-838d-978c8da18cfc.PNG">
+
+>MFCC
+<img width="402" alt="mfcc porcentaje" src="https://user-images.githubusercontent.com/79308448/118772727-59fed980-b884-11eb-970a-cb1857c15245.PNG">
+
+>En nuestro caso, el mejor sistema de reconocimiento sería usando coeficientes LPCC puesto que su tasa de error es la más baja de los 3.
 
 ### Verificación del locutor.
 
@@ -122,6 +142,23 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  >LP
+  
+  <img width="355" alt="costdetection_lp" src="https://user-images.githubusercontent.com/79308448/118772964-9f230b80-b884-11eb-8ea4-d476ab8738a9.PNG">
+
+  >LPCC
+  
+  <img width="359" alt="costdetection_lpcc" src="https://user-images.githubusercontent.com/79308448/118772998-a77b4680-b884-11eb-8001-2c6e10f38a3d.PNG">
+
+  >MFCC
+  
+  <img width="343" alt="costdetection_mfcc" src="https://user-images.githubusercontent.com/79308448/118773019-aba76400-b884-11eb-8b63-cfa0baa0bd93.PNG">
+  
+  >Nuestro mejor sistema de verificación es el que usa coeficientes LPCC: 
+
+|                        | Umbral óptimo  | Nº Falsas Alarmas| Nº pérdidas | Score |
+  |------------------------|:----:|:----:|:----:|:----:|
+  |LPCC |1.20436852|0/1000|81/250|32.4|
  
 ### Test final
 
