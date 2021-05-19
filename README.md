@@ -84,7 +84,8 @@ ejercicios indicados.
 <img width="891" alt="mfcc grafica" src="https://user-images.githubusercontent.com/79308448/118700753-4a937800-b813-11eb-81ef-ac457fa16530.PNG">
 
   + ¿Cuál de ellas le parece que contiene más información?
-
+ >Para que una parametrización contenga más información que otra, debe tener los coeficientes más incorrelados entre sí porque no queremos información redundante. Por tanto, gráficamente podemos observar que los coeficientes más incorrelados son los que se encuentran más dispersos, en nuestro caso los coeficientes LPCC.  
+  
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
@@ -93,8 +94,12 @@ ejercicios indicados.
   | &rho;<sub>x</sub>[2,3] |-0.562927|0.351929|-0.622987|
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
-  
+  >Para observar si los coeficientes son correlados o incorrelados nos tenemos que fijar en el valor absoluto de los coeficientes de correlación normalizada obtenidos en el apartado anterior. Cuanto más se aproximen a 1 más correlados serán, por lo tanto podemos decir que los coeficientes LPCC son los más incorrelados. Vemos que el resultado obtenido gráficamente con el obtenido a partir del programa pearson coincide. 
+ 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+> Según la teoría sabemos que el número de filtros de MFCC puede variar entre 24 y 40 y el número de coeficientes que usamos para el reconocimiento de voz normalmente es 13. 
+> En el caso de LPCC podemos usar 13 coeficientes. 
+> En nuestro caso, para MFCC hemos usado 19 filtros y 30 coeficientes. Para el caso de LPCC hemos usado 35 filtros y 24 coeficientes.
 
 ### Entrenamiento y visualización de los GMM.
 
