@@ -136,16 +136,19 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de reconocimiento.
   >LP
   
-  > <img width="355" alt="costdetection_lp" src="https://user-images.githubusercontent.com/79308448/118772964-9f230b80-b884-11eb-8ea4-d476ab8738a9.PNG">
+  <img width="355" alt="costdetection_lp" src="https://user-images.githubusercontent.com/79308448/118772964-9f230b80-b884-11eb-8ea4-d476ab8738a9.PNG">
 
   >LPCC
   
-  > <img width="359" alt="costdetection_lpcc" src="https://user-images.githubusercontent.com/79308448/118772998-a77b4680-b884-11eb-8001-2c6e10f38a3d.PNG">
+  <img width="359" alt="costdetection_lpcc" src="https://user-images.githubusercontent.com/79308448/118772998-a77b4680-b884-11eb-8001-2c6e10f38a3d.PNG">
 
   >MFCC
   
-  > <img width="343" alt="costdetection_mfcc" src="https://user-images.githubusercontent.com/79308448/118773019-aba76400-b884-11eb-8b63-cfa0baa0bd93.PNG">
+  <img width="343" alt="costdetection_mfcc" src="https://user-images.githubusercontent.com/79308448/118773019-aba76400-b884-11eb-8b63-cfa0baa0bd93.PNG">
 
+|                        | Umbral óptimo  | Nº Falsas Alarmas| Nº pérdidas | Score |
+  |------------------------|:----:|:----:|:----:|:----:|
+  |LPCC |1.20436852|0/1000|81/250|32.4|
  
 ### Test final
 
