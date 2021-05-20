@@ -40,7 +40,7 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lp
 
 # Our array files need a header with the number of cols and rows:
-ncol=$((lpcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+ncol=$((lpcc_order+1)) # lpcc p =>  (gain a1 a2 ... ap) 
 nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them

@@ -118,14 +118,14 @@ namespace upc
 
     float lprob = 0.0;
     unsigned int n;
-//for(unsigned int i = 0; i<data.ncol();i++){
+    //for(unsigned int i = 0; i<data.ncol();i++){
     for (n = 0; n < data.nrow(); ++n)
     {
       /// \TODO Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
       /// \DONE logprob of a single frame computed
       lprob += this->gmm_logprob(data[n]);
     }
-//}
+    //}
     return lprob / n;
   }
 
@@ -298,10 +298,35 @@ namespace upc
     else
     {
       old_size = nmix;
+      std::vector<float> mean_sigma(vector_size);
+      unsigned int max_index=0;
+      float max;
+      
+      for (i = 0; i < old_size; i++)
+      {
+        mean_sigma[i] = 0;
+        for (j = 0; j < vector_size; j++)
+          mean_sigma[i] += (1 / (inv_sigma[i][j])) * (1 /( inv_sigma[i][j]));
+      }
       resize(target_size, vector_size);
+      /*for (i = old_size, j = 0; i < nmix; ++i, ++j)
+        split_mixture(j, i);*/
       /* best way: select mixtures with larger variance (now, the first ones) */
-      for (i = old_size, j = 0; i < nmix; ++i, ++j)
-        split_mixture(j, i);
+      for (i = old_size; i < nmix; ++i)
+      {
+        //select j mixtures with the largest variance
+        max = -1;
+        for (unsigned int k = 0; k < old_size; k++)
+        {
+          if (mean_sigma[k] >= max)
+          {
+            max = mean_sigma[k];
+            max_index = k;
+          }
+        }
+        mean_sigma[max_index] = -1;
+        split_mixture(max_index, i);
+      }
     }
     return nmix;
   }

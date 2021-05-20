@@ -33,37 +33,99 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
+El pipeline principal es:  
+``` bash
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+$LPC -l 240 -m $lpc_order > $base.lp
+```
+En primer lugar, se usa sox para convertir un señal ``inputfile`` (en este caso, en formato .wav) a tipo raw (sin headers) con ``-t raw``. Además, se usa una codificación con signo ``-e signed`` y cada muestra está cuantificada con 16 bits ``-b 16``. Esta conversión a raw es necesaria porque ``sptk`` trabaja directamente sobre el fichero de entrada sin diferenciar contenido de cabeceras o de datos, motivo por el cual hemos de eliminar la parte de cabeceras antes de tratarlo en ``sptk``.
+
+Hecho esto, se usa un conjunto de comandos para tratar estos datos con SPTK. Lo primero es usar ``x2x`` para convertir los datos de short con signo a float ``+sf``. A continuación, entramamos la señal usando el comando ``frame`` con un tamaño de trama de 240 muestras/30 ms (``-l 240``) y un desplazamiento entre frames de 80 muestras (``-p 80``). Luego, se enventana la señal (``window``) indicando el tamaño de frame de la entrada (``-l 240``) y el de la salida, que es el mismo (``-L 240``). Al no estar indicando qué tipo de ventana queremos usar, por defecto sptk usa la ventana de *Blackman*. 
+
+Una vez ya hemos entramado y enventanado la señal, solo queda obtener los coeficientes LPC, lo cual se hace con el comando ``lpc``. Se ha de indicar el tamaño de frame de entrada (``-l 240``) y el orden del lpc ``-m``, el cual en este caso lo indica el usuario. Este resultado se guarda en un fichero temporal ``$base.lp``.
+
+
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+
+Las líneas donde se obtiene en formato *fmatrix* son:
+
+``` bash
+# Our array files need a header with the number of cols and rows:
+ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+
+# Build fmatrix file by placing nrow and ncol in front, and the data after them
+echo $nrow $ncol | $X2X +aI > $outputfile
+```
+Por un lado, la primera casilla de nuestro fichero será el número del coeficiente, el cual será el orden del lpc ``lpc_order`` + 1, ya que el primer elemento es la ganancia, no el primer coeficiente. Por otro lado, para las columnas hemos de convertir lo que hemos generado en el apartado anterior de float a ascii ``sptk x2x -af`` y lo hemos separado en diferentes líneas con wc
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
+  Si está en *fmatrix* podemos ver los contenidos en ascii usando ``fmatrix_show``. El fichero que tenemos de entrada es un conjunto de floats concatenados, los cuales no podemos interpretar directamente, ya que no están en ascii. Gracias al formato *fmatrix* podemos además guardarnos los datos por filas o columnas combinando ``fmatrix_show`` y ``cut`` en un fichero de texto y que estén en un formato legible.
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+``` bash
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lp
+```
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+
+```bash
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -s 8 -l 240 -m $mfcc_order -n $filter_bank_order > $base.mfcc
+```
 
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
   
+   <p align="center">
+   <img src="img/pygraph1.png" width="540" align="center">
+   </p>
+
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+
+  Debido al formato que se decide en ``wav2lp.sh``, la primera columna no nos proporciona información de los coeficientes, ya que es un contador. Además, hemos de tener en cuenta que la primera posición de datos, en el caso del LP y lpcc corresponde a la ganancia, con lo que nos quedaremos con la cuarta (segundo coeficiente) y quinta (tercer coeficiente) posición:
+
+  ```bash
+  fmatrix_show work/lp/BLOCK00/SES000/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+  fmatrix_show work/lpcc/BLOCK00/SES000/*.lpcc | egrep '^\[' | cut -f4,5 > lpcc_2_3.txt
+  fmatrix_show work/mfcc/BLOCK00/SES000/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
+  ```
   + ¿Cuál de ellas le parece que contiene más información?
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
   |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] | 0.189785 |      |0.189785      |
+  |------------------------|:-----------------:|:-----------------:|:-----------------:|
+  | &rho;<sub>x</sub>[2,3] | -0.818326 |0.217792|-0.134221|
+
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
+  Vemos que en la gráfica la relación entre los coeficientes, en el caso LP se dispersan de una manera más o menos lineal. Es decir, al coeficiente 3 le corresponden valores bastante similares al coeficiente 2 según vamos variando su valor. Por otro lado, que en los otros dos casos los coeficientes siguen una distribución más dispersa, con lo que podemos deducir que estos últimos están menos correlados que los lpc.
+
+  Los resultados obtenidos con *Pearson* nos llevan a la misma conclusión: El coeficiente LPC toma valores próximos a 1 (alta correlación normalizada), mientras que los LPCC y MFCC están más próximos a 0 (baja correlación normalizada). 
+  
+  En resumen, los MFCC son los que tienen más información entre coeficientes, seguidos de cerca por los LPCC.
+
+
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+  Para los LPCC:
+    + Orden del LPCC: **13-16**
+
+  Para los MFCC:
+    + Número de filtros: **24-40**
+    + Número de coeficientes: **13**
 
 ### Entrenamiento y visualización de los GMM.
 
