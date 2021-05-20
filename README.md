@@ -95,6 +95,8 @@ ejercicios indicados.
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+  - LPCC: 12 coeficientes de LPC y 13 de LPCC.
+  - MFCC: 25 coeficientes.
 
 ### Entrenamiento y visualización de los GMM.
 
