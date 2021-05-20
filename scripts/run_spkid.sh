@@ -112,7 +112,7 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 25 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -147,7 +147,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 1e-6 -N 100 -m 16 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 1e-6 -N 120 -m 16 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            # options:
             # -v int : Bit code to control "verbosity" -> 1
             # -T thr : Logprob threshold of final EM iterations -> 0.001 o menor
