@@ -47,6 +47,7 @@ sox $inputfile -t raw -e signed -b 16 - | #convert (-t) wav file to raw file
    $WINDOW -l 240 -L 240 -w 1 |           #enventana con Hamming longitud 240
                                           #-l frame length input, -L frame length output
 	$MFCC -m $mfcc_order -l 240 > $base.mfcc  #computes MFCC cepstral coeffs from MFCC
+                                 
 
 # Our array files need a header with the number of cols and rows:
 #Esto se hace para que haga match con el formato fmatrix

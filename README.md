@@ -89,9 +89,12 @@ ejercicios indicados.
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  Con el objetivo de poder relacionar mejor los resultados usando pearson.cpp con los resultados gráficos, hemos optado por mostrar la correlación de los parámetros 2 y 3 para dos locutores distintos. El valor de esta correlación se ha calculado haciendo un promedio del valor de correlación de 
+
+  |-----------|                        | LP   | LPCC | MFCC |
+  |-----------|------------------------|:----:|:----:|:----:|
+  | locutor SES014/SA014S08| &rho;<sub>x</sub>[2,3] |      |      |      |
+  || &rho;<sub>x</sub>[2,3] |      |      |      |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
