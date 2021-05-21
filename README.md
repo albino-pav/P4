@@ -95,8 +95,8 @@ ejercicios indicados.
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
-  - LPCC: 12 coeficientes de LPC y 13 de LPCC.
-  - MFCC: 25 coeficientes.
+  - LPCC: 12 coeficientes de LPC y 12 de ceptsrum.
+  - MFCC: 12 coeficientes.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -104,10 +104,19 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+    <img src="img/4_3-1.png" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+    ```bash
+    plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK10/SES100/SA100S*
+    ```
+
+    <img src="img/4_3-1.png" align="center">
+
+    Lo primero que podemos destacar es que la capacidad del GMM varía mucho con el número de gaussianas que se usan, pero de este factor también depende el tiempo de ejecución. También es importante la elección de los parámetros que se modelan, ya que unos parámetros muy correlados nos darán funciones de densidad muy correladas para diferentes locutores, y lo que queremos son densidades de probabilidad bien diferenciadas para mejorar la detección.
 
 ### Reconocimiento del locutor.
 
@@ -115,6 +124,10 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+    | Parametrización |   LP   |  LPCC   |  MFCC  |
+    |-----------------|:------:|:-------:|:------:|
+    | Error           | 9,81 % | 12,36 % | 1,02 % |
 
 ### Verificación del locutor.
 
