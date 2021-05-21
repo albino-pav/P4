@@ -46,7 +46,7 @@ ejercicios indicados.
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
-      Pasamos de una señal de voz codificada con ley mu de 8 bits a un listado de p coeficientes para cada trama, sacados de una señal raw de 16 bits con signo. Es conveniente usar este formato ya que, a nivel matemático y de programación, nos es muy útil tener los coeficientes ordenados de esta manera.
+      Pasamos de una señal de voz codificada con ley mu de 8 bits a un listado de p coeficientes para cada trama, sacados de una señal raw de 16 bits con signo. Es conveniente usar este formato ya que, a nivel matemático y de programación, nos es muy útil tener los coeficientes ordenados por segmentos, en forma de matriz. Es útil tener coeficientes en vez de señales ya que sintetizan las particularidades del narrador en pocos valores.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
@@ -66,6 +66,7 @@ ejercicios indicados.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
+
     <img src="img/3_5-1.png" align="center">
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
@@ -104,6 +105,7 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+
     <img src="img/4_3-1.png" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
