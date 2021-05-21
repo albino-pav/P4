@@ -116,7 +116,7 @@ Complete el código necesario para entrenar modelos GMM.
     plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK10/SES100/SA100S*
     ```
 
-    <img src="img/4_3-1.png" align="center">
+    <img src="img/4_3-2.png" align="center">
 
     Lo primero que podemos destacar es que la capacidad del GMM varía mucho con el número de gaussianas que se usan, pero de este factor también depende el tiempo de ejecución. También es importante la elección de los parámetros que se modelan, ya que unos parámetros muy correlados nos darán funciones de densidad muy correladas para diferentes locutores, y lo que queremos son densidades de probabilidad bien diferenciadas para mejorar la detección.
 
