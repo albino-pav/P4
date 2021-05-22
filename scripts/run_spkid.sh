@@ -19,7 +19,7 @@ name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 
-world=users # other, users_other
+world=others # other, users_other
 
 # ------------------------
 # Usage
@@ -206,8 +206,8 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        fi
        # You can pass the threshold to spk_verif_score.pl or it computes the
        # best one for these particular results.
-       #spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
-       spk_verif_score 7.59680093060402 $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+       spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+       #spk_verif_score 7.59680093060402 $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
    elif [[ $cmd == finalclass ]]; then
        ## @file
