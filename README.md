@@ -82,11 +82,11 @@ ejercicios indicados.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
-  
+
   ```sh
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | 
   $WINDOW -l 240 -L 240 |
-	$MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
+  $MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
   ```
 
 ### Extracción de características.
