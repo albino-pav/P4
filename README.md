@@ -57,23 +57,37 @@ ejercicios indicados.
   ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
   nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
-    # Build fmatrix file by placing nrow and ncol in front, and the data after them
+  # Build fmatrix file by placing nrow and ncol in front, and the data after them
   echo $nrow $ncol | $X2X +aI > $outputfile
   cat $base.lp >> $outputfile
   ```
 
   El fichero fmatrix está formado por el número de filas (nrow) y el número de columnas (ncol) seguido de los datos. 
 
-  El número de columnas corresponde al orden del predictor lpc+1, que es el numero de coeficientes del mismo. En cambio, el numero de filas corresponde al numero de tramas del archivo parametrizado. Para esto, utilizando nuevamente el programa `X2X` convertimos la señal en texto (+fa) y contamos el número de lineas utilizando el comando de `UNIX` wc (-l). Finalmente construimos el fichero de salida convirtiendo los valores del número de filas y columnas a partir del comando +ai de `X2X`.
+  El número de columnas corresponde al orden del predictor lpc+1, que es el número de coeficientes del mismo. En cambio, el número de filas corresponde al número de tramas del archivo parametrizado. Para esto, utilizando nuevamente el programa `X2X` convertimos la señal en texto (+fa) y contamos el número de lineas utilizando el comando de `UNIX` wc (-l). Finalmente construimos el fichero de salida convirtiendo los valores del número de filas y columnas a enteros sin signo de 4 bytes (+ai) usando `X2X`.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
+    Inicialmente, teníamos una señal de voz modificada con ley mu de 8 bits. Esto no es muy conveniente debido al orden de los coeficientes. Por lo que el resultado que obtenemos, el valor de los coeficientes en cada trama de forma matricial, facilitará la lectura de estos.
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 |
+  $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | 
+  $LPC2C -m $lpc_order -M $cepstrum_order > $base.cep
+  ```
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+  
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | 
+  $WINDOW -l 240 -L 240 |
+	$MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
+  ```
 
 ### Extracción de características.
 
