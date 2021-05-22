@@ -49,24 +49,37 @@ bool compare_corr(pair<int, float> a, pair<int, float> b) {
   return fabs(a.second) > fabs(b.second);
 }
 
+// void report_pearson(ostream &os, const fmatrix &sigma) {
+//   if (sigma.ncol() == 2) {
+//     os << sigma[0][1] << '\n';
+//     return;
+//   }
+
+//   for (unsigned int i = 0; i < sigma.ncol(); i++) {
+//     os << "Feature " << i << '\n';
+//     vector<pair<int, float>> corr;
+//     for (unsigned int j = 0; j < sigma.ncol(); j++) {
+//       if (j != i)
+//         corr.push_back(make_pair(j, sigma[i][j]));
+//     }
+//     sort(corr.begin(), corr.end(), compare_corr);
+//     for (unsigned int j = 0; j < corr.size(); j++)
+//       os << corr[j].second << "\trho[" << i << "][" << corr[j].first <<
+//       "]\n";
+//     os << '\n';
+//   }
+// }
+
+/*MODIFYED VERSION: just giver rho[2][3] as output*/
 void report_pearson(ostream &os, const fmatrix &sigma) {
   if (sigma.ncol() == 2) {
     os << sigma[0][1] << '\n';
     return;
   }
-
-  for (unsigned int i = 0; i < sigma.ncol(); i++) {
-    os << "Feature " << i << '\n';
-    vector<pair<int, float>> corr;
-    for (unsigned int j = 0; j < sigma.ncol(); j++) {
-      if (j != i)
-        corr.push_back(make_pair(j, sigma[i][j]));
-    }
-    sort(corr.begin(), corr.end(), compare_corr);
-    for (unsigned int j = 0; j < corr.size(); j++)
-      os << corr[j].second << "\trho[" << i << "][" << corr[j].first << "]\n";
-    os << '\n';
-  }
+  vector<pair<int, float>> corr;
+  corr.push_back(make_pair(0, sigma[2][3]));
+  os << corr[0].second << "\trho[" << 2 << "][" << 3 << "]\n";
+  os << '\n';
 }
 
 void normalize_covarianze(fmatrix &cov) {
@@ -123,7 +136,7 @@ int main(int argc, const char *argv[]) {
   // Read data from filenames
   fmatrix data;
   read_data(filenames, data);
-  cout << "DATA: " << data.nrow() << " x " << data.ncol() << endl;
+  // cout << "DATA: " << data.nrow() << " x " << data.ncol() << endl;
 
   MyFMatrix sigma;
 
