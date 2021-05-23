@@ -247,7 +247,7 @@ Complete el código necesario para entrenar modelos GMM.
 
   Observamos que en los casos de que la población coincide con el locutor las zonas azules estan dentro de la regiones con el 50% de densidad, por lo que estan repartidas de manera correcta. En los casos en que la población no coincide con su locutor, la densidad de población no se corresponde con las regiones marcadas.
   
-  Este resultdo es el esperado ya que nos ayudará a diferenciar si un candidato es un impostor o es legítimo.
+  Este resultado es el esperado ya que nos ayudará a diferenciar si un candidato es un impostor o es legítimo.
 
 ### Reconocimiento del locutor.
 
@@ -255,6 +255,26 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  Los resultados obtenidos con los valores que hemos utilizado para cada método de entrenamiento son los siguientes:
+
+  | Initialization method | error rate LP   | error rate LPCC | error rate MFCC |
+  |-----------------------|:---------------:|:---------------:|:---------------:|
+  |         Random        |      9.30%      |      0.76%      |      1.15%      |
+  |          VQ           |      11.46%     |      0.51%      |      1.78%      |
+  |          EM           |      5.99%      |      0.64%      |      1.40%      |
+
+  En la tabla observamos como el mejor resultado lo hemos obtenido aplicando la parametrización en LPCC y con un entrenamiento usando el método de VQ. Aun así, los resultados usando otras parametrizaciones y entrenamientos son buenos. Las componentes de computación de cada parametrización y las de entrenamiento son:
+
+  Usando parametrización de LP utilizamos un orden de predicción de valor 15. Las componentes de las demás parametrizaciones ya las hemos comentado en el ejercicio 2 de esta práctica.
+
+  En el modelo de entrenamiento Random se asigna un número aleatorio al valor inicial de las gaussianas. Al no usar información del locutor, es necesario un número alto de iteraciones y gaussianas, hemos escogido iterar 40 veces y aplicar 40 gaussianas.
+
+  Usando el modelo de entrenamiento VQ, converge a un número más reducido de gaussianas, los valores óptimos que hemos encontrado son 100 iteraciones y 16 gaussianas.
+
+  Con el método de entrenamiento EM split, los valores óptimos que se han establecido son 20 iteraciones, 50 gaussianas, el umbral final de la probabilidad logarítmica a 0,001, y el número de iteraciones final a 100.
+
+  En conclusión, para realizar un reconocimiento del locutor, el sistema con el que hemos conseguido mejores resultados, el que tiene una tasa de error menor, es usando la parametrización LPCC y el método de entrenamiento VQ, asignando valores óptimos a sus características.
 
 ### Verificación del locutor.
 

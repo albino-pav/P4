@@ -148,8 +148,8 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -i 1 -n 100 -v 5 -T 0.001 -N100 -m 16 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
-           #gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 50 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           #gmm_train  -i 1 -n 100 -v 5 -T 0.001 -N100 -m 16 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 50 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            #gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
