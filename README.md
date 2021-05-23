@@ -268,9 +268,21 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
   Usando parametrización de LP utilizamos un orden de predicción de valor 15. Las componentes de las demás parametrizaciones ya las hemos comentado en el ejercicio 2 de esta práctica.
 
+  ```sh
+  gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
+
   En el modelo de entrenamiento Random se asigna un número aleatorio al valor inicial de las gaussianas. Al no usar información del locutor, es necesario un número alto de iteraciones y gaussianas, hemos escogido iterar 40 veces y aplicar 40 gaussianas.
 
+  ```sh
+  gmm_train  -i 1 -n 100 -v 5 -T 0.001 -N100 -m 16 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
+
   Usando el modelo de entrenamiento VQ, converge a un número más reducido de gaussianas, los valores óptimos que hemos encontrado son 100 iteraciones y 16 gaussianas.
+
+  ```sh
+  gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 50 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
 
   Con el método de entrenamiento EM split, los valores óptimos que se han establecido son 20 iteraciones, 50 gaussianas, el umbral final de la probabilidad logarítmica a 0,001, y el número de iteraciones final a 100.
 
