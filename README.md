@@ -51,11 +51,6 @@ ejercicios indicados.
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
 
-
-
- <code> ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
-        nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'` <code>:
-
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
@@ -79,9 +74,10 @@ ejercicios indicados.
 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] |-0,442|0,3825|0,2169|
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+  Podem veure com els valors de lp a lpcc respectivament es van dispersant, i per tant el seu valor de la correlació normalitzada entre els paràmetres 2 i 3 disminueix. 
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
