@@ -91,7 +91,10 @@ fi
 
 #Lineal prediction
 compute_lp() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    db=$1
+    shift
+    listas=$*
+    for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lp 15 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -100,7 +103,11 @@ compute_lp() {
 
 #Lineal prediction cepstral coeficients
 compute_lpcc() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    db=$1
+    shift
+    listas=$*
+    for filename in $(cat $listas); do
+
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lpcc 36 24 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -212,7 +219,7 @@ for cmd in $*; do
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
        # \DONE
-        compute_$FEAT $final $lists/final/class.test
+        compute_$FEAT $db_test $lists/final/class.test
         (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
 
     
