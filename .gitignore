@@ -3,5 +3,8 @@ lp/
 lpcc/
 mfcc/
 gmm/
+.DS_Store
+Makefile
+bin/
 
 !src/gmm

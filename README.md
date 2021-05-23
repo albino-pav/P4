@@ -33,37 +33,154 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
+  ```
+
+  `sox`: Este programa, que ya utilizamos en la primera práctica, nos ayuda a convertir una señal en formato wave a formato raw (-t) de 16 bits (-b) con signo (-e), para que posteriormente `X2X` pueda tratar el fichero, ya que solo puede leer en formato raw.
+
+  `$X2X`: Este es un programa de `SPTK` que nos permite convertir el fichero que inicialmente era de valores short a valores float, es decir, reales en coma flotante de 32 bits (+sf).
+
+  `$FRAME`: También se trata de un programa de `SPTK`  que divide la señal de entrada en tramas de 240 muestras (-l) con un desplazamiento de ventana de 80 muestras (-p).
+
+  `$WINDOW`:  Este también es un programa de `SPTK`que aplica una ventana (por defecto se usa la ventana de Blackman) a la señal de 240 muestras (-l) y la convierte en una señal con frames de 240 muestras (-L).
+
+  `$LPC`:  También se trata de un programa de `SPTK` que calcula los primeros coeficientes (-m) de la ganancia de la predicción lineal en tramas de 240 muestras (-l).
+
+  El resultado de esta parametrización se guarda en el fichero `$base.lp`, es decir, tendrá el mismo nombre que el archivo de entrada.
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+
+  ```sh
+  # Our array files need a header with the number of cols and rows:
+  ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+  nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+
+  # Build fmatrix file by placing nrow and ncol in front, and the data after them
+  echo $nrow $ncol | $X2X +aI > $outputfile
+  cat $base.lp >> $outputfile
+  ```
+
+  El fichero fmatrix está formado por el número de filas (nrow) y el número de columnas (ncol) seguido de los datos. 
+
+  El número de columnas corresponde al orden del predictor lpc+1, que es el número de coeficientes del mismo. En cambio, el número de filas corresponde al número de tramas del archivo parametrizado. Para esto, utilizando nuevamente el programa `X2X` convertimos la señal en texto (+fa) y contamos el número de lineas utilizando el comando de `UNIX` wc (-l). Finalmente construimos el fichero de salida convirtiendo los valores del número de filas y columnas a enteros sin signo de 4 bytes (+ai) usando `X2X`.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
+    Inicialmente, teníamos una señal de voz modificada con ley mu de 8 bits. Esto no es muy conveniente debido al orden de los coeficientes. Por lo que el resultado que obtenemos, el valor de los coeficientes en cada trama de forma matricial, facilitará la lectura de estos.
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.cep
+  ```
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
+  ```
 
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
-  
+
+    <img src="/img/img1.png" width="1200" align="center">
+
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+
+    Para obterner los ficheros de texto hemos usado los siguientes comandos en el terminal:
+
+    ```console
+    fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+    fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
+    fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
+    ```
+
+    Seguidamente para mostrar los resultados, hemos ejecutado el siguiente código en python:
+
+    ```py
+    import matplotlib.pyplot as plt
+    import matplotlib.cbook as cbook
+    import numpy as np
+
+    lp = np.loadtxt('lp_2_3.txt')
+    lpcc = np.loadtxt('lpcc_2_3.txt')
+    mfcc = np.loadtxt('mfcc_2_3.txt')
+
+    fig, (axlp,axlpcc,axmfcc) = plt.subplots(3)
+    fig.suptitle("Coeficientes 2 y 3 usando LP, LPCC y MFCC de las senales de un locutor")
+    axlp.plot(lp[:, 0], lp[:, 1],'.')
+    axlpcc.plot(lpcc[:, 0], lpcc[:, 1],'.')
+    axmfcc.plot(mfcc[:, 0], mfcc[:, 1],'.')
+    axlp.set_title('LP')
+    axlp.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axlpcc.set_title('LPCC')
+    axlpcc.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axmfcc.set_title('MFCC')
+    axmfcc.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axlp.grid()
+    axlpcc.grid()
+    axmfcc.grid()
+    plt.show()
+    ```
+
+    Finalmente para ejecutar el código anterior usamos la siguiente orden en el terminal:
+
+    ```console
+    python ex2.py &
+    ```
+
+    Cabe destacar que no detecta la "ñ" como un carácter en ASCII y por eso hemos tenido que sustituirla. También hemos modificado los parámetros de la gráfica para que los títulos no se superpusieran con los ejes de la gràfica superior.
+
   + ¿Cuál de ellas le parece que contiene más información?
+
+    Entendemos esta pregunta como ver la cantidad de coeficientes correlados que hay entre ellos. Si la gráfica que obtenemos es una linea recta, significa que hay poca información entre los coeficientes, ya que a partir de uno podremos calcular el otro. En cambio, dependiendo del tipo de parametrización, observamos:
+
+    Para la parametricación LP, la información entre los coeficientes tiende a tener una forma lineal cada vez más estrecha, por tanto no aporta mucha información.
+
+    En el caso de la parametrización LPCC se observa en la gráfica que los coeficientes muestran una mayor dispersión, sobretodo para valores bajos del segundo coeficiente por tanto la información con esta parametrización es mayor.
+
+    Por último, usando la parametrización MFCC observamos que en esta gráfica la información está más dispersa respecto al caso anterior, lo vemos en que el márgen dinámico de ambos coeficientes es mucho más elevado.
+
+    En definitiva, la parámetrización que contiene más información es la MFCC ya que sus coeficientes estan más incorrelados ente ellos, por lo que será más complicado predecir el siguiente.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
+  Con las siguientes instrucciones en el terminal:
+
+  ```console
+  pearson work/lp/BLOCK01/SES017/*.lp
+  pearson work/lpcc/BLOCK01/SES017/*.lpcc
+  pearson work/mfcc/BLOCK01/SES017/*.mfcc
+  ```
+
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] | -0.873263     |0.160985      |0.316451      |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+    
+    Si el valor del módulo de rho_x se aproxima a 1 significa que la correlación entre los coeficientes es alta. En cambio, si se aproxima a 0, significa que la correlación es baja.
+
+    Para el caso de la parametrización LP observamos que el módulo de rho_x  se aproxima a 1, por lo que la correlación es muy correlada y aporta poca información. Esto coincide con la gráfica del apartado anterior, donde hemos llegado a la misma conclusión.
+
+    Para las parametrizaciones LPCC y MFCC vemos que el módulo de rho_x se aproxima a 0 por lo que los coeficientes 2 y 3 son bastante incorrelados y por tanto contienen más información. Esto, también coincide con las gráficas.
+
+    No obstante, vemos que los coeficientes del LPCC són significativamente más incorrelados que los del MFCC así que aportan más información. Esto no coincide con las gràficas del apartado anterior.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+  Para la parametrización de LPCC la teoría indica que los coeficientes cepstrales tienen que tener como valor 3/2 por el orden del predictor LPCC. Nosotros hemos escogido orden 24 y 36 coeficientes cepstrales.
+
+  En el caso de la parametrización MFCC la teoría indica que el orden toma valor 13 y el numero de filtros deberia estar entre 24 y 40. Nosotros hemos utilizado 18 coeficientes y 40 filtros.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -71,10 +188,62 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+
+  Para obtener la gráfica del locutor 17 hemos puesto en el terminal el siguiente comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc &
+  ```
+  
+  <img src="/img/img2.png" width="1200" align="center">
+
+  Para obtener la gráfica del locutor 43 hemos puesto en el terminal el siguiente comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc &
+  ```
+
+  <img src="/img/img3.png" width="1200" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+  Para el locutor 17 con su correspondiente población ejecutamos el comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img4.png" width="1200" align="center">
+
+  Para el locutor 43 con su correspondiente población ejecutamos el comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img5.png" width="1200" align="center">
+
+  Para el locutor 17 (rojo) con la población del locutor 43 (azul) usamos el comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img6.png" width="1200" align="center">
+
+  Para el locutor 43 (rojo) con la población del locutor 17 (azul) usamos el comando:
+
+  ```console
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img7.png" width="1200" align="center">
+
+  Observamos que en los casos de que la población coincide con el locutor las zonas azules estan dentro de la regiones con el 50% de densidad, por lo que estan repartidas de manera correcta. En los casos en que la población no coincide con su locutor, la densidad de población no se corresponde con las regiones marcadas.
+  
+  Este resultado es el esperado ya que nos ayudará a diferenciar si un candidato es un impostor o es legítimo.
 
 ### Reconocimiento del locutor.
 
@@ -82,6 +251,38 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  Los resultados obtenidos con los valores que hemos utilizado para cada método de entrenamiento son los siguientes:
+
+  | Initialization method | error rate LP   | error rate LPCC | error rate MFCC |
+  |-----------------------|:---------------:|:---------------:|:---------------:|
+  |         Random        |      9.30%      |      0.76%      |      1.15%      |
+  |          VQ           |      11.46%     |      0.51%      |      1.78%      |
+  |          EM           |      5.99%      |      0.64%      |      1.40%      |
+
+  En la tabla observamos como el mejor resultado lo hemos obtenido aplicando la parametrización en LPCC y con un entrenamiento usando el método de VQ. Aun así, los resultados usando otras parametrizaciones y entrenamientos son buenos. Las componentes de computación de cada parametrización y las de entrenamiento son:
+
+  Usando parametrización de LP utilizamos un orden de predicción de valor 15. Las componentes de las demás parametrizaciones ya las hemos comentado en el ejercicio 2 de esta práctica.
+
+  ```sh
+  gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
+
+  En el modelo de entrenamiento Random se asigna un número aleatorio al valor inicial de las gaussianas. Al no usar información del locutor, es necesario un número alto de iteraciones y gaussianas, hemos escogido iterar 40 veces y aplicar 40 gaussianas.
+
+  ```sh
+  gmm_train  -i 1 -n 100 -v 5 -T 0.001 -N100 -m 16 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
+
+  Usando el modelo de entrenamiento VQ, converge a un número más reducido de gaussianas, los valores óptimos que hemos encontrado son 100 iteraciones y 16 gaussianas.
+
+  ```sh
+  gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 50 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+  ```
+
+  Con el método de entrenamiento EM split, los valores óptimos que se han establecido son 20 iteraciones, 50 gaussianas, el umbral final de la probabilidad logarítmica a 0,001, y el número de iteraciones final a 100.
+
+  En conclusión, para realizar un reconocimiento del locutor, el sistema con el que hemos conseguido mejores resultados, el que tiene una tasa de error menor, es usando la parametrización LPCC y el método de entrenamiento VQ, asignando valores óptimos a sus características.
 
 ### Verificación del locutor.
 
@@ -91,6 +292,33 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+    Para la parametrización en LPCC, que es la mejor obtenida anteriormente, hemos conseguido el siguiente resultado:
+
+    <img src="/img/img8.png" width="600" align="center">
+
+    Los resultados obtenidos para el resto de parametrizaciones son los siguientes:
+
+    |                |         LP       |        LPCC       |        MFCC      |
+    |----------------|:----------------:|:-----------------:|:----------------:|
+    |       THR      | 0.75439540846699 | 0.390622017085594 | 0.59251646338931 |
+    |     Missed     | 178/250 = 0.7120 |  38/250 = 0.1520  |  89/250 = 0.3560 |
+    |  False Alarm   |  0/1000=0.0000   |   0/1000=0.0000   |   0/1000=0.0000  |
+    | Cost detection |       71.2       |        15.2       |       35.6       |
+
+    Ya que en el reconocimiento del locutor hemos obtenido mejores resultados para la parametrización LPCC. Para la verificación nos hemos centrado en optimizar el resultado para esta parametrización. El entrenamiento del mundo para las parametrizaciones LP y LPCC es el siguiente:
+
+    ```sh
+    gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 60 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+    ```
+
+    El método de entrenamiento que nos ha dado mejor resultado es el random con 40 iteraciones y 60 gaussianas. No obstante, hemos priorizado no tener ninguna Falsa Alarma en ninguna de las parametrizaciones y finalmente hemos optado para usar un entrenamiento del mundo distinto para en caso de MFCC:
+
+    ```sh
+    gmm_train  -i 1 -n 100 -v 1 -T 0.0001 -N100 -m 99 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+    ```
+
+    En este caso el método de entrenamiento es el VQ con 100 iteraciones y 99 gaussianas. Así conseguimos tener un coste de detección teniendo en cuenta que no hay ninguna falsa alarma.
  
 ### Test final
 
