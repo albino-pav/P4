@@ -173,7 +173,15 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-        gmm_train  -i 0 -v 1 -T 0.001 -N16 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        #gmm_train  -i 1 -n 200 -v 1 -T 0.001 -N200 -m 70 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        #gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        if [[ $FEAT == mfcc ]]; then
+            gmm_train  -i 1 -n 100 -v 1 -T 0.0001 -N100 -m 99 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        else 
+            gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 60 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        fi
+
+
    elif [[ $cmd == verify ]]; then
        ## @file
 	   # \TODO 
@@ -216,7 +224,7 @@ for cmd in $*; do
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/final/verif.test $lists/final/verif.test.candidates | 
             tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > CAMBIAR Y PONER EL UMBRAL OPTIMO) {print "1\n"} 
+            if ($F[2] > 0.390622017085594) {print "1\n"} 
             else {print "0\n"}' $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
         
 

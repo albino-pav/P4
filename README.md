@@ -292,6 +292,29 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  
+    Los resultados obtenidos son los siguientes:
+
+    |                |         LP       |        LPCC       |        MFCC      |
+    |----------------|:----------------:|:-----------------:|:----------------:|
+    |       THR      | 0.75439540846699 | 0.390622017085594 | 0.59251646338931 |
+    |     Missed     | 178/250 = 0.7120 |  38/250 = 0.1520  |  89/250 = 0.3560 |
+    |  False Alarm   |  0/1000=0.0000   |   0/1000=0.0000   |   0/1000=0.0000  |
+    | Cost detection |       71.2       |        15.2       |       35.6       |
+
+    Ya que en el reconocimiento del locutor hemos obtenido mejores resultados para la parametrización LPCC. Para la verificación nos hemos centrado en optimizar el resultado para esta parametrización. El entrenamiento del mundo para las parametrizaciones LP y LPCC es el siguiente:
+
+    ```sh
+    gmm_train  -i 0 -n 40 -v 5 -T 0.001 -N40 -m 60 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+    ```
+
+    El método de entrenamiento que nos ha dado mejor resultado es el random con 40 iteraciones y 60 gaussianas. No obstante, hemos priorizado no tener ninguna Falsa Alarma en ninguna de las parametrizaciones y finalmente hemos optado para usar un entrenamiento del mundo distinto para en caso de MFCC:
+
+    ```sh
+    gmm_train  -i 1 -n 100 -v 1 -T 0.0001 -N100 -m 99 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+    ```
+
+    En este caso el método de entrenamiento es el VQ con 100 iteraciones y 99 gaussianas. Así conseguimos tener un coste de detección teniendo en cuenta que no hay ninguna falsa alarma.
  
 ### Test final
 
