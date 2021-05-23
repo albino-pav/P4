@@ -215,20 +215,20 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-
+        compute_$FEAT $db_test $lists/final/class.test
        # Test
-       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test | tee $w/class_${FEAT}_${name_exp}.log) || exit 1
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test |
+        tee $w/final_class_${FEAT}_${name_exp}.log) || exit 1
        # Count errors
-       if [[ ! -s $w/class_${FEAT}_${name_exp}.log ]] ; then
-          echo "ERROR: $w/class_${FEAT}_${name_exp}.log not created"
+       if [[ ! -s $w/final_class_${FEAT}_${name_exp}.log ]] ; then
+          echo "ERROR: $w/final_class_${FEAT}_${name_exp}.log not created"
           exit 1
        fi
        perl -ne 'BEGIN {$ok=0; $err=0}
-                 next unless /^.*SA(...).*SES(...).*$/; 
-                 if ($1 == $2) {$ok++}
-                 else {$err++}
-                 END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/final_class_${FEAT}_${name_exp}.log  | tee class_test.log
-   
+               next unless /^.*c(...).*c(...).*$/; 
+               if ($1 == $2) {$ok++}
+               else {$err++}
+               END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/final_class_${FEAT}_${name_exp}.log  | tee class_test.log
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
