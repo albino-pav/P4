@@ -91,14 +91,21 @@ ejercicios indicados.
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
-  Con el objetivo de poder relacionar mejor los resultados usando pearson.cpp con los resultados gráficos, hemos optado por mostrar la correlación de los parámetros 2 y 3 para dos locutores distintos. El valor de esta correlación se ha calculado haciendo un promedio del valor de correlación de 
+  Con el objetivo de poder relacionar mejor los resultados usando pearson.cpp con los resultados gráficos, hemos calculado los coeficientes de correlación normalizada del locutor SES024: 
+  ```bash
+  pearson -N work/lp/BLOCK02/SES024/SA024S*
+  pearson -N work/lpcc/BLOCK02/SES024/SA024S*
+  pearson -N work/mfcc/BLOCK02/SES024/SA024S*
 
-  |-----------|                        | LP   | LPCC | MFCC |
-  |-----------|------------------------|:----:|:----:|:----:|
-  | locutor SES014/SA014S08| &rho;<sub>x</sub>[2,3] |      |      |      |
-  || &rho;<sub>x</sub>[2,3] |      |      |      |
+  ```
+
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | &rho;<sub>x</sub>[2,3] |  -0.657444  |   0.125695   |   0.100235   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+
+  Vemos que, igual que pasaba en las gráficas, la mayor dispersión que mostraban los coeficientes MFCC gráficamente, se ha traducido en un valor de correlación más cercano a 0 (baja correlación).
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
   - LPCC: 12 coeficientes de LPC y 12 de ceptsrum.
