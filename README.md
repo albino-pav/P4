@@ -76,9 +76,12 @@ ejercicios indicados.
     
     Para obtener los ficheros con los coeficientes, en el terminal:
     ```bash
-    fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f2,3 > lp_2_3.txt
-    fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f2,3 > lpcc_2_3.txt
-    fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f2,3 > mfcc_2_3.txt
+    fmatrix_show work/lp/BLOCK01/SES016/*.lp | egrep '^\[' | cut -f2,3 > lp16_2_3.txt
+    fmatrix_show work/lpcc/BLOCK01/SES016/*.lpcc | egrep '^\[' | cut -f2,3 > lpcc16_2_3.txt
+    fmatrix_show work/mfcc/BLOCK01/SES016/*.mfcc | egrep '^\[' | cut -f2,3 > mfcc16_2_3.txt
+    fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f2,3 > lp17_2_3.txt
+    fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f2,3 > lpcc17_2_3.txt
+    fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f2,3 > mfcc17_2_3.txt
     ```
 
     Para obtener las gráficas:
