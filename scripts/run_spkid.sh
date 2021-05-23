@@ -87,6 +87,7 @@ fi
 # \TODO
 # Create your own features with the name compute_$FEAT(), where $FEAT is the name of the feature.
 # - Select (or change) different features, options, etc. Make you best choice and try several options.
+# \DONE
 
 #Lineal prediction
 compute_lp() {
@@ -105,7 +106,6 @@ compute_lpcc() {
         echo $EXEC && $EXEC || exit 1
     done
 }
-#8 10
 
 #mel frequency cepstral coeficients
 compute_mfcc() {
@@ -118,7 +118,6 @@ compute_mfcc() {
         echo $EXEC && $EXEC || exit 1
     done
 }
-
 
 #  Set the name of the feature (not needed for feature extraction itself)
 if [[ ! -n "$FEAT" && $# > 0 && "$(type -t compute_$1)" = function ]]; then
@@ -145,6 +144,7 @@ for cmd in $*; do
        ## @file
 	   # \TODO
 	   # Select (or change) good parameters for gmm_train
+       # \DONE
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
@@ -173,6 +173,7 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
+       # \DONE
         #gmm_train  -i 1 -n 200 -v 1 -T 0.001 -N200 -m 70 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
         #gmm_train  -i 2 -n 20 -v 1 -T 0.001 -N20 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
         if [[ $FEAT == mfcc ]]; then
@@ -191,6 +192,7 @@ for cmd in $*; do
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
+       # \DONE
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/verif/all.test $lists/verif/all.test.candidates | 
             tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 
@@ -209,6 +211,7 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
+       # \DONE
         compute_$FEAT $final $lists/final/class.test
         (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
 
@@ -220,6 +223,7 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
+       # \DONE
         compute_$FEAT $db_test $lists/final/verif.test
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/final/verif.test $lists/final/verif.test.candidates | 
             tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1

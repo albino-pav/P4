@@ -2,6 +2,7 @@
 
 ## \file
 ## \TODO This file implements a very trivial feature extraction; use it as a template for other front ends.
+## \DONE
 ## 
 ## Please, read SPTK documentation and some papers in order to implement more advanced front ends.
 
