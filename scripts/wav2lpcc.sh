@@ -25,12 +25,14 @@ if [[ $UBUNTU_SPTK == 1 ]]; then
    X2X="sptk x2x"
    FRAME="sptk frame"
    WINDOW="sptk window"
+   LPC="sptk lpc"
    LPC2C="sptk lpc2c"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
+   LPC="lpc"
    LPC2C="lpc2c"
 fi
 
