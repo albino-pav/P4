@@ -13,11 +13,11 @@ for row in rows:
     data_x.append(float(x)) 
     data_y.append(float(y)) 
 
-fdata.close()
-
 plt.plot(data_x,data_y,'x')
 plt.title('Coeficients LP')
-plt.xlabel("Mostres")
-plt.ylabel("Autocorrelació")
+plt.xlabel("C2")
+plt.ylabel("C3")
 plt.grid(True)
 plt.show()
+
+fdata.close()

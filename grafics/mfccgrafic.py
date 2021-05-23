@@ -14,8 +14,8 @@ for row in rows:
 
 plt.plot(data_x,data_y,'x')
 plt.title('Coeficients MFCC')
-plt.xlabel("Mostres")
-plt.ylabel("Autocorrelació")
+plt.xlabel("C2")
+plt.ylabel("C3")
 plt.grid(True)
 plt.show()
 
