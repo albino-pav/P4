@@ -292,11 +292,12 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
     Para la parametrización en LPCC, que es la mejor obtenida anteriormente, hemos conseguido el siguiente resultado:
 
     <img src="/img/img8.png" width="600" align="center">
 
-    Los resultados obtenidos son los siguientes:
+    Los resultados obtenidos para el resto de parametrizaciones son los siguientes:
 
     |                |         LP       |        LPCC       |        MFCC      |
     |----------------|:----------------:|:-----------------:|:----------------:|
