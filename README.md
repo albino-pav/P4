@@ -93,21 +93,98 @@ ejercicios indicados.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
-  
+
+  <img src="/img/img1.png" width="300" align="center">
+
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+
+    Para obterner los ficheros de texto hemos usado los siguientes comandos en el terminal:
+
+    ```bash
+    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
+    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
+    ```
+
+    Seguidamente para mostrar los resultados, hemos ejecutado el siguiente código en python:
+
+    ```py
+    import matplotlib.pyplot as plt
+    import matplotlib.cbook as cbook
+    import numpy as np
+
+    lp = np.loadtxt('lp_2_3.txt')
+    lpcc = np.loadtxt('lpcc_2_3.txt')
+    mfcc = np.loadtxt('mfcc_2_3.txt')
+
+    fig, (axlp,axlpcc,axmfcc) = plt.subplots(3)
+    fig.suptitle("Coeficientes 2 y 3 usando LP, LPCC y MFCC de las senales de un locutor")
+    axlp.plot(lp[:, 0], lp[:, 1],'.')
+    axlpcc.plot(lpcc[:, 0], lpcc[:, 1],'.')
+    axmfcc.plot(mfcc[:, 0], mfcc[:, 1],'.')
+    axlp.set_title('LP')
+    axlp.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axlpcc.set_title('LPCC')
+    axlpcc.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axmfcc.set_title('MFCC')
+    axmfcc.set(xlabel='Coeficiente 2', ylabel='Coeficiente 3')
+    axlp.grid()
+    axlpcc.grid()
+    axmfcc.grid()
+    plt.show()
+    ```
+
+    Finalmente para ejecutar el código anterior usamos la siguiente orden en el terminal:
+
+    ```bash
+    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ python ex2.py 
+    ```
+
+    Cabe destacar que no detecta la "ñ" como un carácter en ASCII y por eso hemos tenido que sustituirla. También hemos modificado los parámetros de la gráfica para que los títulos no se superpusieran con los ejes de la gràfica superior.
+
   + ¿Cuál de ellas le parece que contiene más información?
+
+    Entendemos esta pregunta como ver la cantidad de coeficientes correlados que hay entre ellos. Si la gráfica que obtenemos es una linea recta, significa que hay poca información entre los coeficientes, ya que a partir de uno podremos calcular el otro. En cambio, dependiendo del tipo de parametrización, observamos:
+
+    Para la parametricación LP, la información entre los coeficientes tiende a tener una forma lineal cada vez más estrecha, por tanto no aporta mucha información.
+
+    En el caso de la parametrización LPCC se observa en la gráfica que los coeficientes muestran una mayor dispersión, sobretodo para valores bajos del segundo coeficiente por tanto la información con esta parametrización es mayor.
+
+    Por último, usando la parametrización MFCC observamos que en esta gráfica la información está más dispersa respecto al caso anterior, lo vemos en que el márgen dinámico de ambos coeficientes es mucho más elevado.
+
+    En definitiva, la parámetrización que contiene más información es la MFCC ya que sus coeficientes estan más incorrelados ente ellos, por lo que será más complicado predecir el siguiente.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
+  Con las siguientes instrucciones en el terminal:
+
+  ```bash
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/lp/BLOCK01/SES017/*.lp
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/lpcc/BLOCK01/SES017/*.lpcc
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/mfcc/BLOCK01/SES017/*.mfcc
+  ```
+
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] | -0.873263     |0.160985      |0.316451      |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+    
+    Si el valor del módulo de rho_x se aproxima a 1 significa que la correlación entre los coeficientes es alta. En cambio, si se aproxima a 0, significa que la correlación es baja.
+
+    Para el caso de la parametrización LP observamos que el módulo de rho_x  se aproxima a 1, por lo que la correlación es muy correlada y aporta poca información. Esto coincide con la gráfica del apartado anterior, donde hemos llegado a la misma conclusión.
+
+    Para las parametrizaciones LPCC y MFCC vemos que el módulo de rho_x se aproxima a 0 por lo que los coeficientes 2 y 3 son bastante incorrelados y por tanto contienen más información. Esto, también coincide con las gráficas.
+
+    No obstante, vemos que los coeficientes del LPCC són significativamente más incorrelados que los del MFCC así que aportan más información. Esto no coincide con las gràficas del apartado anterior.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+  Para la parametrización de LPCC la teoría indica que los coeficientes cepstrales tienen que tener como valor 3/2 por el orden del predictor LPCC. Nosotros hemos escogido orden 24 y 36 coeficientes cepstrales.
+
+  En el caso de la parametrización MFCC la teoría indica que el orden toma valor 13 y el numero de filtros deberia estar entre 24 y 40. Nosotros hemos utilizado 18 coeficientes y 40 filtros.
 
 ### Entrenamiento y visualización de los GMM.
 
