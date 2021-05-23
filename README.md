@@ -32,9 +32,9 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+
   ```sh
-  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-  $LPC -l 240 -m $lpc_order > $base.lp
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
   ```
 
   `sox`: Este programa, que ya utilizamos en la primera práctica, nos ayuda a convertir una señal en formato wave a formato raw (-t) de 16 bits (-b) con signo (-e), para que posteriormente `X2X` pueda tratar el fichero, ya que solo puede leer en formato raw.
@@ -49,9 +49,9 @@ ejercicios indicados.
 
   El resultado de esta parametrización se guarda en el fichero `$base.lp`, es decir, tendrá el mismo nombre que el archivo de entrada.
 
-
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+
   ```sh
   # Our array files need a header with the number of cols and rows:
   ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
@@ -75,18 +75,14 @@ ejercicios indicados.
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
   ```sh
-  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 |
-  $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | 
-  $LPC2C -m $lpc_order -M $cepstrum_order > $base.cep
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.cep
   ```
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
 
   ```sh
-  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | 
-  $WINDOW -l 240 -L 240 |
-  $MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -l 240 -m $mfcc_order -n $number_filters > $base.mfcc
   ```
 
 ### Extracción de características.
