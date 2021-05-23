@@ -69,6 +69,18 @@ void report_pearson(ostream &os, const fmatrix &sigma) {
   }
 }
 
+// /*MODIFYED VERSION: just giver rho[2][3] as output*/
+// void report_pearson(ostream &os, const fmatrix &sigma) {
+//   if (sigma.ncol() == 2) {
+//     os << sigma[0][1] << '\n';
+//     return;
+//   }
+//   vector<pair<int, float>> corr;
+//   corr.push_back(make_pair(0, sigma[2][3]));
+//   os << corr[0].second << "\trho[" << 2 << "][" << 3 << "]\n";
+//   os << '\n';
+// }
+
 void normalize_covarianze(fmatrix &cov) {
 
   unsigned int ncof = cov.ncol();
@@ -123,7 +135,7 @@ int main(int argc, const char *argv[]) {
   // Read data from filenames
   fmatrix data;
   read_data(filenames, data);
-  cout << "DATA: " << data.nrow() << " x " << data.ncol() << endl;
+  // cout << "DATA: " << data.nrow() << " x " << data.ncol() << endl;
 
   MyFMatrix sigma;
 

@@ -33,6 +33,7 @@ float verify(const GMM &gmm_candidate, const fmatrix &dat) {
   //DONE: implemented
 
   float score = gmm_candidate.logprob(dat);
+  //DONE: implementation verification score based on gmm of the candidate
   return score;
 }
 
@@ -45,7 +46,7 @@ float verify(const GMM &gmm_candidate, const GMM & gmm_world, const fmatrix &dat
   lprobcand = gmm_candidate.logprob(dat); 
   lprobbackground = gmm_world.logprob(dat);
   float score = lprobcand - lprobbackground;
-
+  //DONE: implementation verification with normalizated score
   return score;
   //DONDE: implemented
 

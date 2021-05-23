@@ -19,7 +19,7 @@ name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 
-world=users # other, users_other
+world=others # other, users_other
 
 # ------------------------
 # Usage
@@ -157,7 +157,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
             # -d dir : directory of input files -> $w/$FEAT
             # -e ext : extension of the input files -> (lp, mfcc, ...) -> lo que hagamos indicado en FEAT
             # -g name : name of output GMM file -> $w/gmm/$FEAT/$name.gmm
-           # list_of_train_files -> $lists/class/$name.train
+            # list_of_train_files -> $lists/class/$name.train
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -196,10 +196,10 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
-       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/verif/all.test $lists/verif/all.test.candidates | 
+       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
              tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 
-   elif [[ $cmd == verif_err ]]; then
+   elif [[ $cmd == verifyerr ]]; then
        if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then
           echo "ERROR: $w/verif_${FEAT}_${name_exp}.log not created"
           exit 1
@@ -207,6 +207,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # You can pass the threshold to spk_verif_score.pl or it computes the
        # best one for these particular results.
        spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+       #spk_verif_score 7.59680093060402 $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
    elif [[ $cmd == finalclass ]]; then
        ## @file
@@ -235,6 +236,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
+       compute_$FEAT $db_test $lists/final/verif.test
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/final/verif.test $lists/final/verif.test.candidates | 
         tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
 
