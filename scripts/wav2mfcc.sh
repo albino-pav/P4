@@ -37,7 +37,7 @@ else
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 184 -p 106 | $WINDOW -l 240 -L 240 |
 	$MFCC -l 240 -m $mfcc_order -s 8 -w 1 -n $bank_size > $base.mfcc #el bank size el podem posar fixe
 
 # Our array files need a header with the number of cols and rows:
