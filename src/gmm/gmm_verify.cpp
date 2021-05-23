@@ -30,6 +30,7 @@ float verify(const GMM &gmm_candidate, const fmatrix &dat) {
     lprobcand is an informative values to be printed as debug information.
     The decision is based on the returned value
    */
+  //DONE: implemented
 
   float score = gmm_candidate.logprob(dat);
   //DONE: implementation verification score based on gmm of the candidate
@@ -47,6 +48,8 @@ float verify(const GMM &gmm_candidate, const GMM & gmm_world, const fmatrix &dat
   float score = lprobcand - lprobbackground;
   //DONE: implementation verification with normalizated score
   return score;
+  //DONDE: implemented
+
 }
 
 

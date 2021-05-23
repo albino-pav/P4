@@ -122,11 +122,11 @@ namespace upc
     {
       /// \TODO Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
       lprob += this->gmm_logprob(data[n]);
-      /// \DONE Compute logprob of a single frame of input data
+      /// \DONE Compute logprob of a single frame of input data.
     }
     return lprob / n;
   }
-  /// \DONE Compute logprob for all input data
+  /// \DONE Compute logprob for all input data.
 
   int GMM::centroid(const upc::fmatrix &data)
   {
@@ -240,7 +240,7 @@ namespace upc
       {
         break;
       }
-      /// \DONE loop of EM performance completed
+      /// \DONE loop of EM performance completed.
       if (verbose & 01)
       {
         cout << "GMM nmix=" << nmix << "\tite=" << iteration << "\tlog(prob)=" << new_prob << "\tinc=" << inc_prob << endl;

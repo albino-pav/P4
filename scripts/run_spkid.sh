@@ -148,10 +148,6 @@ for cmd in $*; do # Para cada argumento en la línea del comando
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
            gmm_train  -v 1 -T 1e-6 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
-           # gmm_train  -v 1 -T 1e-6 -N 100 -m 27 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1; 12 -> 1.40 %
-           # gmm_train  -v 1 -T 1e-7 -N 120 -m 30 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1: 12 -> 1.15 %
-           # gmm_train  -v 1 -T 1e-8 -N 150 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
-
 
            # options:
             # -v int : Bit code to control "verbosity" -> 1
@@ -165,7 +161,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
            echo
        done
    elif [[ $cmd == test ]]; then
-       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/class/all.test | tee $w/class_${FEAT}_${name_exp}.log) || exit 1
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/class/all.test | tee $w/class_${FEAT}_${name_exp}.log) || exit 1
 
    elif [[ $cmd == classerr ]]; then
        if [[ ! -s $w/class_${FEAT}_${name_exp}.log ]] ; then
@@ -185,7 +181,11 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # \DONE 'trainworld' implemented
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 1e-6 -N 20 -m 16 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 24
+       # gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 23.6
+
+
    elif [[ $cmd == verify ]]; then
        ## @file
 	   # \TODO 
@@ -215,8 +215,20 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-       echo "To be implemented ..."
-   
+        compute_$FEAT $db_test $lists/final/class.test
+       # Test
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test |
+        tee $w/final_class_${FEAT}_${name_exp}.log) || exit 1
+       # Count errors
+       if [[ ! -s $w/final_class_${FEAT}_${name_exp}.log ]] ; then
+          echo "ERROR: $w/final_class_${FEAT}_${name_exp}.log not created"
+          exit 1
+       fi
+       perl -ne 'BEGIN {$ok=0; $err=0}
+               next unless /^.*c(...).*c(...).*$/; 
+               if ($1 == $2) {$ok++}
+               else {$err++}
+               END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/final_class_${FEAT}_${name_exp}.log  | tee class_test.log
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
@@ -229,8 +241,11 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
 
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > 7.59680093060402) {print "1\n"}
+            if ($F[2] > 0.422267388650088) {print "1\n"}
             else {print "0\n"}'  $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
+        echo "
+            ********** CUIDAO QUE SHA DE POSAR EL THRESHOLD OPTIM *************
+            "
    
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
