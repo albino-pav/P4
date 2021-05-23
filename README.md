@@ -32,9 +32,29 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+  - *SOX* : Serveix per canviar el format de la senyal d'entrada a un senyal adequat als nostres requeriments. Té els següents comandaments: 
+    - -t raw : Ens indica que el format de sortida és .raw
+    - -e signed: Ens indica quina codifiació de sortida tenim. En el nostre cas la tenim guardada com a integers amb símbol 
+    - -b 16: Ens indica el número de bits que tenim a cada mostra codificada. En el nostre cas tenim codificacions de 16 bits.
+  - *$X2X* : Serveix per convertir el format de dades d'entrada en un format estàndard de sortida, en aquest cas ho converteix a un short float. 
+  - *$FRAME* : Serveix per extreure una frama d'una seqüència de dades i la converteix en una sèrie de frames amb possiblitat de superposició amb un cert període. 
+    - -l 240: Indica que la llargada de la frama que extraiem és de 240 bits. 
+    - -p 80: Indica que el període de superposició és de 80 bits.
+  - *$WINDOW* : Multiplica element per element la llargada dels vectors d'entrada per una funció d'enfinestrat prèviament especificada. 
+    - -l 240: Indica que la llargada de l'entrada és de 240 bits. 
+    - -L 240: Indica que la llargada de la sortida és de 240 bits. 
+  - *$LPC* : Calcula els coeficients de predicció lineal de dades enfinestrades amb una llargada L que entren per l'input donant com a output el seu resultat: 
+    - -l 240: Indica que la llargada de la frama és de 240 bits. 
+    - -m $lpc_order: Ens indica l'ordre de la predicció lineal. En aquest cas el que hem fet és agafar-lo amb un valor que podem anar canviant dins del programa. 
+    - $base.lp : És el nom del fitxxer de sortida.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+
+
+
+ <code> ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+        nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'` <code>:
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
