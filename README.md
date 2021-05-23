@@ -94,7 +94,7 @@ ejercicios indicados.
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
 
-  <img src="/img/img1.png" width="1200" align="center">
+    <img src="/img/img1.png" width="1200" align="center">
 
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
@@ -102,9 +102,9 @@ ejercicios indicados.
     Para obterner los ficheros de texto hemos usado los siguientes comandos en el terminal:
 
     ```bash
-    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
-    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
-    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
+    fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+    fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
+    fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
     ```
 
     Seguidamente para mostrar los resultados, hemos ejecutado el siguiente código en python:
@@ -138,7 +138,7 @@ ejercicios indicados.
     Finalmente para ejecutar el código anterior usamos la siguiente orden en el terminal:
 
     ```bash
-    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ python ex2.py 
+    python ex2.py &
     ```
 
     Cabe destacar que no detecta la "ñ" como un carácter en ASCII y por eso hemos tenido que sustituirla. También hemos modificado los parámetros de la gráfica para que los títulos no se superpusieran con los ejes de la gràfica superior.
@@ -161,9 +161,9 @@ ejercicios indicados.
   Con las siguientes instrucciones en el terminal:
 
   ```bash
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/lp/BLOCK01/SES017/*.lp
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/lpcc/BLOCK01/SES017/*.lpcc
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ pearson work/mfcc/BLOCK01/SES017/*.mfcc
+  pearson work/lp/BLOCK01/SES017/*.lp
+  pearson work/lpcc/BLOCK01/SES017/*.lpcc
+  pearson work/mfcc/BLOCK01/SES017/*.mfcc
   ```
 
   |                        | LP   | LPCC | MFCC |
@@ -192,10 +192,62 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+
+  Para obtener la gráfica del locutor 17 hemos puesto en el terminal el siguiente comando:
+
+  ```console
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc &
+  ```
+  
+  <img src="/img/img2.png" width="1200" align="center">
+
+  Para obtener la gráfica del locutor 43 hemos puesto en el terminal el siguiente comando:
+
+  ```console
+    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc &
+  ```
+
+  <img src="/img/img3.png" width="1200" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+  Para el locutor 17 con su correspondiente población ejecutamos el comando:
+
+  ```console
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img4.png" width="1200" align="center">
+
+  Para el locutor 43 con su correspondiente población ejecutamos el comando:
+
+  ```console
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img5.png" width="1200" align="center">
+
+  Para el locutor 17 (rojo) con la población del locutor 43 (azul) usamos el comando:
+
+  ```console
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img6.png" width="1200" align="center">
+
+  Para el locutor 43 (rojo) con la población del locutor 17 (azul) usamos el comando:
+
+  ```console
+  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  ```
+
+  <img src="/img/img7.png" width="1200" align="center">
+
+  Observamos que en los casos de que la población coincide con el locutor las zonas azules estan dentro de la regiones con el 50% de densidad, por lo que estan repartidas de manera correcta. En los casos en que la población no coincide con su locutor, la densidad de población no se corresponde con las regiones marcadas.
+  
+  Este resultdo es el esperado ya que nos ayudará a diferenciar si un candidato es un impostor o es legítimo.
 
 ### Reconocimiento del locutor.
 
