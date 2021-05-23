@@ -103,7 +103,7 @@ ejercicios indicados.
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
 
-  
+  Vemos que, igual que pasaba en las gráficas, la mayor dispersión que mostraban los coeficientes MFCC gráficamente, se ha traducido en un valor de correlación más cercano a 0 (baja correlación).
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
   - LPCC: 12 coeficientes de LPC y 12 de ceptsrum.
