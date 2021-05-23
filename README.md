@@ -101,7 +101,7 @@ ejercicios indicados.
 
     Para obterner los ficheros de texto hemos usado los siguientes comandos en el terminal:
 
-    ```bash
+    ```console
     fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
     fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
     fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
@@ -137,7 +137,7 @@ ejercicios indicados.
 
     Finalmente para ejecutar el código anterior usamos la siguiente orden en el terminal:
 
-    ```bash
+    ```console
     python ex2.py &
     ```
 
@@ -160,7 +160,7 @@ ejercicios indicados.
 
   Con las siguientes instrucciones en el terminal:
 
-  ```bash
+  ```console
   pearson work/lp/BLOCK01/SES017/*.lp
   pearson work/lpcc/BLOCK01/SES017/*.lpcc
   pearson work/mfcc/BLOCK01/SES017/*.mfcc
@@ -196,7 +196,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para obtener la gráfica del locutor 17 hemos puesto en el terminal el siguiente comando:
 
   ```console
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc &
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc &
   ```
   
   <img src="/img/img2.png" width="1200" align="center">
@@ -204,7 +204,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para obtener la gráfica del locutor 43 hemos puesto en el terminal el siguiente comando:
 
   ```console
-    MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc &
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc &
   ```
 
   <img src="/img/img3.png" width="1200" align="center">
@@ -216,7 +216,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para el locutor 17 con su correspondiente población ejecutamos el comando:
 
   ```console
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
   ```
 
   <img src="/img/img4.png" width="1200" align="center">
@@ -224,7 +224,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para el locutor 43 con su correspondiente población ejecutamos el comando:
 
   ```console
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
   ```
 
   <img src="/img/img5.png" width="1200" align="center">
@@ -232,7 +232,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para el locutor 17 (rojo) con la población del locutor 43 (azul) usamos el comando:
 
   ```console
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
+  plot_gmm_feat work/gmm/mfcc/SES017.gmm work/mfcc/BLOCK04/SES043/*.mfcc -f blue -g red &
   ```
 
   <img src="/img/img6.png" width="1200" align="center">
@@ -240,7 +240,7 @@ Complete el código necesario para entrenar modelos GMM.
   Para el locutor 43 (rojo) con la población del locutor 17 (azul) usamos el comando:
 
   ```console
-  MacBook-MacBook-Pro-de-Isabel:P4 isabelmanresaroman$ plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
+  plot_gmm_feat work/gmm/mfcc/SES043.gmm work/mfcc/BLOCK01/SES017/*.mfcc -f blue -g red &
   ```
 
   <img src="/img/img7.png" width="1200" align="center">
