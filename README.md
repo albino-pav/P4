@@ -68,9 +68,11 @@ ejercicios indicados.
   para todas las señales de un locutor.
 
     - Locutor 16
+
       <img src="img/3_5-1.png" align="center">
 
     - Locutor 17
+    
       <img src="img/3_5-2.png" align="center">
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
