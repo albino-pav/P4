@@ -147,7 +147,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 1e-6 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 1e-7 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
 
            # options:
             # -v int : Bit code to control "verbosity" -> 1
