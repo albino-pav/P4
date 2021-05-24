@@ -19,7 +19,7 @@ name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 
-world=others # other, users_other
+world=users_and_others # users, others, users_and_others
 
 # ------------------------
 # Usage
@@ -181,7 +181,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # \DONE 'trainworld' implemented
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 1e-6 -N 100 -m 20 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 24
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 23.6
 
@@ -215,20 +215,14 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-        compute_$FEAT $db_test $lists/final/class.test
-       # Test
+
+       # Parametritzar senyals test, COMENTAR si ja està fet
+       # compute_$FEAT $db_test $lists/final/class.test
+
+       # Classificacio
        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test |
-        tee $w/final_class_${FEAT}_${name_exp}.log) || exit 1
-       # Count errors
-       if [[ ! -s $w/final_class_${FEAT}_${name_exp}.log ]] ; then
-          echo "ERROR: $w/final_class_${FEAT}_${name_exp}.log not created"
-          exit 1
-       fi
-       perl -ne 'BEGIN {$ok=0; $err=0}
-               next unless /^.*c(...).*c(...).*$/; 
-               if ($1 == $2) {$ok++}
-               else {$err++}
-               END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/final_class_${FEAT}_${name_exp}.log  | tee class_test.log
+       tee $w/final_class_${FEAT}_${name_exp}.log | tee class_test.log) || exit 1
+
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
@@ -246,7 +240,28 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         echo "
             ********** CUIDAO QUE SHA DE POSAR EL THRESHOLD OPTIM *************
             "
-   
+
+   elif [[ $cmd == verifytest ]]; then
+       ## @file
+
+       for m in $(seq 58 100); do
+        gmm_train  -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+
+        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
+        tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
+
+        if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then
+            echo "ERROR: $w/verif_${FEAT}_${name_exp}.log not created"
+            exit 1
+        fi
+        spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+
+        echo "m = $m" | tee -a verify_nmix.log
+        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verify_nmix.log
+        echo "" | tee -a verify_nmix.log
+
+       done
+
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
    elif [[ "$(type -t compute_$cmd)" = function ]]; then
