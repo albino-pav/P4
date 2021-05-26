@@ -244,10 +244,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
    elif [[ $cmd == verifytest ]]; then
        ## @file
 
-       # compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
-       # compute_$FEAT $db_test $lists/final/verif.test
+       compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
 
-       for m in $(seq 95 125); do
+       for m in $(seq 5 5); do
         gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
@@ -262,6 +261,42 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         echo "m = $m" | tee -a verifymfcc12_nmix.log
         tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix.log
         echo "" | tee -a verify_nmix.log
+
+       done
+
+   elif [[ $cmd == classtest ]]; then
+       ## @file 
+
+       ## Parametrizar
+       #compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+
+       for m in $(seq 1 35); do
+        # Train
+        for dir in $db/BLOCK*/SES* ; do
+           name=${dir/*\/}
+           echo $name ----
+           gmm_train  -v 1 -T 1e-7 -N 100 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           echo
+        done
+
+        # Test
+        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/class/all.test | tee $w/class_${FEAT}_${name_exp}.log) || exit 1
+
+        # % Error
+        if [[ ! -s $w/class_${FEAT}_${name_exp}.log ]] ; then
+           echo "ERROR: $w/class_${FEAT}_${name_exp}.log not created"
+           exit 1
+        fi
+        perl -ne 'BEGIN {$ok=0; $err=0}
+                  next unless /^.*SA(...).*SES(...).*$/; 
+                  if ($1 == $2) {$ok++}
+                  else {$err++}
+                  END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/class_${FEAT}_${name_exp}.log | tee -a $w/class_${FEAT}_${name_exp}.log
+ 
+        # Print
+        echo "m = $m" | tee -a classifymfcc12_nmix.log
+        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc12_nmix.log
+        echo "" | tee -a classifymfcc12_nmix.log
 
        done
 
