@@ -248,7 +248,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # compute_$FEAT $db_test $lists/final/verif.test
 
        for m in $(seq 95 125); do
-        gmm_train  -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
         tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
@@ -259,8 +259,8 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         fi
         spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
-        echo "m = $m" | tee -a verify_nmix.log
-        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verify_nmix.log
+        echo "m = $m" | tee -a verifymfcc12_nmix.log
+        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix.log
         echo "" | tee -a verify_nmix.log
 
        done
