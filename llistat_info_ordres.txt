@@ -1,5 +1,14 @@
 CLASSIFICACIÓ
+- ordres:
+run_spkid mfcc
+FEAT=mfcc run_spkid train
+FEAT=mfcc run_spkid test classerr
+FEAT=mfcc run_spkid finalclass
 
+parametrització: mfcc de 12 coeffs
+train: gmm_train  -v 1 -T 1e-7 -N 100 -m 23 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+error_rate: 0.89
+-------------------------------------------------------------------------------------------------------------------------------------------
 VERIFICACIÓ
 - ordres:
 run_spkid mfcc
