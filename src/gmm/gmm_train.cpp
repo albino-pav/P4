@@ -62,7 +62,7 @@ int main(int argc, const char *argv[]) {
   case 1: //VQ split
     break;
   case 2://EM split
-    gmm.em_split(data, nmix, em_iterations, em_threshold, verbose);
+    gmm.em_split(data, nmix, init_iterations, init_threshold, verbose);
     break;
   default:
     ;

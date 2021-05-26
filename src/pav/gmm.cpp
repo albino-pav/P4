@@ -201,10 +201,11 @@ namespace upc {
 
   int GMM::em(const fmatrix &data, unsigned int max_it, float inc_threshold, int verbose) {
     unsigned int iteration;
-    float old_prob=-1e34, new_prob=-1e34, inc_prob=-1e34;
+    float old_prob=-1e34, new_prob=-1e34, inc_prob=inc_threshold;
     
     fmatrix weights(data.nrow(), nmix);
-    for (iteration=0; iteration<max_it && inc_prob > inc_threshold; ++iteration) {
+    for (iteration=0; (iteration<max_it) && (inc_prob >= inc_threshold); ++iteration) {
+    //for (iteration=0; iteration<max_it; ++iteration) {
       /// \TODO
 	  // Complete the loop in order to perform EM, and implement the stopping criterion.
 	  //
