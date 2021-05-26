@@ -18,7 +18,7 @@ name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 
-world=users #others,users_and_others
+world=users_and_others #others,users_and_others, #users
 # ------------------------
 # Usage
 # ------------------------
@@ -109,7 +109,8 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 8 20 30 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        #Frecuencia muestreo, Orden MFCC, Orden banco de filtros
+        EXEC="wav2mfcc 8 13 20 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -164,9 +165,10 @@ for cmd in $*; do
        ## @file
 	   # \TODO
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
-	   #
+	   # 
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 0.001 -i 1 -N 5 -m 5 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 0.001 -i 1 -N 35 -m 100 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       # \DONE Implementado entrenamiento basado en el modelo del mundo 
 
    elif [[ $cmd == verify ]]; then
        ## @file
@@ -177,6 +179,7 @@ for cmd in $*; do
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
+       # \DONE Verificación implementada
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/verif/all.test $lists/verif/all.test.candidates |
              tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 

@@ -38,6 +38,7 @@ int classify(const vector<GMM> &vgmm, const fmatrix &dat, float &maxlprob)
       maxind = ind;
     }
   }
+  //DONE Retornamos el indice de la GMM con mejor probabilidad
 
   return maxind;
 }
