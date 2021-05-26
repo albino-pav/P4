@@ -112,7 +112,7 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -181,9 +181,10 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # \DONE 'trainworld' implemented
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 1e-6 -N 100 -m 20 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 24
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 23.6
+       # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 17.6
 
 
    elif [[ $cmd == verify ]]; then
@@ -207,7 +208,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # You can pass the threshold to spk_verif_score.pl or it computes the
        # best one for these particular results.
        spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
-       #spk_verif_score 7.59680093060402 $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+       #spk_verif_score 0.39230127 $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
    elif [[ $cmd == finalclass ]]; then
        ## @file
@@ -235,18 +236,22 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
 
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > 0.422267388650088) {print "1\n"}
+            if ($F[2] > 0.392301270473997) {print "1\n"}
             else {print "0\n"}'  $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
         echo "
             ********** CUIDAO QUE SHA DE POSAR EL THRESHOLD OPTIM *************
             "
 
    elif [[ $cmd == verifytest ]]; then
-       ## @file
+        ## @file
 
-       compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+        # parametritzar
+        compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+        # compute_$FEAT $db_test $lists/final/verif.test
 
-       for m in $(seq 5 5); do
+        # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes
+        # x cada iteració, fer el train, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log
+        for m in $(seq 5 5); do
         gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
@@ -256,13 +261,14 @@ for cmd in $*; do # Para cada argumento en la línea del comando
             echo "ERROR: $w/verif_${FEAT}_${name_exp}.log not created"
             exit 1
         fi
+
         spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
-        echo "m = $m" | tee -a verifymfcc12_nmix.log
-        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix.log
-        echo "" | tee -a verify_nmix.log
+        echo "m = $m" | tee -a verifymfcc13_nmix.log
+        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc13_nmix.log
+        echo "" | tee -a verifymfcc13_nmix.log
 
-       done
+        done
 
    elif [[ $cmd == classtest ]]; then
        ## @file 
