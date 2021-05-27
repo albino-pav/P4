@@ -57,18 +57,41 @@ ejercicios indicados.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  >
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+  > ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+  > nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  >
+  > En la primera línea, se especifica el número de columnas que tendrá la matriz. En este script debe ser el orden de los coeficientes de prediccón lineal más uno ya que también se tiene que tener en cuenta la ganancia, que es el primer elemento. De esta forma, los coeficientes de cada fichero de cada audio estarán en una fila diferente.
+  > En la segunda línea, se transforma el contenido del fichero temporal `$base.lp` de **float** a **ASCII** para poder visualizar los datos. El comando `wc -l` cuenta el número de líneas del fichero temporal transformado a ASCII y de esta forma obtenemos el número de filas que debe tener el fichero resultante. El comando `perl -ne` imprime los valores con un salto de línea.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
+    >
     > Es más útil tener los datos guardados siguiendo un orden y con espacios determinados a que estén todos juntos. 
-    > Por ejemplo, si se quiere observar los coeficientes del audio número N, tan solo hay que buscar los coeficientes 
+    > Por ejemplo, si se quiere observar los coeficientes del audio número N, tan solo hay que buscar los coeficientes en la línea N en vez de ponerse a contar cuántos coeficientes se han leído hasta el momento.
 
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
+  >
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+  > sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	>   $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $lpcc_order > $base.lpcc
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  >
+  > Se han mantenido los comandos de `wav2lp.sh` y se ha añadido la función `$LPC2C`, que convierte los coeficientes LPC a LPCC, implementada con las opciones `-m`(se especifica el orden de los coeficientes LPC de entrada) y `-M`(se especifica el orden de los coeficientes LPCC de salida).
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+  >
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+  > sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	>   $MFCC -s $sampling_freq -l 240 -m $mfcc_order -n $melbank_order > $base.mfcc
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  >
+  > Se han mantenido los comandos de `wav2lp.sh` (menos el comando `$LPC`) y se ha añadido la función `$MFCC`, que calcula los coeficientes MFCC, implementada con las opciones `-s` (la frecuencia de muestreo), `-l` (la longitud de la trama), `-m` (el orden de los coeficientes MFCC) y `-n` (la cantidad de filtros Mel usados).
 
 ### Extracción de características.
 
