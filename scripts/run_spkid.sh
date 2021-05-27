@@ -110,7 +110,7 @@ compute_mfcc() {
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         #Frecuencia muestreo, Orden MFCC, Orden banco de filtros
-        EXEC="wav2mfcc 8 13 20 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 8 16 24 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -144,7 +144,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -i 1 -N 60 -m 40 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -i 1 -N 60 -m 64 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -167,7 +167,7 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   # 
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 0.001 -i 1 -N 35 -m 100 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 0.001 -i 1 -N 35 -m 64 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
        # \DONE Implementado entrenamiento basado en el modelo del mundo 
 
    elif [[ $cmd == verify ]]; then
