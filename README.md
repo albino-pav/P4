@@ -33,10 +33,10 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
   > - `sox`: aplicación para cambiar el formato de un archivo de audio, cambiar su codificación, frecuencia de muestreo, aplicar filtros a la señal que contiene.
-  > - `X2X`: transforma el tipo de los datos.
-  > - `FRAME`: separa la secuencia de datos de un archivo en tramas distintas.
-  > - `WINDOW`: enventana una trama de datos.
-  > - `LPC`: calcula los coeficientes de predicción lineal.
+  > - `$X2X`: transforma el tipo de los datos.
+  > - `$FRAME`: separa la secuencia de datos de un archivo en tramas distintas.
+  > - `$WINDOW`: enventana una trama de datos.
+  > - `$LPC`: calcula los coeficientes de predicción lineal.
 
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
