@@ -32,11 +32,27 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
-  > - `sox`: aplicación para cambiar el formato de un archivo de audio, cambiar su codificación, frecuencia de muestreo, aplicar filtros a la señal que contiene.
-  > - `$X2X`: transforma el tipo de los datos.
-  > - `$FRAME`: separa la secuencia de datos de un archivo en tramas distintas.
-  > - `$WINDOW`: enventana una trama de datos.
-  > - `$LPC`: calcula los coeficientes de predicción lineal.
+  >
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+  > sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 |
+  >   $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
+  > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  >
+  > - `sox`: aplicación para cambiar el formato de un archivo de audio, cambiar su codificación, frecuencia de muestreo, aplicar filtros a la señal que contiene. En este caso, se ha transformado el fichero de entrada, que es raw, a uno de enteros con signo (signed-integer) de 16 bits por muestra a través de las opciones `-t`, `-e` y `-b`.
+  >
+  >   * `-t`: Indica el tipo de fichero de audio de entrada. En este caso, raw.
+  >   * `-e`: Indica el tipo de codificación que se le aplica al fichero de entrada. En este caso, signed-integer.
+  >   * `-b`: Indica el número de bits por muestra que se utilizan en la codificación. En este caso, 16 bits, es decir, 2 bytes.
+  >
+  > - `$X2X`: transforma el tipo de los datos. En este caso, se usa una conversión de 2 bytes (short, opción `+s`) a 4 bytes (float, opción `+f`). 
+  >
+  > - `$FRAME`: separa la secuencia de datos de un archivo en tramas distintas. En este caso, separa las muestras en segmentos de 240 muestras (tamaño de trama, opción `-l`) con un desplazamiento entre tramas de 80 muestras (desplazamiento entre tramas, opción `-p`).
+  >
+  > - `$WINDOW`: enventana una trama de datos. En este caso, el tamaño de ventana de la señal input es de 240 muestras (opción `-l`) como se ha establecido en el comando anterior y el tamaño de ventana de salida queremos que sea el mismo (opción `-L`). Como no se mofician los parámetros `-n`y `-w`, por defecto, se aplicará una normalización de la potencia y el tipo de ventana será Blackman. Se adjunta una imagen donde se muestra la forma de la ventana Blackman.
+  >
+  > <img src="img/Blackman.jpeg" width="800" align="center">
+  >
+  > - `$LPC`: calcula los coeficientes de predicción lineal. Con la opción `-l`se establece el tamaño de las tramas (en este caso, debe ser 240 muestras por los comandos anteriores) y con la ocpión `-m` el usuario podrá decidir el orden del LPC.
 
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
