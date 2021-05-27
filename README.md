@@ -53,10 +53,6 @@ ejercicios indicados.
   > <img src="img/Blackman.jpeg" width="550" align="center">
   >
   > - `$LPC`: calcula los coeficientes de predicción lineal. Con la opción `-l`se establece el tamaño de las tramas (en este caso, debe ser 240 muestras por los comandos anteriores) y con la ocpión `-m` el usuario podrá decidir el orden del LPC.
-<<<<<<< HEAD
-=======
-
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
@@ -74,10 +70,6 @@ ejercicios indicados.
     >
     > Es más útil tener los datos guardados siguiendo un orden y con espacios determinados a que estén todos juntos. 
     > Por ejemplo, si se quiere observar los coeficientes del audio número N, tan solo hay que buscar los coeficientes en la línea N en vez de ponerse a contar cuántos coeficientes se han leído hasta el momento.
-<<<<<<< HEAD
-=======
-
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
@@ -104,11 +96,7 @@ ejercicios indicados.
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
   >
-<<<<<<< HEAD
   > Las gráficas con los coeficientes 2 y 3 de la sesión 226:
-=======
-  > Las gráficas con los coeficientes 2 y 3 del locutor 22, sesión 226, audio 30 son las siguientes:
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
   >
   > <img src="img/lpc_23.png" width="408" align="center">
   >
@@ -124,25 +112,9 @@ ejercicios indicados.
     > Usando los comandos siguientes en el terminal obtenemos un fichero con los valores a representar (también se ha recortado el fichero output para poder representar en Python las gráficas):
     >
     > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
-<<<<<<< HEAD
     >  fmatrix_show work/lp/BLOCK22/SES226/*.lp | egrep '^\[' | cut -f2,3 > lp_2_3.txt
     >  fmatrix_show work/lpcc/BLOCK22/SES226/*.lpcc | egrep '^\[' | cut -f2,3 > lpcc_2_3.txt
     >  fmatrix_show work/mfcc/BLOCK22/SES226/*.mfcc | egrep '^\[' | cut -f2,3 > mfcc_2_3.txt
-=======
-    >  fmatrix_cut -f 2,3 work/lp/BLOCK22/SES22*/SA226S**.lp lp_23.lp
-    >  fmatrix_show lp_23.lp > lp_23.txt
-    >  cut -f 2,3 lp_23.txt > lp_23_graf.txt
-    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
-    >  fmatrix_cut -f 2,3 work/lpcc/BLOCK22/SES226/SA226S30.lpcc lpcc_23.lpcc
-    >  fmatrix_show lpcc_23.lpcc > lpcc_23.txt
-    >  cut -f 2,3 lpcc_23.txt > lpcc_23_graf.txt
-    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
-    >  fmatrix_cut -f 2,3 work/mfcc/BLOCK22/SES226/SA226S30.mfcc mfcc_23.mfcc
-    >  fmatrix_show mfcc_23.mfcc > mfcc_23.txt
-    >  cut -f 2,3 mfcc_23.txt > mfcc_23_graf.txt
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
     > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     >
     > Cógido de Python usado:
@@ -153,15 +125,9 @@ ejercicios indicados.
     >  import matplotlib.pyplot as plt
     >
     >  # Abrir los ficheros
-<<<<<<< HEAD
     >  lp_filename = 'lp_2_3.txt'
     >  lpcc_filename = 'lpcc_2_3.txt'
     >  mfcc_filename = 'mfcc_2_3.txt'
-=======
-    >  lp_filename = 'lp_23_graf.txt'
-    >  lpcc_filename = 'lpcc_23_graf.txt'
-    >  mfcc_filename = 'mfcc_23_graf.txt'
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
     >  lp = np.loadtxt(lp_filename, delimiter='\t', skiprows=0,)
     >  lpcc = np.loadtxt(lpcc_filename, delimiter='\t', skiprows=0,)
     >  mfcc = np.loadtxt(mfcc_filename, delimiter='\t', skiprows=0,)
@@ -188,10 +154,6 @@ ejercicios indicados.
     >  plt.show()
     > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
   + ¿Cuál de ellas le parece que contiene más información?
   >
   > La que contiene más información es la MFCC ya que, como se ha comentado anteriormente, sus parámetros no están tan correlados como las otras dos parametrizaciones.
@@ -199,15 +161,9 @@ ejercicios indicados.
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
-<<<<<<< HEAD
   |                        |       LP      |     LPCC     |      MFCC    |
   |------------------------|:-------------:|:------------:|:------------:|
   | &rho;<sub>x</sub>[2,3] |   -0.634368   |   0.218288   |   0.010362   |
-=======
-  |                        | LP            | LPCC        | MFCC            |
-  |------------------------|:-------------:|:-----------:|:---------------:|
-  | &rho;<sub>x</sub>[2,3] |   -0.506848   |   0.136544  |   -0.00299097   |
->>>>>>> 53d54d8cf4df9da08b83b19bbf7f234ce2d7b794
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   >
