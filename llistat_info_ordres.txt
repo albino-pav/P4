@@ -17,7 +17,13 @@ FEAT=mfcc run_spkid verify verifyerr
 FEAT=mfcc run_spkid finalverif
 
 parametrització: mfcc de 13 coeffs
-train: gmm_train  -v 1 -T 1e-7 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+train: gmm_train -v 1 -T 1e-7 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
 trainworld: gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 verifyerr: spk_verif_score 0.39230127
 CostDetection: 17.6
+
+parametrització: mfcc de 13 coeffs
+train: gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+verifyerr: 
+CostDetection: 12.8
