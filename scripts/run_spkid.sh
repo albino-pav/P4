@@ -274,7 +274,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        ## @file 
 
        ## Parametrizar
-       #compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+       compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
 
        for m in $(seq 1 35); do
         # Train
@@ -300,9 +300,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
                   END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/class_${FEAT}_${name_exp}.log | tee -a $w/class_${FEAT}_${name_exp}.log
  
         # Print
-        echo "m = $m" | tee -a classifymfcc12_nmix.log
-        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc12_nmix.log
-        echo "" | tee -a classifymfcc12_nmix.log
+        echo "m = $m" | tee -a classifymfcc13_nmix.log
+        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc13_nmix.log
+        echo "" | tee -a classifymfcc13_nmix.log
 
        done
 
