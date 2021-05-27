@@ -97,17 +97,86 @@ ejercicios indicados.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
+  >
+  > Las gráficas con los coeficientes 2 y 3 del locutor 22, sesión 226, audio 30 son las siguientes:
+  >
+  > <img src="img/lpc_23.png" width="408" align="center">
+  >
+  > <img src="img/lpcc_23.png" width="408" align="center">
+  >
+  > <img src="img/mfcc_23.png" width="408" align="center">
+  >
+  > Podemos ver que el orden de más a menos correlado es: LPC, LPCC y MFCC. Esto se puede comprobar con la distribución de las gráficas. Por ejemplo, en LPC los puntos de la gráfica siguen una distribución lineal de forma que con un parámetro obtenemos el otro. En cambio, en MFCC no parecen forman ninguna distribución en concreto con lo que los dos parámetros aportan información.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+    >
+    > Usando los comandos siguientes en el terminal obtenemos un fichero con los valores a representar (también se ha recortado el fichero output para poder representar en Python las gráficas):
+    >
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+    >  fmatrix_cut -f 2,3 work/lp/BLOCK22/SES22*/SA226S**.lp lp_23.lp
+    >  fmatrix_show lp_23.lp > lp_23.txt
+    >  cut -f 2,3 lp_23.txt > lp_23_graf.txt
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+    >  fmatrix_cut -f 2,3 work/lpcc/BLOCK22/SES226/SA226S30.lpcc lpcc_23.lpcc
+    >  fmatrix_show lpcc_23.lpcc > lpcc_23.txt
+    >  cut -f 2,3 lpcc_23.txt > lpcc_23_graf.txt
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.sh
+    >  fmatrix_cut -f 2,3 work/mfcc/BLOCK22/SES226/SA226S30.mfcc mfcc_23.mfcc
+    >  fmatrix_show mfcc_23.mfcc > mfcc_23.txt
+    >  cut -f 2,3 mfcc_23.txt > mfcc_23_graf.txt
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    >
+    > Cógido de Python usado:
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.py
+    >  # Imports necessarios
+    >  import numpy as np
+    >  import matplotlib as mpl
+    >  import matplotlib.pyplot as plt
+    >
+    >  # Abrir los ficheros
+    >  lp_filename = 'lp_23_graf.txt'
+    >  lpcc_filename = 'lpcc_23_graf.txt'
+    >  mfcc_filename = 'mfcc_23_graf.txt'
+    >  lp = np.loadtxt(lp_filename, delimiter='\t', skiprows=0,)
+    >  lpcc = np.loadtxt(lpcc_filename, delimiter='\t', skiprows=0,)
+    >  mfcc = np.loadtxt(mfcc_filename, delimiter='\t', skiprows=0,)
+    >
+    >  # Mostrar los coeficientes LPC
+    >  plt.plot(lp[:,0], lp[:,1],'b.')
+    >  plt.xlabel("$Coeficiente 2$", fontsize=12)
+    >  plt.ylabel("$Coeficiente 3$", fontsize=12)
+    >  plt.title("LPC", fontsize=14)
+    >  plt.show()
+    >
+    >  # Mostrar los coeficientes LPCC
+    >  plt.plot(lpcc[:,0], lpcc[:,1],'b.')
+    >  plt.xlabel("$Coeficiente 2$", fontsize=12)
+    >  plt.ylabel("$Coeficiente 3$", fontsize=12)
+    >  plt.title("LPCC", fontsize=14)
+    >  plt.show()
+    >
+    >  # Mostrar los coeficientes MFCC
+    >  plt.plot(mfcc[:,0], mfcc[:,1],'b.')
+    >  plt.xlabel("$Coeficiente 2$", fontsize=12)
+    >  plt.ylabel("$Coeficiente 3$", fontsize=12)
+    >  plt.title("MFCC", fontsize=14)
+    >  plt.show()
+    > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
   + ¿Cuál de ellas le parece que contiene más información?
+  >
+  > La que contiene más información es la MFCC ya que, como se ha comentado anteriormente, sus parámetros no están tan correlados como las otras dos parametrizaciones.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  |                        | LP            | LPCC        | MFCC            |
+  |------------------------|:-------------:|:-----------:|:---------------:|
+  | &rho;<sub>x</sub>[2,3] |   -0.506848   |   0.136544  |   -0.00299097   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
