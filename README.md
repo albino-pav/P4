@@ -50,7 +50,7 @@ ejercicios indicados.
   >
   > - `$WINDOW`: enventana una trama de datos. En este caso, el tamaño de ventana de la señal input es de 240 muestras (opción `-l`) como se ha establecido en el comando anterior y el tamaño de ventana de salida queremos que sea el mismo (opción `-L`). Como no se mofician los parámetros `-n`y `-w`, por defecto, se aplicará una normalización de la potencia y el tipo de ventana será Blackman. Se adjunta una imagen donde se muestra la forma de la ventana Blackman.
   >
-  > <img src="img/Blackman.jpeg" width="800" align="center">
+  > <img src="img/Blackman.jpeg" width="550" align="center">
   >
   > - `$LPC`: calcula los coeficientes de predicción lineal. Con la opción `-l`se establece el tamaño de las tramas (en este caso, debe ser 240 muestras por los comandos anteriores) y con la ocpión `-m` el usuario podrá decidir el orden del LPC.
 
