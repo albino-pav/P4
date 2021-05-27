@@ -179,10 +179,18 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+  >
+  > Usando 60 gaussianas con 90 iteraciones, un umbral de probabilidad de 0.0001 y una inicialización con VQ, obtenemos la siguiente función de densidad de probabilidad para el locutor 226:
+  >
+  > <img src="img/gmm_mfcc_226.png" width="640" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+  >
+  > Podemos observar que ambas funciones de probabilidad se concentran en la misma zona pero las formas de las gaussianas bidimensionales (y de los percentiles) son suficientemente diferentes como para poder distinguir ambos locutores. En este caso, el percentil 50% del locutor 226 es más extenso que el del 064.
+  >
+  > <img src="img/Comparación_gmm_mfcc_226_064.png" width="1242" align="center">
 
 ### Reconocimiento del locutor.
 
@@ -190,6 +198,10 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  |                 |       LP      |     LPCC     |      MFCC    |
+  |-----------------|:-------------:|:------------:|:------------:|
+  | Tasa de errores |               |              |              |
 
 ### Verificación del locutor.
 
@@ -199,6 +211,16 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+  |                     |       LP      |     LPCC     | MFCC (verificación) | MFCC (reconocimiento) |
+  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
+  | Umbral óptimo       |               |              |                     |                       |
+  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
+  | Núm. falsas alarmas |               |              |                     |                       |
+  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
+  | Núm. pérdidas       |               |              |                     |                       |
+  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
+  | Coste de detección  |               |              |                     |                       |
  
 ### Test final
 

@@ -143,6 +143,8 @@ for cmd in $*; do
        ## @file
 	   # \TODO
 	   # Select (or change) good parameters for gmm_train
+       # \DONE
+       # Se ha usado inicialización por VQ con 60 gaussianas
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
