@@ -54,12 +54,13 @@ int main(int argc, const char *argv[]) {
   /// 
   /// Other alternatives are: vq, em_split... See the options of the program and place each
   /// initicialization accordingly.
-  /// \DONE Algoritmo EM implementado, falta VQ
+  /// \DONE Algoritmo EM y VQ implementados
   switch (init_method) {
   case 0: //random split
     gmm.random_init(data, nmix);
     break;
   case 1: //VQ split
+    gmm.vq_lbg(data, nmix, init_iterations, init_threshold, verbose);
     break;
   case 2://EM split
     gmm.em_split(data, nmix, init_iterations, init_threshold, verbose);
@@ -69,6 +70,7 @@ int main(int argc, const char *argv[]) {
   }
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
+  /// \DONE Parámetros de las GMM estimados con EM
   gmm.em(data, em_iterations, em_threshold, verbose);
 
   //Create directory, if it is needed

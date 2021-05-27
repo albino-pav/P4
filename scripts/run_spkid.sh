@@ -11,13 +11,15 @@
 # - lists:    directory with the list of signal files
 # - w:        a working directory for temporary files
 # - name_exp: name of the experiment
-# - db:       directory of the speecon database 
+# - db:       directory of the speecon database
+# \DONE
+# Se ha usado como mundo users_and_others
 lists=lists
 w=work
 name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
-world=users_and_others # users, other, users_and_others
+world=users_and_others
 
 # ------------------------
 # Usage
@@ -144,7 +146,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -t 0.0001 -N 40 -n 40 -m 50 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.0001 -t 0.0001 -N 90 -n 90 -m 60 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -167,6 +169,8 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
+       # \DONE
+       # Se ha usado inicialización por EM
         gmm_train  -v 1 -T 0.0001 -t 0.0001 -N 40 -n 40 -m 33 -i 2 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
    elif [[ $cmd == verify ]]; then
        ## @file
@@ -177,6 +181,7 @@ for cmd in $*; do
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
+       # \DONE Implementado el segundo ejemplo
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/verif/all.test $lists/verif/all.test.candidates |
              tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 
@@ -196,7 +201,9 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-       echo "To be implemented ..."
+       compute_$FEAT $db_test $lists/final/class.test
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | 
+            tee class_test.log) || exit 1
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
