@@ -258,7 +258,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 
         # Per cada iteració, fer el trainworld pel nombre de gauss corresponents, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log (o número de coefs que tinguem)
         # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes ~ seq val_inici val_final, augment de 1 en 1
-        for m in $(seq 5 120); do
+        for m in $(seq 97 120); do
             gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
             (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
