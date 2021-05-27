@@ -112,7 +112,7 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -245,28 +245,34 @@ for cmd in $*; do # Para cada argumento en la línea del comando
    elif [[ $cmd == verifytest ]]; then
         ## @file
 
-        # parametritzar
+        # Parametritzar (es pot comentar si ja tenim la param amb el nombre de coefs desitjats)
         compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
-        # compute_$FEAT $db_test $lists/final/verif.test
 
-        # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes
-        # x cada iteració, fer el train, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log
-        for m in $(seq 5 5); do
-        gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        # Entrenar models senyals amb valor òptim gaussianes obtingut a classtest (es pot comentar si ja ho tenim)
+        for dir in $db/BLOCK*/SES* ; do
+           name=${dir/*\/} 
+           echo $name ----
+           gmm_train  -v 1 -T 1e-7 -N 100 -m 23 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           echo
+        done
 
-        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
-        tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
+        # Per cada iteració, fer el trainworld pel nombre de gauss corresponents, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log (o número de coefs que tinguem)
+        # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes ~ seq val_inici val_final, augment de 1 en 1
+        for m in $(seq 97 120); do
+            gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
-        if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then
-            echo "ERROR: $w/verif_${FEAT}_${name_exp}.log not created"
-            exit 1
-        fi
+            (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
+            tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 
-        spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
+            if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then
+                echo "ERROR: $w/verif_${FEAT}_${name_exp}.log not created"
+                exit 1
+            fi
+            spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
-        echo "m = $m" | tee -a verifymfcc13_nmix.log
-        tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc13_nmix.log
-        echo "" | tee -a verifymfcc13_nmix.log
+            echo "m = $m" | tee -a verifymfcc12_nmix.log
+            tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix.log
+            echo "" | tee -a verifymfcc12_nmix.log
 
         done
 

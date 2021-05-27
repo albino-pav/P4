@@ -148,7 +148,7 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
     | Parametrización |   LP   |  LPCC   |  MFCC  |
     |-----------------|:------:|:-------:|:------:|
-    | Error           | 9,81 % | 12,36 % | 1,02 % |
+    | Error           | 9,81 % | 12,36 % | 0,89 % |
 
 ### Verificación del locutor.
 
