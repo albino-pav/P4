@@ -32,11 +32,11 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
-  >> - **sox**: aplicación para cambiar el formato de un archivo de audio, cambiar su codificación, frecuencia de muestreo, aplicar filtros a la señal que contiene.
-  >> - **X2x**: transforma el tipo de los datos.
-  >> - **Frame**: separa la secuencia de datos de un archivo en tramas distintas.
-  >> - **Window**: enventana una trama de datos.
-  >> - **LPC**: calcula los coeficientes de predicción lineal.
+  > - `sox`: aplicación para cambiar el formato de un archivo de audio, cambiar su codificación, frecuencia de muestreo, aplicar filtros a la señal que contiene.
+  > - `X2X`: transforma el tipo de los datos.
+  > - `FRAME`: separa la secuencia de datos de un archivo en tramas distintas.
+  > - `WINDOW`: enventana una trama de datos.
+  > - `LPC`: calcula los coeficientes de predicción lineal.
 
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
@@ -44,8 +44,8 @@ ejercicios indicados.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
-    >> Es más útil tener los datos guardados siguiendo un orden y con espacios determinados a que estén todos juntos. 
-    >> Por ejemplo, si se quiere observar los coeficientes del audio número N, tan solo hay que buscar los coeficientes 
+    > Es más útil tener los datos guardados siguiendo un orden y con espacios determinados a que estén todos juntos. 
+    > Por ejemplo, si se quiere observar los coeficientes del audio número N, tan solo hay que buscar los coeficientes 
 
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
