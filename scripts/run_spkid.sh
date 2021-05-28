@@ -112,7 +112,7 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 17 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -307,9 +307,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
                   END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/class_${FEAT}_${name_exp}.log | tee -a $w/class_${FEAT}_${name_exp}.log
  
         # Print
-        echo "m = $m" | tee -a classifymfcc13_nmix.log
-        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc13_nmix.log
-        echo "" | tee -a classifymfcc13_nmix.log
+        echo "m = $m" | tee -a classifymfcc17_nmix.log
+        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc17_nmix.log
+        echo "" | tee -a classifymfcc17_nmix.log
 
        done
 
