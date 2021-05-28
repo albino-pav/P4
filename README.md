@@ -32,6 +32,65 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+  
+> Al abrir el script wa2lp.sh, nos encontramos con que antes de realizar la parametrización de una señal .wav, se eliminan los 
+> ficheros temporales, si existiesen, asociados a la parametrización (en este caso a través del cálculo de los coeficientes de predición lineal LPC).
+> Tambien un "usage" que nos indica como se ultiliza el script, y que este necesita de una señal .wav de entrada, y que devuelve un fichero salida.lp.
+```c
+# Ensure cleanup of temporary files on exit
+trap cleanup EXIT
+cleanup() {
+   \rm -f $base.*
+}
+
+if [[ $# != 3 ]]; then
+   echo "$0 lpc_order input.wav output.lp"
+   exit 1
+fi
+```
+> A continuación, se especifican aquellos parámetros que el usuario tendra que especificar en el momento que invoque el script. En este caso los importantes son el número de coeficientes LPC que queremos que se calculen, y los ficheros de entrada y salida. Tanto $1 como $2 y $3 guardan en ellos los parámetros especificados en orden por consola ($0 no se usa ya que es el primer argumento de todos realmente es el propio nombre del script en este caso).
+> Despues, dependiendo del valor de la variable de entorno UBUNTU_SPTK, se especifica como se invocan los comandos o programas del paquete de código abierto para procesado de señal de voz, SPTK.
+```c
+lpc_order=$1
+inputfile=$2
+outputfile=$3
+
+if [[ $UBUNTU_SPTK == 1 ]]; then
+   # In case you install SPTK using debian package (apt-get)
+   X2X="sptk x2x"
+   FRAME="sptk frame"
+   WINDOW="sptk window"
+   LPC="sptk lpc"
+else
+   # or install SPTK building it from its source
+   X2X="x2x"
+   FRAME="frame"
+   WINDOW="window"
+   LPC="lpc"
+fi
+
+```
+> Tras ya haber especificado los parámetros que el usuario tendra que especificar en la linea de coandos (o en otro script), se pasa a la función principal de wav2lp.sh. El pipeline principal que a través de los programas especificados justo en el paso anterior, conseguimos una extracción de caracteristicas adecuada para nuestra señal. El pipleine principal es el siguiente: 
+```c
+# Main command for feature extration
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$LPC -l 240 -m $lpc_order > $base.lp
+```
+> Analicemos cada uno de los pasos en esta pipeline:
+```c
+sox $inputfile -t raw -e signed -b 16 - 
+```
+```c
+$X2X +sf
+```
+```c
+$FRAME -l 240 -p 80
+```
+```c
+$WINDOW -l 240 -L 240
+```
+```c
+$LPC -l 240 -m $lpc_order > $base.lp
+```
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
