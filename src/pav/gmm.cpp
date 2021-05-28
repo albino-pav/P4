@@ -233,12 +233,13 @@ namespace upc
       //
       // Update old_prob, new_prob and inc_prob in order to stop the loop if logprob does not
       // increase more than inc_threshold.
-      // \DONE stopping criterion implemented
+      // \DONE stop criterion implemented
       new_prob = this->em_expectation(data, weights);
       this->em_maximization(data, weights);
       inc_prob = new_prob - old_prob;
       old_prob = new_prob;
 
+      //stop criterion -> leave loop if the probability increment is lower than a threshold
       if (inc_prob < inc_threshold)
       {
         break;
@@ -283,6 +284,8 @@ namespace upc
   int GMM::split(unsigned int target_size)
   {
     unsigned int i, j, old_size;
+    unsigned int max_index = 0;
+    double max;
 
     if (nmix >= target_size)
       return nmix;
@@ -290,43 +293,37 @@ namespace upc
     if (2 * nmix <= target_size)
     {
       target_size = 2 * nmix;
-      old_size = nmix;
-      resize(target_size, vector_size);
-      for (i = old_size, j = 0; i < nmix; ++i, ++j)
-        split_mixture(j, i);
     }
-    else
+
+    old_size = nmix;
+
+    resize(target_size, vector_size);
+    std::vector<double> mean_sigma(old_size);
+
+    //store the mean of the variance of each row in mean_sigma
+    for (i = 0; i < old_size; i++)
     {
-      old_size = nmix;
-      std::vector<float> mean_sigma(vector_size);
-      unsigned int max_index=0;
-      float max;
-      
-      for (i = 0; i < old_size; i++)
+      mean_sigma[i] = 0;
+      for (j = 0; j < vector_size; j++)
+
+        mean_sigma[i] += (1 / (inv_sigma[i][j] + 0.00001)) * (1 / (inv_sigma[i][j] + 0.00001));
+    }
+    /* best way: select mixtures with larger variance (now, the first ones) */
+    for (i = old_size; i < nmix; ++i)
+    {
+      //select j mixtures with the largest variance
+      max = -1;
+      for (unsigned int k = 0; k < old_size; k++)
       {
-        mean_sigma[i] = 0;
-        for (j = 0; j < vector_size; j++)
-          mean_sigma[i] += (1 / (inv_sigma[i][j])) * (1 /( inv_sigma[i][j]));
-      }
-      resize(target_size, vector_size);
-      /*for (i = old_size, j = 0; i < nmix; ++i, ++j)
-        split_mixture(j, i);*/
-      /* best way: select mixtures with larger variance (now, the first ones) */
-      for (i = old_size; i < nmix; ++i)
-      {
-        //select j mixtures with the largest variance
-        max = -1;
-        for (unsigned int k = 0; k < old_size; k++)
+        if (mean_sigma[k] >= max)
         {
-          if (mean_sigma[k] >= max)
-          {
-            max = mean_sigma[k];
-            max_index = k;
-          }
+          max = mean_sigma[k];
+          max_index = k;
         }
-        mean_sigma[max_index] = -1;
-        split_mixture(max_index, i);
       }
+      //discard value once it has been used
+      mean_sigma[max_index] = -1;
+      split_mixture(max_index, i);
     }
     return nmix;
   }
