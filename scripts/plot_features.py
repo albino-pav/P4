@@ -1,20 +1,23 @@
 import matplotlib.pyplot as plt
-import numpy as np
-import soundfile as sf
+import sys
 
-fdata = open('lp_2_3.txt', 'r')
-x_data = []                
-y_data = []               
-lines = fdata.readlines() 
-for line in lines:
-    x, y = line.split()     
-    x_data.append(float(x))
-    y_data.append(float(y))
+if len( sys.argv ) < 2:
+    print("Invalid Args!")
+    sys.exit()
 
-fdata.close()
+for feat in sys.argv[1:]:
+    fdata = open(feat + '_2_3.txt', 'r')
+    x_data = []                
+    y_data = []               
+    lines = fdata.readlines() 
 
+    for line in lines:
+        x, y = line.split()     
+        x_data.append(float(x))
+        y_data.append(float(y))
 
-plt.figure(figsize=(10,7))
-plt.plot(x_data,y_data,'o',markersize=2)
-plt.show()
-plt.savefig("./assets/plot-feature.png")
+    fdata.close()
+    plt.figure(figsize=(10,7))
+    plt.title(feat.upper())
+    plt.plot(x_data,y_data,'o',markersize=2)
+    plt.savefig("./assets/" + feat + "-feature-plot.png")

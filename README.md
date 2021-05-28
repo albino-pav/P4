@@ -55,9 +55,60 @@ PAV - P4: reconocimiento y verificación del locutor
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones para todas las señales de un locutor.
+
+  >Como podemos ver en la siguiente linea de código perteneciente al script `wav2lp.sh`, la segunda columna generada en las parametrizaciones es la ganancia (la primera corresponde a un contador). Por lo que los coeficientes 2 y 3 corresponden a las columnas 4 y 5 respectivamente:
+  >```bash 
+  >ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+  >```
+  >**LP**
+  >```bash 
+  >$ fmatrix_show work/lp/BLOCK10/SES103/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+  >```
+  >**LPCC**
+  >```bash 
+  >$ fmatrix_show work/lpcc/BLOCK10/SES103/*.lpcc | egrep '^\[' | cut -f4,5 > lpcc_2_3.txt
+  >```
+  >**MFCC**
+  >```bash 
+  >$ fmatrix_show work/mfcc/BLOCK10/SES103/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
+  >```
+  >Para generar los plots hemos creado el siguiente script de python que coge como argumento los features a generar:
+  >```python
+  >import matplotlib.pyplot as plt
+  >import sys
   >
+  >if len( sys.argv ) < 2:
+  >    print("Invalid Args!")
+  >    sys.exit()
   >
+  >for feat in sys.argv[1:]:
+  >    fdata = open(feat + '_2_3.txt', 'r')
+  >    x_data = []                
+  >    y_data = []               
+  >    lines = fdata.readlines() 
   >
+  >    for line in lines:
+  >        x, y = line.split()     
+  >        x_data.append(float(x))
+  >        y_data.append(float(y))
+  >
+  >    fdata.close()
+  >    plt.figure(figsize=(10,7))
+  >    plt.title(feat.upper())
+  >    plt.plot(x_data,y_data,'o',markersize=2)
+  >    plt.savefig("./assets/" + feat + "-feature-plot.png")
+  >```
+  >```bash
+  >$ python3 scripts/plot_features.py lp lpcc mfcc
+  >```
+  ><img src="./assets/lp-feature-plot.png" style="border-radius:10px">
+  >
+  ><img src="./assets/lpcc-feature-plot.png" style="border-radius:10px">
+  >
+  ><img src="./assets/mfcc-feature-plot.png" style="border-radius:10px">
+  >
+  
+  python3 scripts/plot_features.py lp lpcc mfcc
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales parametrizadas.
   + ¿Cuál de ellas le parece que contiene más información?

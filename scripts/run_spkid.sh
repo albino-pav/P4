@@ -144,7 +144,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -N20 -m 65 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -N 20 -m 67 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
        # \DONE
@@ -212,7 +212,7 @@ for cmd in $*; do
        compute_$FEAT $db_verif $lists/final/verif.test
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates | tee $w/verification.log) || exit 1
        perl -ane 'print "$F[0]\t$F[1]\t";
-        if ($F[2] > 1.16045492957761) {print "1\n"}
+        if ($F[2] > 1.02340112717401) {print "1\n"}
         else {print "0\n"}' $w/verification.log |  tee verif_test.log
        # \DONE
 
