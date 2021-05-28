@@ -110,13 +110,24 @@ $LPC -l 240 -m $lpc_order > $base.lp
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
+    
+>Haber pasado de una señal de voz .wav codificada con ley mu de 8 bits a el formato fmatrix nos permite tener las señales ordenadas y caracterizadas por tramas y coeficientes. Cada fila corresponde a una trama de señal y cada columna a cada uno de los coeficientes con los que se ha parametrizdo la trama. Tambien este formato permite manejar mucho más fácilmente los datos. Los programas "fmatrix_show" y "fmatrix_cut" permiten mostrar el contenido de estos ficheros y seleccionar columnas concretas de los mismos.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
+  ```c
+  # Main command for feature extration
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lpcc
+  ```
+  >Vemos que la pipeline principal de la parametrización LPCC sigue la misma idea que la parametrización anterior. Con la diferencia de que hay que tener en cuenta que para encontrar los coeficientes cepstrales, hace falta previamente sacar los coeficientes de la predicción lineal. De ahi que antes de delegar los datos de la parametrización cepstral al fichero temporal .lpcc, se saquen previamente los coeficientes de predicción lineal con el comando "lpc".
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
-
+  ```c
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$MFCC -s $fm -l 240 -m $mfcc_order -n $melbank_order > $base.mfcc
+  ```
+  >De nuevo, la misma idea peor como ahora buscamos los coeficientes Mel-cepstrales usaremos el comando "mfcc". En el podremos especificar tanto el número de coeficiente, como el banco de filtros que usaremos.
+  
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
@@ -128,14 +139,39 @@ $LPC -l 240 -m $lpc_order > $base.lp
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
+  
+  >Usamos el programa pearson de la siguiente manera:
+  ![Pearson_codigo](https://user-images.githubusercontent.com/79224893/120047475-f8253900-c014-11eb-93b2-bc12c7067a81.png)
+  
+  >Consultamos entonces los ficheros generados, y de ahi extraemos el coeficiente de correlación Pearson.
+  >Para los coeficientes de predicción lineal:
+  >
+  ![pearson_lp](https://user-images.githubusercontent.com/79224893/120047553-26a31400-c015-11eb-88c5-227a211cbfb8.png)
+  
+  >Para los coeficientes cepstrales:
+  >
+  ![pearson_lpcc](https://user-images.githubusercontent.com/79224893/120047563-2f93e580-c015-11eb-8bb2-aeb12bcdbffc.png)
+  
+  >Para los coeficientes Mel-cepstrales:
+  >
+  ![pearson_mfcc](https://user-images.githubusercontent.com/79224893/120047595-433f4c00-c015-11eb-8def-4ce162485b4d.png)
+  
+  >Nos queda por lo tanto la siguiente tabla:
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  |                        | LP            | LPCC         | MFCC          |
+  |------------------------|:-------------:|:------------:|:-------------:|
+  | &rho;<sub>x</sub>[2,3] |   -0.666745   |   0.334289   |   0.0588095   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
+  > Como podemos apreciar, los coeficientes LP y ceptrales, en los cuales podíamos más o menos distinguir algun tipo de correlación entre los coeficientes al distinguir un patron, son los que obtienen coeficientes de correlación Pearson más alejados del 0. En cambio los coefientes mel-cepstrum que tenían una representación más en forma de nube, son los que obtienen un coeficiente Pearson más cercano a 0. Estos valores y representaciones tienen sentido ya que un valor cercano a +1 o -1 implica una alta correlación entre componentes (podemos estimar el valor de uno en función del otro). En cambio un valor cercano a 0 indica que las compoenentes estan poco correladas y que la información conjunta proporcionada por ambas es el doble por sólo una de ellas.
+  >
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+> Para los LPCC se recomienda usar un orden de 13 coeficientes.
+>
+> Para los MFCC se recomienda usar: 
+> - Entre 24 y 40 filtros del banco mel.
+> - Unos 13 coeficientes Mel-Ceptrales. A partir de 20 coeficientes, la información otorgada por los coeficientes podría confundir al sistema de reconocimiento de voz.
 
 ### Entrenamiento y visualización de los GMM.
 
