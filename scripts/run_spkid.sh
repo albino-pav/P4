@@ -203,9 +203,10 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
+       # \DONE
        compute_$FEAT $db_test $lists/final/class.test
        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | 
-            tee class_test.log) || exit 1
+            cut -f 1,2 | tee class_test.log) || exit 1
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
@@ -214,11 +215,13 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
+       # \DONE
+       # Umbral = 0.634817110119989
         compute_$FEAT $db_test $lists/final/verif.test
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/final/verif.test $lists/final/verif.test.candidates |
              tee $w/final_verif.log) || exit 1
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > CAMBIAR Y PONER EL UMBRAL OPTIMO) {print "1\n"} 
+            if ($F[2] > 0.634817110119989) {print "1\n"} 
             else {print "0\n"}' work/final_verif.log | tee verif_test.log
    
    # If the command is not recognize, check if it is the name

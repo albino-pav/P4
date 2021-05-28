@@ -199,9 +199,11 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
 
-  |                 |       LP      |     LPCC     |      MFCC    |
-  |-----------------|:-------------:|:------------:|:------------:|
-  | Tasa de errores |               |              |              |
+  >  |                 |       LP      |     LPCC     |     MFCC    |
+  >  |-----------------|:-------------:|:------------:|:-----------:|
+  >  | Tasa de errores |      8.41%    |     2.80%    |    1.02%    |
+  >
+  > Podemos ver que la parametrización que obtiene una peor tasa de errores es el LP y la mejor, el MFCC.
 
 ### Verificación del locutor.
 
@@ -212,15 +214,14 @@ Complete el código necesario para realizar verificación del locutor y optimice
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
 
-  |                     |       LP      |     LPCC     | MFCC (verificación) | MFCC (reconocimiento) |
-  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
-  | Umbral óptimo       |               |              |                     |                       |
-  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
-  | Núm. falsas alarmas |               |              |                     |                       |
-  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
-  | Núm. pérdidas       |               |              |                     |                       |
-  |---------------------|:-------------:|:------------:|:-------------------:|:---------------------:|
-  | Coste de detección  |               |              |                     |                       |
+  >  |                    | MFCC (verificación) | MFCC (reconocimiento) |
+  >  |--------------------|:-------------------:|:---------------------:|
+  >  | Umbral óptimo      | 0.634817110119989   | 0.44152714672999      |
+  >  | Falsas alarmas     |          0%         |          0%           |
+  >  | Pérdidas           |          0.18%      |          0.152%       |
+  >  | Coste de detección |          18%        |          15.2%        |
+  >
+  > Podemos ver con el sistema del reconocimiento (60 gaussianas) obtenemos un coste de detección menor que para el de verificación (33 gaussianas). Hemos decidido no aumentar tanto el número de gmm para que el sistema sea capaz de generalizar mejor y también para que sea más rápido al reconocer al locutor.
  
 ### Test final
 
