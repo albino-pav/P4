@@ -79,21 +79,34 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 ```c
 sox $inputfile -t raw -e signed -b 16 - 
 ```
+>La herramienta sox nos permite convertir la entrada que esta en formato de ley mu a enteros de 16 bits con signo. Este paso es primordial ya que los ficheros .wav estan >codificados con la ley mu pero el posterior paso de parametrización con SPTK solo es capaz de leet señales de float4.
 ```c
 $X2X +sf
 ```
+>En este paso es donde conseguimos convertir finalmente los datos del fichero de entrada, que gracias al paso anterior esta en formato enteros con signo de 2 bytes (+s). Y ahora >pasamos a float de 4 bytes (+f).
 ```c
 $FRAME -l 240 -p 80
 ```
+>Pasamos al entramado de la señal. El programa frame nos permite configurar la ventana de extración de datos de una secuencia. En este caso nos interesa escoger ventanas de >30ms, que con una frecuencia de muestreo de 8000Hz correspondería a una ventana de 240 muestras. Tambien configuramos un desplazamiento entre ventanas de 10ms, lo que >corresponde a 80 muestras.
 ```c
 $WINDOW -l 240 -L 240
 ```
+>Usamos el programa "window" para enventanar la señal. Primero especificamos el número de muestras que entra, que tal y como hemos configurado en el paso previo de la pipeline, >tienen que ser 240 muestras. Luego se especifica la longitud en muestras de lo que sale.
 ```c
 $LPC -l 240 -m $lpc_order > $base.lp
 ```
+>Y finalmente, pasamos a la parametrización perse. En ella se especifican el número de muestras y el número de coeficientes de predicción lineal que en este caso tal y como >hemos explicado antes, pasaremos como parámetro cuando invoquemos el script.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  ```c
+  # Our array files need a header with the number of cols and rows:
+  ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+  nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  ```
+>Para obtener el número de columnas de la matriz, simplemente lo definimos como el orden escogido del LPC que son el número de coeficientes, y luego tenemos en cuenta una      >unidad más ya que el primer valor de todos es la ganancia. 
+>Para calcular el número de filas se usa el comando perl. 
+>Primero pasamos el contenido de nuestro ficheros temporales los cuales son un conjunto de floats de 4 bytes concatenados a formato ASCII. Se genera asi un fichero con un valor ASCII en cada linea, que el comando "wc -l" se encargara de extraer el número de lineas. De esta manera tenemos el número de valores que tenía nuestro fichero temporal. Conociendo el número de columnas, simplemente se divide el número de datos totales por el de columnas para obtener asi el número de filas.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
