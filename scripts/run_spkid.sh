@@ -147,7 +147,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # Eliminar la partícula anterior a SES, nos quedamos con SESxxx
            echo $name ----
-           gmm_train  -v 1 -T 1e-7 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 1e-7 -N 100 -m 23 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
 
            # options:
             # -v int : Bit code to control "verbosity" -> 1
@@ -216,9 +216,10 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
+       # \DONE: finalclass with mfcc 12 coeffs, 23 gauss and VQ init
 
        # Parametritzar senyals test, COMENTAR si ja està fet
-       # compute_$FEAT $db_test $lists/final/class.test
+       compute_$FEAT $db_test $lists/final/class.test
 
        # Classificacio
        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test |
@@ -246,20 +247,20 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         ## @file
 
         # Parametritzar (es pot comentar si ja tenim la param amb el nombre de coefs desitjats)
-        compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+        #compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
 
         # Entrenar models senyals amb valor òptim gaussianes obtingut a classtest (es pot comentar si ja ho tenim)
-        for dir in $db/BLOCK*/SES* ; do
-           name=${dir/*\/} 
-           echo $name ----
-           gmm_train  -v 1 -T 1e-7 -N 100 -m 23 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
-           echo
-        done
+        # for dir in $db/BLOCK*/SES* ; do
+        #    name=${dir/*\/} 
+        #    echo $name ----
+        #    gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+        #    echo
+        # done
 
         # Per cada iteració, fer el trainworld pel nombre de gauss corresponents, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log (o número de coefs que tinguem)
         # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes ~ seq val_inici val_final, augment de 1 en 1
-        for m in $(seq 97 120); do
-            gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        for m in $(seq 109 125); do
+            gmm_train -v 1 -T 1e-7 -N 150 -t 1e-7 -n 150 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
             (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
             tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
@@ -270,9 +271,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
             fi
             spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
-            echo "m = $m" | tee -a verifymfcc12_nmix.log
-            tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix.log
-            echo "" | tee -a verifymfcc12_nmix.log
+            echo "m = $m" | tee -a verifymfcc12_nmix-7-150.log
+            tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix-7-150.log
+            echo "" | tee -a verifymfcc12_nmix-7-150.log
 
         done
 
@@ -280,7 +281,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        ## @file 
 
        ## Parametrizar
-       #compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
+       compute_$FEAT $db $lists/class/all.train $lists/class/all.test     
 
        for m in $(seq 1 35); do
         # Train
@@ -306,9 +307,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
                   END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/class_${FEAT}_${name_exp}.log | tee -a $w/class_${FEAT}_${name_exp}.log
  
         # Print
-        echo "m = $m" | tee -a classifymfcc12_nmix.log
-        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc12_nmix.log
-        echo "" | tee -a classifymfcc12_nmix.log
+        echo "m = $m" | tee -a classifymfcc13_nmix.log
+        tail -1 $w/class_${FEAT}_${name_exp}.log | tee -a classifymfcc13_nmix.log
+        echo "" | tee -a classifymfcc13_nmix.log
 
        done
 
