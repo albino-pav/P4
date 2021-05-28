@@ -27,3 +27,10 @@ train: gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$
 trainworld: gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 verifyerr: 
 CostDetection: 12.8
+
+parametrització mfcc de 13 coeffs i c= 17 
+     $MFCC -c 17 -m $mfcc_order -l 240 > $base.mfcc 
+train:  gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+classifyerr: 0.89
+cost detection = 13.2 
