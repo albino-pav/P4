@@ -108,21 +108,37 @@ PAV - P4: reconocimiento y verificación del locutor
   ><img src="./assets/mfcc-feature-plot.png" style="border-radius:10px">
   >
   
-  python3 scripts/plot_features.py lp lpcc mfcc
-  
-  + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales parametrizadas.
   + ¿Cuál de ellas le parece que contiene más información?
+  >El caso que contenga más información será aquel en el que se aprecie una mayor incorrelación entre los coeficientes encontrados, ya que se estará valorando un rango de información mayor y depreciando la información redundante. Si nos fijamos en cual de las tres imagenes tiene los coeficientes más incorrelados, y en consecuencia, más dispersos, seleccionaríamos el caso del MFCC, ya que el rango abarcado es mucho mayor que el de LP y LPCC. 
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
-  parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
+  parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.>
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  ><img src="./assets/correlation-result.png" style="border-radius:10px">
+  >
+  >|                        | LP   | LPCC | MFCC |
+  >|------------------------|:----:|:----:|:----:|
+  >| &rho;<sub>x</sub>[2,3] |  -0.511105    |   0.348666   |   -0.0187234   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+  >Anteriormente, en el análisis gráfico, hemos visto que el mejor de los tres casos era el MFCC, seguido del LPCC y el LP. Con los resultados obtenidos con <code>pearson</code> podemos confirmar esta tesis ya que, cuanto más se acerque a 1 el valor absoluto de los coeficientes de correlación normalizada obtenidos más correlados estarán los coeficientes. El caso más lejano a 1 es el de MFCC, seguido del LPCC y el LP, que coincide con los resultados que habíamos obtenido anteriormente, y confirma que nuestro programa tiene un funcionamiento muy positivo con los coeficientes MFCC.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+>**LPCC**
+>+ Orden de LPC: 8
+>+ Orden del cepstrum: 13
+>
+>**MFCC**
+>+ Orden de MFCC: 13
+>+ Número de filtros: 24-40
+>
+>Los valores que nos han proporcionado un mejor resultado son los siguientes:
+>```bash
+> wav2lpcc 19 26 $db/$filename.wav $w/$FEAT/$filename.$FEAT
+>
+> wav2mfcc 13 24 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT
+>```
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -130,10 +146,21 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+
+>```bash
+>plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK10/SES103/SA103S* -x1 -y2 -p 99,90,50,10,1
+>```
+><img src="./assets/plot-gmm-1.png" style="border-radius:10px">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+>Comparamos el modelo del apartado anterior, del locutor SES10, con el locutor SES00:
+>```bash
+>plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK00/SES000/SA000S* -x1 -y2 -p 99,90,50,10,1 -fgreen
+>```
+><img src="./assets/plot-gmm-2.png" style="border-radius:10px">
 
 ### Reconocimiento del locutor.
 
@@ -141,6 +168,14 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  ><img src="./assets/classerr.png" style="border-radius:10px">
+  >
+   >|                        | LP   | LPCC | MFCC |
+  >|------------------------|:----:|:----:|:----:|
+  >| Número de Errores |   100  |    6  |   10   |
+  >| Tasa de Error |   12.74%   |    0.76%  |   1.27%   |
+
 
 ### Verificación del locutor.
 
@@ -150,6 +185,25 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+  >**LP**
+  >
+  ><img src="./assets/lp-result.png" style="border-radius:10px">
+  >
+  >**LPCC**
+  >
+  ><img src="./assets/lpcc-result.png" style="border-radius:10px">
+  >
+  >**MFCC**
+  >
+  ><img src="./assets/mfcc-result.png" style="border-radius:10px">
+  >
+  >|                        | LP   | LPCC | MFCC |
+  >|------------------------|:----:|:----:|:----:|
+  >| Umbral Óptimo |   2.89069712190869  |    1.7136328651572  |   1.02340112717401   |
+  >| Pérdidas |   235/250   |    68/250  |   37/250   |
+  >| Falsas Alarmas |   0/1000   |    0/1000  |   0/1000   |
+  >| **Coste de detección** |   **94.0**  |    **27.2**  |   **14.8**   |
  
 ### Test final
 
