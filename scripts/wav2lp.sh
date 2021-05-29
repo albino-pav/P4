@@ -23,6 +23,10 @@ lpc_order=$1
 inputfile=$2
 outputfile=$3
 
+<<<<<<< HEAD
+=======
+#UBUNTU_SPTK=1
+>>>>>>> f337f18395ebc9ed7be27e0d9a012f76082a07ee
 if [[ $UBUNTU_SPTK == 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"

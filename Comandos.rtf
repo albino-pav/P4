@@ -53,7 +53,11 @@ plot_gmm_feat work/gmm/mfcc/SES000.gmm work/mfcc/BLOCK00/SES001/*  \
 \
 make doc\
 \
+spk_verif_score -43 work/verif_mfcc_one.log\
 \
+FEAT=lp run_spkid verif_err\
+\
+FEAT=lp run_spkid trainworld\
 \
 CON LP:\
 plot_gmm_feat -x 1 -y 2 work/gmm/lp/SES000.gmm work/lp/BLOCK00/SES001/\
