@@ -173,8 +173,10 @@ $LPC -l 240 -m $lpc_order > $base.lp
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 > Para los LPCC se recomienda usar un orden de 13 coeficientes.
 >
-> Para los MFCC se recomienda usar: 
+> Para los MFCC se recomienda usar:
+
 > - Entre 24 y 40 filtros del banco mel.
+
 > - Unos 13 coeficientes Mel-Ceptrales. A partir de 20 coeficientes, la información otorgada por los coeficientes podría confundir al sistema de reconocimiento de voz.
 
 ### Entrenamiento y visualización de los GMM.
@@ -194,6 +196,18 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+  
+  >Adjuntamos a continuación los resultados obtenidos haciendo uso de los parámetros que mejor nos han funcionado para la parametrización MFCC.
+
+  >Hemos usado 8 coeficientes de predicción lineal
+
+  >Hemos usado 13 coeficientes cepstrales
+
+  >Hemos usado _ coeficientes Mel-Cepstrales y _ filtros del banco de filtros.
+  
+  |                        | LP            | LPCC         | MFCC          |
+  |------------------------|:-------------:|:------------:|:-------------:|
+  | TASA DE ERROR          |   9.81% (77 errores)  |   3.06% (24 errores)   |   X.XX% (Y errores)   |
 
 ### Verificación del locutor.
 
@@ -203,11 +217,20 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  
+  >Tal y como hemos visto en el apartado anterior, los resultados con MFCC son de largo los mejores para la tarea de reconocimiento de voz. La verificación obtenida es la siguiente:
+ 
+  |                        | UMBRAL ÓPTIMO | FALSAS ALARMAS | PÉRDIDAS    | SCORE         |
+  |------------------------|:-------------:|:------------:|:-------------:|:-------------:|
+  | Verificación con MFCC  |   0   |   0   |   0   |   0   |
+  
  
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
   correspondientes a la evaluación *ciega* final.
+
+>Tanto para la clasificación como para la verificación final, emplearemos los parámetros que nos han permitido conseguir una mejor puntuación en la base de datos SPEECON. Aunque el número de gaussianas tanto en el train como en el trainworld resulten muy especificos, hemos optimizado el umbral de criterio de parada del algoritmo de Expectation Maximization para evitar en la medida de lo posible un "overtraining" que haga más difícil aun extrapolar estos parámetros a otras bases de datos y por lo tanto tener unos modelos más generalizables.
 
 ### Trabajo de ampliación.
 
