@@ -143,8 +143,8 @@ $LPC -l 240 -m $lpc_order > $base.lp
   >Usamos el programa pearson de la siguiente manera:
   ```c
   pearson -N work/lp/BLOCK01/SES010/*.lp >lp_pearson.txt
-  pearson -N work/lp/BLOCK01/SES010/*.lpcc >lpcc_pearson.txt
-  pearson -N work/lp/BLOCK01/SES010/*.mfcc >mfcc_pearson.txt
+  pearson -N work/lpcc/BLOCK01/SES010/*.lpcc >lpcc_pearson.txt
+  pearson -N work/mfcc/BLOCK01/SES010/*.mfcc >mfcc_pearson.txt
   ```
     
   >Consultamos entonces los ficheros generados, y de ahi extraemos el coeficiente de correlación Pearson.
