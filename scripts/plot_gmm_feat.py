@@ -1,4 +1,4 @@
-#! /usr/bin/python3 -u
+#! /usr/bin/env python3
 
 import struct
 
@@ -143,6 +143,7 @@ def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat=None, colorFeat=N
     plt.axis('tight')
     plt.axis(limits)
     plt.show()
+    plt.savefig("./assets/plot-gmm.png")
 
 
 ########################################################################################################
