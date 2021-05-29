@@ -33,7 +33,7 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
-  - sox: Incluye una serie de herramientas para tratar y convertir el señal de entrada a otro formato concreto indicado. Los parámetros empleados son: 
+  - `sox`: Incluye una serie de herramientas para tratar y convertir el señal de entrada a otro formato concreto indicado. Los parámetros empleados son: 
 
     - -t: Indica el formato, para nosotros raw.
     - -e: Indica el tipo de encoding que queremos, signed-integer en nuestro caso.
@@ -41,30 +41,40 @@ ejercicios indicados.
     
     El comando final usado es el siguiente: sox $inputfile -t raw -e signed -b 16
 
-  - X2X: Es un comando que forma parte de SPTK que convierte data de un formato a otro. En nuestro caso queremos convertir de short (2 bytes) a float (4 bytes), por lo que lo hemos usado del siguiente: 
+  - `$X2X`: Es un comando que forma parte de SPTK que convierte data de un formato a otro. En nuestro caso queremos convertir de short (2 bytes) a float (4 bytes), por lo que lo hemos usado del siguiente: 
+    ```zsh
     $X2X +sf
+    ```
   
-  - FRAME: Forma parte también de SPTK. Nos divide la señal de entrada en tramas de duración l y periodo p. Queremos una duración de 240 muestras con periodo de 80, por lo que lo hemos usado de la siguiente manera:
+  - `$FRAME`: Forma parte también de SPTK. Nos divide la señal de entrada en tramas de duración l y periodo p. Queremos una duración de 240 muestras con periodo de 80, por lo que lo hemos usado de la siguiente manera:
+    ```zsh
     $FRAME -l 240 -p 80
+    ```
 
-  - WINDOW: Forma parte de SPTK. Multiplica elemento por elemento del señal de entrada de duración l por una ventana determinada w, dando como resultado una trama de duración L. En nuestro hemos usado l=L=240 muestras y hemos dejado por defecto el valor de la ventana a usar (w=0, ventana Blackman). El comando final usado es el siguiente:
+  - `$WINDOW`: Forma parte de SPTK. Multiplica elemento por elemento del señal de entrada de duración l por una ventana determinada w, dando como resultado una trama de duración L. En nuestro hemos usado l=L=240 muestras y hemos dejado por defecto el valor de la ventana a usar (w=0, ventana Blackman). El comando final usado es el siguiente:
+    ```zsh
     $WINDOW -l 240 -L 240
-
-  - LPC: Forma parte de SPTK. Calcula los LPC de orden m de las l muestras del señal de entrada. En nuestro caso hemos usado una duración de entrada de 240 muestras y el número de coeficientes indicado. Para cabar guardamos los coeficientes en base.lp. El comando usado es el siguiente:
-    lpc_order=$1
+    ```
+  - `$LPC`: Forma parte de SPTK. Calcula los LPC de orden m de las l muestras del señal de entrada. En nuestro caso hemos usado una duración de entrada de 240 muestras y el número de coeficientes indicado. Para acabar guardamos los coeficientes en `base.lp`. El comando usado es el siguiente:
+    ```zsh
     $LPC -l 240 -m $lpc_order > $base.lp
-
+    ```
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
 
-  Como hemos visto en la descripción de los comandos anterior, tenemos en base.lp los coeficientes LPC de la señal de entrada. Ahora queremos tener un fichero de formato fmatrix en el que tengamos la información solicitada de la señal en forma matricial. Para ello debemos indicar el número de columnas, que será el número de coeficientes LPC + 1, ya que en la primera posición tenemos guardada la ganancia de predicción, y el número de filas, igual al número de tramas de la señal. 
-
+  Como hemos visto en la descripción de los comandos anterior, tenemos en `base.lp` los coeficientes LPC de la señal de entrada. Ahora queremos tener un fichero de formato fmatrix en el que tengamos la información solicitada de la señal en forma matricial. Para ello debemos indicar el número de columnas, que será el número de coeficientes LPC + 1, ya que en la primera posición tenemos guardada la ganancia de predicción, y el número de filas, igual al número de tramas de la señal. 
+  ```zsh
   ncol=$((lpc_order+1)) #lpc p =>  (gain a1 a2 ... ap) 
   nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  ````
 
   El procedimiento seguido para determinar nrow es el siguiente:
-    - Primero pasamos los datos de la señal obtenida en base.lp de formato float (f) a texto (a, ASCII) con el comando: $X2X +fa < $base.lp
+    - Primero pasamos los datos de la señal obtenida en base.lp de formato float (f) a texto (a, ASCII) con el comando: 
+
+    ```zsh
+    $X2X +fa < $base.lp
+    ````
     - Luego contamos el número de lineas de este archivo de texto con el comando wc -l para determinar el valor de nrow.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
