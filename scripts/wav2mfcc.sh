@@ -40,11 +40,11 @@ fi
 
 # Main command for feature extration 
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$MFCC -l 240 -m $mfcc_order -s 8 -w 1 -n 40 > $base.mfcc
-# Sin ventana (-w 1) y con 40 Mel-filters (-n 40)
+	$MFCC -l 240 -m $mfcc_order -s 8 -w 1 -n 28 > $base.mfcc
+# Sin ventana (-w 1) y con 40 Mel-filters (-n 40) > 2*orden
 
 # Our array files need a header with the number of cols and rows:
-ncol=$((mfcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+ncol=$((mfcc_order)) # mfcc p =>  (m1 m2 ... mp) 
 nrow=`$X2X +fa < $base.mfcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them

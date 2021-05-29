@@ -33,6 +33,14 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
+  ```c
+  $ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
+  ```
+  > **sox**: es un programa multifuncional, donde podemos generar una señal del formato deseado a partir de un fichero de entrada. Además, permite modificar la frecuencia de muestreo. **-t** sirve para indicar el formato de audio; **-e** el tipo de dato en la codificación; y **-b** se usa para indicar cuantos bits se usan por muestra.
+  > **$X2X (x2x)**: es un programa de SPTK, el cual nos permite la conversión del formato de datos. Con la opción **+sf** indicamos que el input format es short y el de output es float.
+  > **$FRAME (frame)**: programa de SPTK, el cual separa la señal de entrada en un cierto número y formato de tramas, especificando con **-l** el número de muestras por trama y con **-p** sus respectivos solapamientos.
+  > 
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
 
@@ -61,7 +69,7 @@ ejercicios indicados.
 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |-0.79 | 0.17 | -0.02|
+  | &rho;<sub>x</sub>[2,3] |-0.723 | 0.130 | -0.039|
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   

@@ -46,9 +46,9 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order  > $base.lpcc
 
 # Our array files need a header with the number of cols and rows:
-ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
-nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'` # transforma de real a texto el fichero temporal, obtenemos el numero de tramas
-# habran p+1*num_tramas filas; al dividir entre p+1 obtenemos num_tramas
+ncol=$((lpcc_order+1)) # lpcc p =>  (c0 c1 ... cp) 
+nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'` 
+
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 echo $nrow $ncol | $X2X +aI > $outputfile # convertir de ascii a enteros de 4 bytes (unsigned long)
 cat $base.lpcc >> $outputfile # se añade a continuacion
