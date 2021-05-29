@@ -109,27 +109,27 @@ ejercicios indicados.
       fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
     ~~~
 
-  ```python
-  import numpy as np
-  import matplotlib.pyplot as plt
-  import os
+    ```python
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import os
 
-  os.mkdir('Archivos')                                                           
-  ARCHIVOS_FOLDER = os.path.join(os.getcwd(), "Archivos")
+    os.mkdir('Archivos')                                                           
+    ARCHIVOS_FOLDER = os.path.join(os.getcwd(), "Archivos")
 
-  plt.figure(figsize=(30, 18), dpi=80)
-  i = 311
+    plt.figure(figsize=(30, 18), dpi=80)
+    i = 311
 
-  for file in sorted(os.listdir(ARCHIVOS_FOLDER)):                                        
-    if file.endswith(".txt"):
-      plt.subplot(i)
-      file_dir = os.path.join(ARCHIVOS_FOLDER, file)
-      data = np.loadtxt(file_dir)
-      plt.scatter(data[:,0], data[:,1], s=0.5)
-      plt.xlabel(file[:-8])
-      plt.grid()
-      i += 1
-  ```
+    for file in sorted(os.listdir(ARCHIVOS_FOLDER)):                                        
+      if file.endswith(".txt"):
+        plt.subplot(i)
+        file_dir = os.path.join(ARCHIVOS_FOLDER, file)
+        data = np.loadtxt(file_dir)
+        plt.scatter(data[:,0], data[:,1], s=0.5)
+        plt.xlabel(file[:-8])
+        plt.grid()
+        i += 1
+    ```
 
   + ¿Cuál de ellas le parece que contiene más información?
 Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
