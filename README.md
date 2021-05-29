@@ -70,11 +70,7 @@ ejercicios indicados.
   ````
 
   El procedimiento seguido para determinar nrow es el siguiente:
-    - Primero pasamos los datos de la señal obtenida en base.lp de formato float (f) a texto (a, ASCII) con el comando: 
-
-    ```zsh
-    $X2X +fa < $base.lp
-    ````
+    - Primero pasamos los datos de la señal obtenida en base.lp de formato float (f) a texto (a, ASCII).
     - Luego contamos el número de lineas de este archivo de texto con el comando wc -l para determinar el valor de nrow.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
@@ -142,11 +138,12 @@ ejercicios indicados.
     ```
 
   + ¿Cuál de ellas le parece que contiene más información?
-Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
-Una manera fácil y gráfica de observar la incorrelación es con las gráficas de las diferentes parametrizaciones.
-En el caso de LP obtenemos una distribución con comportamiento prácticamente lineal y con una menor dispersión que en las otras parametrizaciones. 
-Por ejemplo en el caso de la parametrización LPCC observamos una distribución más dispersa , factor que implica una mayor incorrelación entre coeficientes por consiguiente , contiene más información.
-Finalmente para la parametrización MFCC observamos que es la que presenta mayor incorrelación, así que podemos decir, que será la parametrización que contenga más información de las 3.
+
+  Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
+  Una manera fácil y gráfica de observar la incorrelación es con las gráficas de las diferentes parametrizaciones.
+  En el caso de LP obtenemos una distribución con comportamiento prácticamente lineal y con una menor dispersión que en las otras parametrizaciones. 
+  Por ejemplo en el caso de la parametrización LPCC observamos una distribución más dispersa , factor que implica una mayor incorrelación entre coeficientes por consiguiente , contiene más información.
+  Finalmente para la parametrización MFCC observamos que es la que presenta mayor incorrelación, así que podemos decir, que será la parametrización que contenga más información de las 3.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
@@ -156,9 +153,11 @@ Finalmente para la parametrización MFCC observamos que es la que presenta mayor
   | &rho;<sub>x</sub>[2,3] |   -0.6945   |  0.2391    |   0.7168   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+
   Una vez obtenidos los resultados de los coeficientes de la correlaciones, podemos afirmar que son los esperados en relación a las gráficas previamente observadas. Por ejemplo, en el caso de la parametrización LP aporta poca información y que la mejor es la parametrización MFCC como hemos observado en el apartado anterior.
 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
 Como hemos visto en el apartado de teoría ,   para la parametrización MFCC un orden de 30 coeficientes es suficiente y en el caso del filtro de 40. Para la parametrización LPCC, hemos usado un orden de 25 coeficientes tal como indica la librería SPTK ya que nos proporciona un buen resultado.
 ### Entrenamiento y visualización de los GMM.
 
