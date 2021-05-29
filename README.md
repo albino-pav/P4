@@ -57,19 +57,40 @@ ejercicios indicados.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+
+    *Parametrización LP*
+      ~~~
+        fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+      ~~~
+    *Parametrización LPCC*
+    ~~~
+      fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f4,5 > lpcc_2_3.txt
+    ~~~
+    *Parametrización MFCC*
+    ~~~
+      fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
+    ~~~
+
+
   + ¿Cuál de ellas le parece que contiene más información?
+Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
+Una manera fácil y gráfica de observar la incorrelación es con las gráficas de las diferentes parametrizaciones.
+En el caso de LP obtenemos una distribución con comportamiento prácticamente lineal y con una menor dispersión que en las otras parametrizaciones. 
+Por ejemplo en el caso de la parametrización LPCC observamos una distribución más dispersa , factor que implica una mayor incorrelación entre coeficientes por consiguiente , contiene más información.
+Finalmente para la parametrización MFCC observamos que es la que presenta mayor incorrelación, así que podemos decir, que será la parametrización que contenga más información de las 3.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] |   -0.6945   |  0.2391    |   0.7168   |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
-  
-- Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+  Una vez obtenidos los resultados de los coeficientes de la correlaciones, podemos afirmar que son los esperados en relación a las gráficas previamente observadas. Por ejemplo, en el caso de la parametrización LP aporta poca información y que la mejor es la parametrización MFCC como hemos observado en el apartado anterior.
 
+- Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+Como hemos visto en el apartado de teoría ,   para la parametrización MFCC un orden de 30 coeficientes es suficiente y en el caso del filtro de 40. Para la parametrización LPCC, hemos usado un orden de 25 coeficientes tal como indica la librería SPTK ya que nos proporciona un buen resultado.
 ### Entrenamiento y visualización de los GMM.
 
 Complete el código necesario para entrenar modelos GMM.
