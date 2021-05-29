@@ -167,13 +167,12 @@ Complete el código necesario para entrenar modelos GMM.
   para sus dos primeros coeficientes de MFCC.
 
   Por ejemplo en el caso del locutor SES003, hemos ejecutado el siguiente código para obtener la gráfica:
-  ~~~
+  ```zsh
   gmm_train -d work/mfcc -e mfcc -g SES003.gmm lists/class/SES003.train 
 
   plot_gmm_feat work/gmm/mfcc/SES003.gmm
-
-  ~~~
-  ![](img/mfcc.PNG)
+  ```
+  ![](img/mfcc.png)
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
