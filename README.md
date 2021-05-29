@@ -141,7 +141,11 @@ $LPC -l 240 -m $lpc_order > $base.lp
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
   
   >Usamos el programa pearson de la siguiente manera:
-  <img src="https://user-images.githubusercontent.com/79224893/120047475-f8253900-c014-11eb-93b2-bc12c7067a81.png" width="500">
+  ```c
+  pearson -N work/lp/BLOCK01/SES010/*.lp >lp_pearson.txt
+  pearson -N work/lp/BLOCK01/SES010/*.lpcc >lpcc_pearson.txt
+  pearson -N work/lp/BLOCK01/SES010/*.mfcc >mfcc_pearson.txt
+  ```
     
   >Consultamos entonces los ficheros generados, y de ahi extraemos el coeficiente de correlación Pearson.
   >Para los coeficientes de predicción lineal:
