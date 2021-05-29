@@ -35,9 +35,9 @@ ejercicios indicados.
 
   - sox: Incluye una serie de herramientas para tratar y convertir el señal de entrada a otro formato concreto indicado. Los parámetros empleados son: 
 
-    -t: Indica el formato, para nosotros raw.
-    -e: Indica el tipo de encoding que queremos, signed-integer en nuestro caso.
-    -b: Indica el sample size de la codificación, 16 bits en nuestro caso.
+    - -t: Indica el formato, para nosotros raw.
+    - -e: Indica el tipo de encoding que queremos, signed-integer en nuestro caso.
+    - -b: Indica el sample size de la codificación, 16 bits en nuestro caso.
     
     El comando final usado es el siguiente: sox $inputfile -t raw -e signed -b 16
 
@@ -75,18 +75,18 @@ ejercicios indicados.
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
-  '''python3
+  ´´´python3
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
-  '''
+  ´´´
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
 
-  '''python3
+  ´´´python3
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$MFCC -l 240 -m $mfcc_order -w 1 -n 40 -s 8 > $base.mfcc
-  '''
+  ´´´
 
 ### Extracción de características.
 
