@@ -15,7 +15,7 @@
 # \DONE variables added
 lists=lists
 w=work
-name_exp=one
+name_exp=two
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 world=users #other, users_other
@@ -151,7 +151,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -N 25 -m 62 -d $w/$FEAT -i 1 -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.0001 -N 26 -m 62 -d $w/$FEAT -i 1 -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -185,7 +185,7 @@ for cmd in $*; do
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
-       # \ DONE 'verify' implemented
+       # \DONE 'verify' implemented
     (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/verif/all.test $lists/verif/all.test.candidates |
         tee $w/verif_${FEAT}_${name_exp}.log) || exit 1
 
@@ -207,8 +207,9 @@ for cmd in $*; do
        # \DONE final classification test implemented
         compute_$FEAT $db_test $lists/final/class.test
         (gmm_classify -d  $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm  $lists/gmm.list $lists/final/class.test |
-            tee class_test.log) || exit 1 
-   
+            tee $w/class_test_${FEAT}_${name_exp}.log ) || exit 1 
+            perl -ane 'print "$F[0]\t$F[1]\n";' $w/class_test_${FEAT}_${name_exp}.log | tee class_test.log
+
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO

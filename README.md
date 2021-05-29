@@ -38,11 +38,11 @@ El pipeline principal es:
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 $LPC -l 240 -m $lpc_order > $base.lp
 ```
-En primer lugar, se usa sox para convertir un señal ``inputfile`` (en este caso, en formato .wav) a tipo raw (sin headers) con ``-t raw``. Además, se usa una codificación con signo ``-e signed`` y cada muestra está cuantificada con 16 bits ``-b 16``. Esta conversión a raw es necesaria porque ``sptk`` trabaja directamente sobre el fichero de entrada sin diferenciar contenido de cabeceras o de datos, motivo por el cual hemos de eliminar la parte de cabeceras antes de tratarlo en ``sptk``.
+En primer lugar, se usa sox para convertir una señal ``inputfile`` (en este caso, en formato .wav) a tipo raw (sin headers) con ``-t raw``. Además, se usa una codificación con signo ``-e signed`` y cada muestra está cuantificada con 16 bits ``-b 16``. Esta conversión a raw es necesaria porque ``sptk`` trabaja directamente sobre el fichero de entrada sin diferenciar contenido de cabeceras o de datos, motivo por el cual hemos de eliminar la parte de cabeceras antes de tratarlo en ``sptk``.
 
 Hecho esto, se usa un conjunto de comandos para tratar estos datos con SPTK. Lo primero es usar ``x2x`` para convertir los datos de short con signo a float ``+sf``. A continuación, entramamos la señal usando el comando ``frame`` con un tamaño de trama de 240 muestras/30 ms (``-l 240``) y un desplazamiento entre frames de 80 muestras (``-p 80``). Luego, se enventana la señal (``window``) indicando el tamaño de frame de la entrada (``-l 240``) y el de la salida, que es el mismo (``-L 240``). Al no estar indicando qué tipo de ventana queremos usar, por defecto sptk usa la ventana de *Blackman*. 
 
-Una vez ya hemos entramado y enventanado la señal, solo queda obtener los coeficientes LPC, lo cual se hace con el comando ``lpc``. Se ha de indicar el tamaño de frame de entrada (``-l 240``) y el orden del lpc ``-m``, el cual en este caso lo indica el usuario. Este resultado se guarda en un fichero temporal ``$base.lp``.
+Una vez ya hemos entramado y enventanado la señal, solo queda obtener los coeficientes LPC, lo cual se hace con el comando ``lpc``. Se ha de indicar el tamaño de frame de entrada (``-l 240``) y el orden del LPC ``-m``, el cual en este caso lo indica el usuario. Este resultado se guarda en un fichero temporal ``$base.lp``.
 
 
 
@@ -64,7 +64,7 @@ La primera cosa a tener en cuenta es que los ficheros *fmatrix* necesitan saber 
 
 En primer lugar, para obtener el número de columnas, lo podemos hacer de manera directa. Como sabemos el orden del lpc (introducido por el usuario, en este caso), ya podemos obtener el número de columnas, ya que será el número de coeficientes del lpc + 1 (se añade una posición para la ganancia). Esto se hace usando ``$((comando))``, que sirve para asignar el valor de la expresión aritmética de *comando* a la variable a la que se iguale.
 
-Lo siguiente es obtener el número de filas, proceso más tedioso. Nuestro fichero de entrada es un conjunto de floats concatenados ``base.lp``. El primer paso es pasarlos a ascii, lo cual nos generará una lista de números cada uno separado por un retorno de carro. Es decir, tendremos un valor en cada línea, lo cual se manda a ``wc``, que usando la opción ``-l`` obtiene el número de líneas que se le pasen (nuestro total de valores). Ahora que tenemos el número de valores de nuestro fichero, debido a que tiene siempre ``ncol`` columnas en todas las filas, podemos obtener el número de filas con el comando ``perl -ne 'print $_/'$ncol', "\n";'``. Este divide el valor pasado por la pipeline por la variable ``ncol`` (*total valores/total columnas*).
+Lo siguiente es obtener el número de filas, proceso más tedioso. Nuestro fichero de entrada es un conjunto de floats concatenados ``base.lp``. El primer paso es pasarlos a ASCII, lo cual nos generará una lista de números cada uno separado por un retorno de carro. Es decir, tendremos un valor en cada línea, lo cual se manda a ``wc``, que usando la opción ``-l`` obtiene el número de líneas que se le pasen (nuestro total de valores). Ahora que tenemos el número de valores de nuestro fichero, debido a que tiene siempre ``ncol`` columnas en todas las filas, podemos obtener el número de filas con el comando ``perl -ne 'print $_/'$ncol', "\n";'``. Este divide el valor pasado por la pipeline por la variable ``ncol`` (*total valores/total columnas*).
 
 Ahora solo nos queda enviar esta información a un fichero de salida ``outputfile``. Para ello, pasamos a unsigned el valor de filas y columnas y lo escribimos en el inicio del fichero de salida. Por último, usando ``>>`` para hacer un *append*, añadimos los datos que contendrá la matriz a continuación de las filas y columnas que hemos escrito en el comando anterior.
 
@@ -72,7 +72,7 @@ Ahora solo nos queda enviar esta información a un fichero de salida ``outputfil
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
 
-  Si está en *fmatrix* podemos ver los contenidos en ascii usando ``fmatrix_show``. El fichero que tenemos de entrada es un conjunto de floats concatenados, los cuales no podemos interpretar directamente, ya que no están en ascii ni ordenados según tramas/coeficientes. Gracias al formato *fmatrix* podemos además guardarnos los datos por filas o columnas combinando ``fmatrix_show`` y ``cut`` en un fichero de texto y que estén en un formato legible.
+  Si está en *fmatrix* podemos ver los contenidos en ascii usando ``fmatrix_show``. El fichero que tenemos de entrada es un conjunto de floats concatenados, los cuales no podemos interpretar directamente, ya que no están en ASCII ni ordenados según tramas/coeficientes. Gracias al formato *fmatrix* podemos además guardarnos los datos por filas o columnas combinando ``fmatrix_show`` y ``cut`` en un fichero de texto y que estén en un formato legible.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
@@ -102,7 +102,7 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
 
-  Debido al formato que se decide en ``wav2lp.sh``, la primera columna no nos proporciona información de los coeficientes, ya que es un contador de tramas. Además, hemos de tener en cuenta que la primera posición de datos, en el caso del LP y lpcc corresponde a la ganancia, con lo que nos quedaremos con la cuarta (segundo coeficiente considerando primer valor tras el contador el coeficiente 0 / ganancia) y quinta (tercer coeficiente) posición:
+  Debido al formato que se decide en ``wav2lp.sh``, la primera columna no nos proporciona información de los coeficientes, ya que es un contador de tramas. Además, hemos de tener en cuenta que la primera posición de datos, en el caso del LP y LPCC corresponde a la ganancia, con lo que nos quedaremos con la cuarta (segundo coeficiente considerando primer valor tras el contador el coeficiente 0 / ganancia) y quinta (tercer coeficiente) posición:
 
   ```bash
   fmatrix_show work/lp/BLOCK00/SES000/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
@@ -194,7 +194,7 @@ Complete el código necesario para entrenar modelos GMM.
 
   Una vez más, como hemos visto anteriormente, los coeficientes LP se dispersan de una manera algo lineal, lo cual causa que el modelado creado con la mezcla de gaussianas tenga una forma diagonal.
 
-  En todos los casos se ve claro que la GMM correspondiente al locutor pertinente modela ligeramente mejor el locutor al que pertenece. Sobretodo en mfcc, se ve como incluso la orientación general de la GMM difiere en cada locutor, así como los contornos donde hay más concentración de muestras, con lo que podemos deducir que tendrá mayor facilidad para distinguir locutores.
+  En todos los casos se ve claro que la GMM correspondiente al locutor pertinente modela ligeramente mejor el locutor al que pertenece. Sobre todo en MFCC, se ve como incluso la orientación general de la GMM difiere en cada locutor, así como los contornos donde hay más concentración de muestras, con lo que podemos deducir que tendrá mayor facilidad para distinguir locutores.
 
 ### Reconocimiento del locutor.
 
@@ -213,10 +213,12 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
     - *MFCC: 16 coeficientes, 30 filtros*
     - *Para el entrenamiento: 62 gaussianas, 26 iteraciones, threshold=0.0001*
 
+  Como hemos visto en las tareas anteriores, se cumple que usar una parametrización con MFCC mejora bastante los resultados del sistema.
+
   #### Acerca la inicialización
   Está claro que una mala inicialización aleatoria puede empeorar fácilmente los resultados según como funcione, pero, de todas formas, hemos logrado tasas de error bastante pequeñas con esta dada una inicialización aleatoria afortunada (hasta 8 errores).
 
-  La inicialización con *EM_SPLIT* ha estado ligeramente modificada: como punto de partida se nos daba el método prácticamente hecho, pero hacía un split por defecto de las primeras gaussianas que encontrase (orden arbitrario en cuanto a los datos), lo cual, aún así, funcionaba bien, pero hacer los splits de las gaussianas con mayores varianzas puede proporcionar ligeramente mejores resultados. El código añadido es el siguiente (función ``split``):
+  La inicialización con *EM_SPLIT* ha estado ligeramente modificada: como punto de partida se nos daba el método prácticamente hecho, pero hacía un split por defecto de las primeras gaussianas que encontrase (orden arbitrario en cuanto a los datos), lo cual, aun así, funcionaba bien, pero hacer los splits de las gaussianas con mayores varianzas puede proporcionar ligeramente mejores resultados. El código añadido es el siguiente (función ``split``):
 
   ```cpp
   std::vector<double> mean_sigma(old_size);
@@ -271,13 +273,24 @@ Complete el código necesario para realizar verificación del locutor y optimice
     - *MFCC: 16 coeficientes, 30 filtros*
     - *Para el entrenamiento: 50 gaussianas, 30 iteraciones, threshold=0.0001, 15 iteraciones para la inicialización*
 
-    En esta segunda tarea hemos obtenido mejores resultados usando la inicialización *em_split*. Aún así, como en el caso anterior, el coste encontrado está *bastante* optimizado respecto la base de datos de entrenamiento: variando ligeramente las iteraciones de la inicialización, debido a la naturaleza de la función de costes, se obtienen fácilmente valores alrededor de 20%-35%, así que se pueden esperar peores resultados al usar esta optimización con otras bases de datos.
+    En esta segunda tarea hemos obtenido mejores resultados usando la inicialización *em_split*. Aun así, como en el caso anterior, el coste encontrado está **bastante** optimizado respecto la base de datos de entrenamiento: variando ligeramente las iteraciones de la inicialización, debido a la naturaleza de la función de costes, se obtienen fácilmente valores alrededor de 20%-35%, así que se pueden esperar peores resultados al usar esta misma optimización con otras bases de datos.
 
 
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
   correspondientes a la evaluación *ciega* final.
+
+
+  Para la tarea de reconocimiento de locutor, se han escogido parámetros algo más ligeros que los que daban mejores resultados con la base de entrenamiento. De todas formas, estos siguen funcionando bastante bien con la base de datos de prueba (*6 errores; tasa=0.76%*). Además, otro cambio que ha mejorado los resultados ha sido el uso de ventanas de *Hamming* al calcular los MFCC con menos coeficientes en vez de usar las de *Blackman* [[1]](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.483.2189&rep=rep1&type=pdf).
+    - *MFCC: 13 coeficientes, 30 filtros*
+    - *Para el entrenamiento: 50 gaussianas, 25 iteraciones, threshold=0.0001 e inicialización VQ*
+
+  Por otro lado, para la verificación de locutor también hemos intentado usar parámetros que hicieran la tarea más genérica, aunque esto ha sido algo complicado. El reconocimiento de locutor era mucho más predictible de cara a seleccionar parámetros (p.ej. aumentar las gaussianas suele mejorar los resultados hasta llegar a cantidades concretas), pero en la verificación de locutor los cambios en el coste eran demasiado irregulares como para buscar una "zona segura" donde se mantuvieran constantes. Algo que sí hemos notado que mejoraba los resultados en la mayoría de experimentos ha sido el uso de *em_split* en vez de VQ. Los costes obtenidos con esta configuración estaban alrededor de 20%-25% (umbral = 0.7062612) con los datos de entrenamiento.
+
+    - *MFCC: 13 coeficientes, 30 filtros*
+    - *Para el entrenamiento: 41 gaussianas, 25 iteraciones, threshold=0.0001 e inicialización EM SPLIT de 15 iteraciones*
+
 
 ### Trabajo de ampliación.
 

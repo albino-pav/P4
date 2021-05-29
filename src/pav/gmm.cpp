@@ -233,7 +233,7 @@ namespace upc
       //
       // Update old_prob, new_prob and inc_prob in order to stop the loop if logprob does not
       // increase more than inc_threshold.
-      // \DONE stop criterion implemented
+      /// \DONE stop criterion implemented
       new_prob = this->em_expectation(data, weights);
       this->em_maximization(data, weights);
       inc_prob = new_prob - old_prob;
