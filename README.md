@@ -171,7 +171,12 @@ Complete el código necesario para entrenar modelos GMM.
   gmm_train -d work/mfcc -e mfcc -g SES003.gmm lists/class/SES003.train 
 
   plot_gmm_feat work/gmm/mfcc/SES003.gmm
+<<<<<<< HEAD
   ```
+=======
+
+  ~~~
+>>>>>>> ef31ee3d1288506df9e0cf74a5e0bb76ca3f9b66
   ![](img/mfcc.png)
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
@@ -184,6 +189,9 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | &Tasa de error;|      |      |      |
 
 ### Verificación del locutor.
 
@@ -193,7 +201,12 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
- 
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | &THR;                 |      |      |      |
+  | &Missed;              |      |      |      |
+  | &False Alarm;         |      |      |      |
+  | &Cost Detection;      |      |      |      |
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
