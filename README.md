@@ -48,8 +48,8 @@ if [[ $# != 3 ]]; then
    exit 1
 fi
 ```
-> A continuación, se especifican aquellos parámetros que el usuario tendra que especificar en el momento que invoque el script. En este caso los importantes son el número de coeficientes LPC que queremos que se calculen, y los ficheros de entrada y salida. Tanto $1 como $2 y $3 guardan en ellos los parámetros especificados en orden por consola ($0 no se usa ya que es el primer argumento de todos realmente es el propio nombre del script en este caso).
-> Despues, dependiendo del valor de la variable de entorno UBUNTU_SPTK, se especifica como se invocan los comandos o programas del paquete de código abierto para procesado de señal de voz, SPTK.
+> A continuación, se declaran aquellos parámetros que el usuario tendra que especificar en el momento que se invoque el script. En este caso los importantes son el número de coeficientes LPC que queremos que se calculen, y los ficheros de entrada y salida. Tanto $1 como $2 y $3 guardan en ellos los parámetros especificados en orden por consola ($0 no se usa ya que es el primer argumento de todos realmente es el propio nombre del script en este caso).
+> Despues, dependiendo del valor de la variable de entorno UBUNTU_SPTK, se especifica como se invocan los comandos o programas del paquete de código abierto para procesado de señal de voz SPTK.
 ```c
 lpc_order=$1
 inputfile=$2
@@ -70,7 +70,7 @@ else
 fi
 
 ```
-> Tras ya haber especificado los parámetros que el usuario tendra que especificar en la linea de coandos (o en otro script), se pasa a la función principal de wav2lp.sh. El pipeline principal que a través de los programas especificados justo en el paso anterior, conseguimos una extracción de caracteristicas adecuada para nuestra señal. El pipleine principal es el siguiente: 
+> Tras ya haber especificado los parámetros que el usuario tendra que especificar en la linea de comandos (o en otro script), se pasa a la función principal de wav2lp.sh. El pipeline principal, gracias a los programas especificados justo en el paso anterior, conseguimos una extracción de caracteristicas adecuada para nuestra señal. El pipeline principal es el siguiente: 
 ```c
 # Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$LPC -l 240 -m $lpc_order > $base.lp
@@ -79,11 +79,11 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 ```c
 sox $inputfile -t raw -e signed -b 16 - 
 ```
->La herramienta sox nos permite convertir la entrada que esta en formato de ley mu a enteros de 16 bits con signo. Este paso es primordial ya que los ficheros .wav estan >codificados con la ley mu pero el posterior paso de parametrización con SPTK solo es capaz de leet señales de float4.
+>La herramienta sox nos permite convertir la entrada que esta en formato de ley mu a enteros de 16 bits con signo. Este paso es primordial ya que los ficheros .wav estan >codificados con la ley mu pero el posterior paso de parametrización con SPTK solo es capaz de leer señales de float4.
 ```c
 $X2X +sf
 ```
->En este paso es donde conseguimos convertir finalmente los datos del fichero de entrada, que gracias al paso anterior esta en formato enteros con signo de 2 bytes (+s). Y ahora >pasamos a float de 4 bytes (+f).
+>En este paso es donde conseguimos convertir finalmente los datos del fichero de entrada a los deseados. Gracias al paso anterior esta en formato enteros con signo de 2 bytes (+s). Y ahora pasamos a float de 4 bytes (+f).
 ```c
 $FRAME -l 240 -p 80
 ```
@@ -111,7 +111,7 @@ $LPC -l 240 -m $lpc_order > $base.lp
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
     
->Haber pasado de una señal de voz .wav codificada con ley mu de 8 bits a el formato fmatrix nos permite tener las señales ordenadas y caracterizadas por tramas y coeficientes. Cada fila corresponde a una trama de señal y cada columna a cada uno de los coeficientes con los que se ha parametrizdo la trama. Tambien este formato permite manejar mucho más fácilmente los datos. Los programas "fmatrix_show" y "fmatrix_cut" permiten mostrar el contenido de estos ficheros y seleccionar columnas concretas de los mismos.
+>Haber pasado de una señal de voz .wav codificada con ley mu de 8 bits a el formato fmatrix nos permite tener las señales ordenadas y caracterizadas por tramas y coeficientes. Cada fila corresponde a una trama de señal y cada columna a cada uno de los coeficientes con los que se ha parametrizado la trama. Tambien este formato permite manejar mucho más fácilmente los datos. Los programas "fmatrix_show" y "fmatrix_cut" permiten mostrar el contenido de estos ficheros y seleccionar columnas concretas de los mismos.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
@@ -126,7 +126,7 @@ $LPC -l 240 -m $lpc_order > $base.lp
   ```c
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$MFCC -s $fm -l 240 -m $mfcc_order -n $melbank_order > $base.mfcc
   ```
-  >De nuevo, la misma idea peor como ahora buscamos los coeficientes Mel-cepstrales usaremos el comando "mfcc". En el podremos especificar tanto el número de coeficiente, como el banco de filtros que usaremos.
+  >De nuevo, la misma idea pero como ahora buscamos los coeficientes Mel-cepstrales usaremos el comando "mfcc". En el podremos especificar tanto el número de coeficientes, como el banco de filtros que usaremos.
   
 ### Extracción de características.
 
@@ -141,20 +141,20 @@ $LPC -l 240 -m $lpc_order > $base.lp
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
   
   >Usamos el programa pearson de la siguiente manera:
-  ![Pearson_codigo](https://user-images.githubusercontent.com/79224893/120047475-f8253900-c014-11eb-93b2-bc12c7067a81.png)
-  
+  <img src="https://user-images.githubusercontent.com/79224893/120047475-f8253900-c014-11eb-93b2-bc12c7067a81.png" width="500">
+    
   >Consultamos entonces los ficheros generados, y de ahi extraemos el coeficiente de correlación Pearson.
   >Para los coeficientes de predicción lineal:
   >
-  ![pearson_lp](https://user-images.githubusercontent.com/79224893/120047553-26a31400-c015-11eb-88c5-227a211cbfb8.png)
+  <img src="https://user-images.githubusercontent.com/79224893/120047553-26a31400-c015-11eb-88c5-227a211cbfb8.png" width="300">
   
   >Para los coeficientes cepstrales:
   >
-  ![pearson_lpcc](https://user-images.githubusercontent.com/79224893/120047563-2f93e580-c015-11eb-8bb2-aeb12bcdbffc.png)
+  <img src="https://user-images.githubusercontent.com/79224893/120047563-2f93e580-c015-11eb-8bb2-aeb12bcdbffc.png" width="300">
   
   >Para los coeficientes Mel-cepstrales:
   >
-  ![pearson_mfcc](https://user-images.githubusercontent.com/79224893/120047595-433f4c00-c015-11eb-8def-4ce162485b4d.png)
+  <img src="https://user-images.githubusercontent.com/79224893/120047595-433f4c00-c015-11eb-8def-4ce162485b4d.png" width="300">
   
   >Nos queda por lo tanto la siguiente tabla:
 
