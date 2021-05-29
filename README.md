@@ -75,7 +75,7 @@ ejercicios indicados.
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
-  ```python
+  ```zsh
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
   ```
@@ -83,7 +83,7 @@ ejercicios indicados.
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
 
-  ```python
+  ```zsh
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$MFCC -l 240 -m $mfcc_order -w 1 -n 40 -s 8 > $base.mfcc
   ```
@@ -109,6 +109,27 @@ ejercicios indicados.
       fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
     ~~~
 
+  ```python
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import os
+
+  os.mkdir('Archivos')                                                           
+  ARCHIVOS_FOLDER = os.path.join(os.getcwd(), "Archivos")
+
+  plt.figure(figsize=(30, 18), dpi=80)
+  i = 311
+
+  for file in sorted(os.listdir(ARCHIVOS_FOLDER)):                                        
+    if file.endswith(".txt"):
+      plt.subplot(i)
+      file_dir = os.path.join(ARCHIVOS_FOLDER, file)
+      data = np.loadtxt(file_dir)
+      plt.scatter(data[:,0], data[:,1], s=0.5)
+      plt.xlabel(file[:-8])
+      plt.grid()
+      i += 1
+  ```
 
   + ¿Cuál de ellas le parece que contiene más información?
 Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
