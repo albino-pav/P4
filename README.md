@@ -1,4 +1,4 @@
-PAV - P4: reconocimiento y verificación del locutor
+PAV - P4: reconocimiento y verificación del locutor :microphone: :speech_balloon: 
 ===================================================
 
 
@@ -10,7 +10,7 @@ PAV - P4: reconocimiento y verificación del locutor
 
   > 
   >```bash
-  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
+  >$ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
   >```
   >
   >**sox**: Es un programa que sirve para generar una señal del formato adecuado a partir de una señal con otro formato. También se suele usar para convertir la frecuencia de muestreo de un archivo de audio de un valor a otro. La opción **-t** se usa para indicar el tipo de archivo de audio usado. **-e** sirve para indicar el tipo de codificación y **-b** para establecer el tamaño de muestras codificadas en bits.
@@ -40,7 +40,7 @@ PAV - P4: reconocimiento y verificación del locutor
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
   >```bash
-  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
+  >$ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
   >```
   > El programa LPC2C transforma los coeficientes de predicción lineal a coeficientes cepstrales de predicción lineal, con el mismo orden LPC y el orden de cepstrum pasado por parámetro de wav2lp. Finalmente la salida se escribe en el archivo **base.lpcc**.
 
@@ -48,7 +48,7 @@ PAV - P4: reconocimiento y verificación del locutor
   fichero <code>scripts/wav2mfcc.sh</code>:
   
   >```bash
-  >sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -l 240 -w 1 -s 8.0 -m $mfcc_order -n $mel_filter_order > $base.mfcc
+  >$ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -l 240 -w 1 -s 8.0 -m $mfcc_order -n $mel_filter_order > $base.mfcc
   >```
   > En este comando en vez de utilizar el **sptk lp** usamos el **sptk mfcc** que calcula el mel-frequency cepstrum pasando como parámetros el orden de mfcc, el orden del banco de filtros, frecuencia de muestreo (**-s** 8KHz), tamaño de la trama (**-l**) e indicando el tipo de ventana a usar (**-w 1** ⇒ Rectangular).
 
@@ -148,7 +148,7 @@ Complete el código necesario para entrenar modelos GMM.
   para sus dos primeros coeficientes de MFCC.
 
 >```bash
->plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK10/SES103/SA103S* -x1 -y2 -p 99,90,50,10,1
+>$ plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK10/SES103/SA103S* -x1 -y2 -p 99,90,50,10,1
 >```
 ><img src="./assets/plot-gmm-1.png" style="border-radius:10px">
   
@@ -158,7 +158,7 @@ Complete el código necesario para entrenar modelos GMM.
 
 >Comparamos el modelo del apartado anterior, del locutor SES10, con el locutor SES00:
 >```bash
->plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK00/SES000/SA000S* -x1 -y2 -p 99,90,50,10,1 -fgreen
+>$ plot_gmm_feat work/gmm/mfcc/SES103.gmm work/mfcc/BLOCK00/SES000/SA000S* -x1 -y2 -p 99,90,50,10,1 -fgreen
 >```
 ><img src="./assets/plot-gmm-2.png" style="border-radius:10px">
 
@@ -173,7 +173,7 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
   >
    >|                        | LP   | LPCC | MFCC |
   >|------------------------|:----:|:----:|:----:|
-  >| Número de Errores |   100  |    6  |   10   |
+  >| Número de Errores |   100/785  |    6/785  |   10/785   |
   >| Tasa de Error |   12.74%   |    0.76%  |   1.27%   |
 
 
