@@ -221,7 +221,7 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
   | Nº errores | 89/785 | 21/785 | 12/785 |
   | Tasa de error | 11.34% | 2.68% | 1.53% |
   >
-  > **Estos resultados se han obtenido con los siguientes parámtros:*
+  > *Estos resultados se han obtenido con los siguientes parámtros:*
   >
   > *67 gaussianas, 25 iteraciones, 20 iteraciones de inicialización y un umbral de 0.001.*
 
@@ -234,6 +234,11 @@ Complete el código necesario para realizar verificación del locutor y optimice
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
   > 
+  > *El modelado del mundo se ha realizado con los siguientes parámetros:*
+  >
+  > *30 gaussianas, 20 iteraciones, 20 iteraciones de inicialización y un umbral de 0.001.*
+  >
+  > Se ha reducido el número de iteraciones y el número de gaussianas con la intención de generalizar un poco el modelo e intentar aproximar el modelo de una forma que no se moldee a algun locutor en específico.
   > **LP**
   >
   ><img src="img/verif_err_lp.png" width="400" align="center">
@@ -249,10 +254,10 @@ Complete el código necesario para realizar verificación del locutor y optimice
 
   |            | LP   | LPCC | MFCC |
   |------------|:----:|:----:|:----:|
-  | Umbral óptimo| 1.0243683907696 | 0.876277274080092 | 0.46754565488881 |
-  | Nº pérdidas | 228/250 | 158/250 | 41/250 |
+  | Umbral óptimo| 1.0243683907696 | 0.876277274080092 | 0.6364625939256 |
+  | Nº pérdidas | 228/250 | 158/250 | 38/250 |
   | Falsas alarmas | 0/1000 | 0/100 | 0/1000 |
-  | Coste de detección | 91.2 | 63.2 | 16.4 |
+  | Coste de detección | 91.2 | 63.2 | 15.2 |
  
 ### Test final
 
