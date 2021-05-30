@@ -109,7 +109,12 @@ compute_mfcc() {
 }
 
 compute_lpcc() {
-    for filename in $(sort $lists/class/all.train $lists/class/all.test); do
+    dir_db=$1
+    shift
+    listas=$*
+    echo $listas
+
+    for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lpcc 25 25 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -145,7 +150,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 1e-6 -N 30 -m 128 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 1e-4 -N 35 -m 54 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -169,7 +174,7 @@ for cmd in $*; do
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
        
-       gmm_train  -v 1 -T 1e-6 -N 30 -m 128 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 1e-5 -N 25 -m 64 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
    elif [[ $cmd == verify ]]; then
        ## @file
@@ -200,7 +205,8 @@ for cmd in $*; do
 	   # recognized is lists/final/class.test
        #echo "To be implemented ..."
        compute_$FEAT $db_verif $lists/final/class.test
-       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee $w/class_test.res) || exit 1
+       perl -ane 'print "$F[0]\t$F[1]\n"' $w/class_test.res | tee class_test.log
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
@@ -212,7 +218,7 @@ for cmd in $*; do
        compute_$FEAT $db_verif $lists/final/verif.test 
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list  $lists/final/verif.test $lists/final/verif.test.candidates |
         tee $w/verif_test.res) || exit 1
-        perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 0.959430212041493) {print "1\n"} else {print "0\n"}' $w/verif_test.res | 
+        perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 0.499060800203697) {print "1\n"} else {print "0\n"}' $w/verif_test.res | 
         tee verif_test.log
 
    

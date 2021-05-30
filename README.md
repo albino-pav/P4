@@ -91,7 +91,7 @@ ejercicios indicados.
 
   ```zsh
   sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$MFCC -l 240 -m $mfcc_order -w 1 -n 40 -s 8 > $base.mfcc
+	$MFCC -l 240 -m $mfcc_order -w 1 -n 26 -s 8 > $base.mfcc
   ```
 
 ### Extracción de características.
@@ -120,7 +120,6 @@ ejercicios indicados.
     import matplotlib.pyplot as plt
     import os
 
-    os.mkdir('Archivos')                                                           
     ARCHIVOS_FOLDER = os.path.join(os.getcwd(), "Archivos")
 
     plt.figure(figsize=(30, 18), dpi=80)
@@ -131,18 +130,23 @@ ejercicios indicados.
         plt.subplot(i)
         file_dir = os.path.join(ARCHIVOS_FOLDER, file)
         data = np.loadtxt(file_dir)
-        plt.scatter(data[:,0], data[:,1], s=0.5)
+        plt.scatter(data[:,0], data[:,1], s=0.5, color = 'blue')
         plt.xlabel(file[:-8])
         plt.grid()
         i += 1
+
+    plt.savefig("grafica.png") 
+    plt.show()
     ```
 
   + ¿Cuál de ellas le parece que contiene más información?
 
+  ![](img/GraficaCoef.png)
+
   Respecto a las diferentes parametrizaciones con las que hemos trabajado, cuando buscamos la que "contiene más información" nos referimos a la incorrelación entre sus coeficientes. 
   Una manera fácil y gráfica de observar la incorrelación es con las gráficas de las diferentes parametrizaciones.
   En el caso de LP obtenemos una distribución con comportamiento prácticamente lineal y con una menor dispersión que en las otras parametrizaciones. 
-  Por ejemplo en el caso de la parametrización LPCC observamos una distribución más dispersa , factor que implica una mayor incorrelación entre coeficientes por consiguiente , contiene más información.
+  Por ejemplo en el caso de la parametrización LPCC observamos una distribución más dispersa, factor que implica una mayor incorrelación entre coeficientes por consiguiente, contiene más información.
   Finalmente para la parametrización MFCC observamos que es la que presenta mayor incorrelación, así que podemos decir, que será la parametrización que contenga más información de las 3.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
@@ -158,7 +162,7 @@ ejercicios indicados.
 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
-Como hemos visto en el apartado de teoría ,   para la parametrización MFCC un orden de 30 coeficientes es suficiente y en el caso del filtro de 40. Para la parametrización LPCC, hemos usado un orden de 25 coeficientes tal como indica la librería SPTK ya que nos proporciona un buen resultado.
+Como hemos visto en el apartado de teoría ,   para la parametrización MFCC un orden de 30 coeficientes es suficiente y en el caso del filtro de 24-40. Para la parametrización LPCC, hemos usado un orden de 25 coeficientes tal como indica la librería SPTK ya que nos proporciona un buen resultado.
 ### Entrenamiento y visualización de los GMM.
 
 Complete el código necesario para entrenar modelos GMM.
@@ -166,17 +170,18 @@ Complete el código necesario para entrenar modelos GMM.
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
 
-  Por ejemplo en el caso del locutor SES003, hemos ejecutado el siguiente código para obtener la gráfica:
+  Por ejemplo en el caso del locutor SES008, hemos ejecutado el siguiente código para obtener la gráfica:
   ```zsh
-  gmm_train -d work/mfcc -e mfcc -g SES003.gmm lists/class/SES003.train 
-
-  plot_gmm_feat work/gmm/mfcc/SES003.gmm
+  plot_gmm_feat -x1 -y2 -p 99,90,50,10 work/gmm/mfcc/SES008.gmm work/mfcc/BLOCK00/SES008/SA008S*
   ```
-  ![](img/mfcc.png)
+  ![](img/Figure_1.png)
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+  En la siguiente imagen se puede comparar el locutor SES008 con SES002  
+  ![](img/Figure_2.png)
 
 ### Reconocimiento del locutor.
 
@@ -184,9 +189,17 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  ###### LP  
+  ![](img/E_LP.png)
+  ###### LPCC
+  ![](img/E_LPCC.png)
+  ###### MFCC
+  ![](img/E_MFCC.png)
+
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | Tasa de error          |   67.64%    |   5.61%   |   5.61%   |
+  | Tasa de error          |   67.64%    |   5.61%   |   1.02%   |
 
 ### Verificación del locutor.
 
@@ -197,12 +210,19 @@ Complete el código necesario para realizar verificación del locutor y optimice
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
 
+  ###### LP  
+  ![](img/VE_LP.png)
+  ###### LPCC
+  ![](img/VE_LPCC.png)
+  ###### MFCC
+  ![](img/VE_MFCC.png)
+
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | THR;                   |   -0.0354797020084021   |   -0.92861305064869   |      |
-  | Missed;                |   195/250=0.7800   |   33/250=0.1320   |      |
-  | False Alarm;           |   0/1000=0.0000   |   0/1000=0.0000   |      |
-  | Cost Detection;        |   78.0   |   13.2   |      |
+  | THR;                   |   -0.0354797020084021   |   -0.92861305064869   |   0.499060800203697   |
+  | Missed;                |   195/250=0.7800   |   33/250=0.1320   |   40/250=0.1600   |
+  | False Alarm;           |   0/1000=0.0000   |   0/1000=0.0000   |   0/1000=0.0000   |
+  | Cost Detection;        |   78.0   |   13.2   |   16.0   |
 
 ### Test final
 
