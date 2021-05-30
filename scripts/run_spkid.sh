@@ -181,7 +181,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
        # \DONE 'trainworld' implemented
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-        gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+        gmm_train -v 1 -T 1e-7 -N 150 -t 1e-7 -n 150 -m 116 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 24
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 128 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 23.6
        # gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1 -> 17.6
@@ -237,7 +237,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
         tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
 
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > 0.392301270473997) {print "1\n"}
+            if ($F[2] > 0.317649235262001) {print "1\n"}
             else {print "0\n"}'  $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
         echo "
             ********** CUIDAO QUE SHA DE POSAR EL THRESHOLD OPTIM *************
@@ -259,7 +259,7 @@ for cmd in $*; do # Para cada argumento en la línea del comando
 
         # Per cada iteració, fer el trainworld pel nombre de gauss corresponents, verify, spk_verif_score i escriure el resultat en el fitxer verifymfcc13_nmix.log (o número de coefs que tinguem)
         # seq 5 5 -> de 5 a 5, només 1 iteració, 5 gaussianes ~ seq val_inici val_final, augment de 1 en 1
-        for m in $(seq 109 125); do
+        for m in $(seq 95 125); do
             gmm_train -v 1 -T 1e-7 -N 150 -t 1e-7 -n 150 -m $m -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
 
             (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates | 
@@ -271,9 +271,9 @@ for cmd in $*; do # Para cada argumento en la línea del comando
             fi
             spk_verif_score $w/verif_${FEAT}_${name_exp}.log | tee $w/verif_${FEAT}_${name_exp}.res
 
-            echo "m = $m" | tee -a verifymfcc12_nmix-7-150.log
-            tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix-7-150.log
-            echo "" | tee -a verifymfcc12_nmix-7-150.log
+            echo "m = $m" | tee -a verifymfcc12_nmix-7-150-097.log
+            tail -3 $w/verif_${FEAT}_${name_exp}.res | tee -a verifymfcc12_nmix-7-150-097.log
+            echo "" | tee -a verifymfcc12_nmix-7-150-097.log
 
         done
 

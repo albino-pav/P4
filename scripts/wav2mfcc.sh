@@ -46,7 +46,7 @@ sox $inputfile -t raw -e signed -b 16 - | #convert (-t) wav file to raw file
                                           #con desplazamiento de 80 muestras
    $WINDOW -l 240 -L 240 -w 1 |           #enventana con Hamming longitud 240
                                           #-l frame length input, -L frame length output
-	$MFCC -c 17 -m $mfcc_order -l 240 > $base.mfcc  #computes MFCC cepstral coeffs from MFCC
+	$MFCC -c 17 -a 0.96 -m $mfcc_order -l 240 > $base.mfcc  #computes MFCC cepstral coeffs from MFCC
                                  
 
 # Our array files need a header with the number of cols and rows:
