@@ -80,6 +80,9 @@ ejercicios indicados.
   Podem veure com els valors de lp a lpcc respectivament es van dispersant, i per tant el seu valor de la correlació normalitzada entre els paràmetres 2 i 3 disminueix. 
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+Per al LPCC, el Linear Prediction Cepstral Coeficients, ens diu que hem d'utilitzar una prediccio P d'ordre 12 i per la longitud de les trames de entre 20-30ms i entre 10-15ms.
+
+Per altra banda, pel MFCC, els Mel Frequency Cepstral Coeficients, es solen utilitzar els primers 13 coeficients per a la tasca de reconeixement de veu i es recomana utilitzar un banc de 24-26 filtres. Per la resta de parametres, són els mateixos que per LPCC.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -98,6 +101,9 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | Tasa de error (%)      | 8,54 | 1,78 | 2,17 |
 
 ### Verificación del locutor.
 
@@ -107,7 +113,23 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+  *LP*
+  <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/captures/verif_err_lp.png'>
+
+  *LPCC*
+  <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/captures/verif_err_lpcc.png'>
  
+  *MFCC* 
+  <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/captures/verif_err_mfcc.png'> 
+
+  Tot i que durant el reconeixement el millor resultat l'obtenim a través de fer servir paràmetres LPCC, quan passem a la verificació de SPEECON el millor resultat és clarament a través de MFCC. No obstant la diferència en el reconeixement és molt petita (de un 0,39%).
+
+  La taula amb els valors obtinguts amb MFCC és: 
+            | Llindar  | Falsa alarma | Pèrdua | Score |
+  |---------|:--------:|:------------:|:------:|:-----:|
+  | MFCC    | 0,284349 |    0/1000    | 68/250 |  27.2 |
+
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 

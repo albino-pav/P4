@@ -206,23 +206,22 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-       compute_$FEAT $final $lists/final/class.test
+       compute_$FEAT $db_verif $lists/final/class.test
        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | 
-       tee $w/class_test.res) || exit 1 #filtro tee
-       tee class_test.log
+       tee class_test.log) || exit 1 #filtro tee
        #echo "To be implemented ..."
    
-   elif [[ $cmd == finalverif ]]; then
+ elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
 	   # Perform the final test on the speaker verification of the files in spk_ima/sr_test/spk_ver.
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-       compute_$FEAT $db_verif $lists/final/verif.test
-       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/final/verif.test $lists/final/verif.test.candidates |
+       #compute_$FEAT $db_verif $lists/final/verif.test
+       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates |
          tee $w/verif_test.res) || exit 1
-         perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 2.2918176858281) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
+         perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 0.255178076520402) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
          tee verif_test.log
         
        #echo "To be implemented ..."
