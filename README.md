@@ -84,12 +84,12 @@ ejercicios indicados.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
-
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+
+  ![image](https://user-images.githubusercontent.com/80445439/120117276-aa334100-c18c-11eb-92ac-7a242e80bd9e.png)
+
+  Como podemos ver, hay mucha relación entre coeficientes en LP. En cambio para MFCC y LPCC hay menos correlación.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
