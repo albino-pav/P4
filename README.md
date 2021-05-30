@@ -245,7 +245,7 @@ Complete el código necesario para realizar verificación del locutor y optimice
 
   |            | LP   | LPCC | MFCC |
   |------------|:----:|:----:|:----:|
-  | Umbral óptimo|  |  |  |
+  | Umbral óptimo| 1.0243683907696 | 0.876277274080092 | 0.46754565488881 |
   | Nº pérdidas | 228/250 | 158/250 | 41/250 |
   | Falsas alarmas | 0/1000 | 0/100 | 0/1000 |
   | Coste de detección | 91.2 | 63.2 | 16.4 |
