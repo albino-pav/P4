@@ -229,12 +229,15 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de reconocimiento.
   > 
   > **LP**
+  >
   ><img src="img/verif_err_lp.png" width="400" align="center">
   >
   > **LPCC**
+  >
   ><img src="img/verif_err_lpcc.png" width="400" align="center">
   > 
   > **MFCC**
+  >
   ><img src="img/verif_err_mfcc.png" width="400" align="center">
   > 
 
