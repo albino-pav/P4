@@ -56,6 +56,7 @@ int main(int argc, const char *argv[]) {
   /// initicialization accordingly.
   switch (init_method) {
   case 0:
+    gmm.random_init(data, nmix);
     break;
   case 1:
     break;
@@ -66,7 +67,8 @@ int main(int argc, const char *argv[]) {
   }
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
-
+  gmm.em(data,em_iterations,em_threshold,verbose);
+  /// \DONE
 
   //Create directory, if it is needed
   gmm_filename.checkDir();
@@ -104,7 +106,7 @@ int usage(const char *progname, int err)  {
 int read_options(int ArgC, const char *ArgV[], Directory &input_dir, Ext &input_ext, vector<string> &filenames, 
 		 unsigned int &nmix, string &gmm_filename, 
 		 unsigned int &init_iterations, unsigned int &em_iterations, float &init_threshold, float &em_threshold, 
-		 int &init_method, unsigned int &verbose) {
+		 int &init_method, unsigned int &verbose) { // se traduce de ordenes de invocacion a variables del programa
 
   char option;
   bool use_list = true;
