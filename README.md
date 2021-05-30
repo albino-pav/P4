@@ -48,7 +48,7 @@ if [[ $# != 3 ]]; then
    exit 1
 fi
 ```
-> A continuación, se declaran aquellos parámetros que el usuario tendra que especificar en el momento que se invoque el script. En este caso los importantes son el número de coeficientes LPC que queremos que se calculen, y los ficheros de entrada y salida. Tanto $1 como $2 y $3 guardan en ellos los parámetros especificados en orden por consola ($0 no se usa ya que es el primer argumento de todos realmente es el propio nombre del script en este caso).
+> A continuación, se declaran aquellos parámetros que el usuario tendra que especificar en el momento que se invoque el script. En este caso los importantes son el número de coeficientes LPC que queremos que se calculen, y los ficheros de entrada y salida. Tanto $1 como $2 y $3 guardan en ellos los parámetros especificados en orden por consola ($0 no se usa ya que es el primer argumento de todos que suele ser el propio nombre del script).
 > Despues, dependiendo del valor de la variable de entorno UBUNTU_SPTK, se especifica como se invocan los comandos o programas del paquete de código abierto para procesado de señal de voz SPTK.
 ```c
 lpc_order=$1
@@ -106,7 +106,7 @@ $LPC -l 240 -m $lpc_order > $base.lp
   ```
 >Para obtener el número de columnas de la matriz, simplemente lo definimos como el orden escogido del LPC que son el número de coeficientes, y luego tenemos en cuenta una      >unidad más ya que el primer valor de todos es la ganancia. 
 >Para calcular el número de filas se usa el comando perl. 
->Primero pasamos el contenido de nuestro ficheros temporales los cuales son un conjunto de floats de 4 bytes concatenados a formato ASCII. Se genera asi un fichero con un valor ASCII en cada linea, que el comando "wc -l" se encargara de extraer el número de lineas. De esta manera tenemos el número de valores que tenía nuestro fichero temporal. Conociendo el número de columnas, simplemente se divide el número de datos totales por el de columnas para obtener asi el número de filas.
+>Primero pasamos el contenido de nuestro ficheros temporales los cuales son un conjunto de floats de 4 bytes concatenados a formato ASCII. Se genera asi un fichero con un valor ASCII en cada linea. El comando "wc -l" se encargara de extraer el número de lineas de deste fichero. Así sabremos el número de valores que tenía nuestro fichero temporal y conociendo el número de columnas, simplemente se divide el número de datos totales por el de columnas para obtener asi el número de filas de la matriz.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
@@ -150,15 +150,15 @@ $LPC -l 240 -m $lpc_order > $base.lp
   >Consultamos entonces los ficheros generados, y de ahi extraemos el coeficiente de correlación Pearson.
   >Para los coeficientes de predicción lineal:
   >
-  <img src="https://user-images.githubusercontent.com/79224893/120047553-26a31400-c015-11eb-88c5-227a211cbfb8.png" width="300">
+  <img src="https://user-images.githubusercontent.com/79224893/120047553-26a31400-c015-11eb-88c5-227a211cbfb8.png" width="200">
   
   >Para los coeficientes cepstrales:
   >
-  <img src="https://user-images.githubusercontent.com/79224893/120047563-2f93e580-c015-11eb-8bb2-aeb12bcdbffc.png" width="300">
+  <img src="https://user-images.githubusercontent.com/79224893/120047563-2f93e580-c015-11eb-8bb2-aeb12bcdbffc.png" width="200">
   
   >Para los coeficientes Mel-cepstrales:
   >
-  <img src="https://user-images.githubusercontent.com/79224893/120047595-433f4c00-c015-11eb-8def-4ce162485b4d.png" width="300">
+  <img src="https://user-images.githubusercontent.com/79224893/120047595-433f4c00-c015-11eb-8def-4ce162485b4d.png" width="200">
   
   >Nos queda por lo tanto la siguiente tabla:
 
@@ -168,8 +168,8 @@ $LPC -l 240 -m $lpc_order > $base.lp
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
-  > Como podemos apreciar, los coeficientes LP y ceptrales, en los cuales podíamos más o menos distinguir algun tipo de correlación entre los coeficientes al distinguir un patron, son los que obtienen coeficientes de correlación Pearson más alejados del 0. En cambio los coefientes mel-cepstrum que tenían una representación más en forma de nube, son los que obtienen un coeficiente Pearson más cercano a 0. Estos valores y representaciones tienen sentido ya que un valor cercano a +1 o -1 implica una alta correlación entre componentes (podemos estimar el valor de uno en función del otro). En cambio un valor cercano a 0 indica que las componentes estan poco correladas y que la información conjunta proporcionada por ambas es el doble que la que otorga una sola de ellas.
-  >
+  > Como podemos apreciar, los coeficientes LP en los cuales podíamos más o menos distinguir algun tipo de correlación en la representación de los coeficientes 2 y 3 al distinguir un patron, es el que obtiene un coeficiente de correlación Pearson más alejados del 0. En cambio los coeficientes ceptrales y Mel-cepstrales que tenían una representación más en forma de nube, son los que obtienen un coeficiente Pearson más cercano a 0. Estos valores y representaciones tienen sentido ya que un valor cercano a +1 o -1 implica una alta correlación entre componentes (podemos estimar el valor de uno en función del otro). En cambio un valor cercano a 0 indica que las componentes estan poco correladas y que la información conjunta proporcionada por ambas es el doble que la que otorga una sola de ellas.
+  
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 > Para los LPCC se recomienda usar un orden de 13 coeficientes.
 >
