@@ -35,7 +35,7 @@ ejercicios indicados.
   
 > Al abrir el script wa2lp.sh, nos encontramos con que antes de realizar la parametrización de una señal .wav, se eliminan los 
 > ficheros temporales, si existiesen, asociados a la parametrización (en este caso a través del cálculo de los coeficientes de predición lineal LPC).
-> Tambien un "usage" que nos indica como se ultiliza el script, y que este necesita de una señal .wav de entrada, y que devuelve un fichero salida.lp.
+> Tambien un "usage" que nos indica como se utiliza el script, este necesita de una señal .wav de entrada, y que devuelve un fichero salida.lp.
 ```c
 # Ensure cleanup of temporary files on exit
 trap cleanup EXIT
@@ -70,7 +70,7 @@ else
 fi
 
 ```
-> Tras ya haber especificado los parámetros que el usuario tendra que especificar en la linea de comandos (o en otro script), se pasa a la función principal de wav2lp.sh. El pipeline principal, gracias a los programas especificados justo en el paso anterior, conseguimos una extracción de caracteristicas adecuada para nuestra señal. El pipeline principal es el siguiente: 
+> Tras ya haber especificado los parámetros que el usuario tendra que especificar en la linea de comandos (o en otro script), se pasa a la función principal de wav2lp.sh. El pipeline principal, gracias a los programas especificados justo en el paso anterior, consigue una extracción de caracteristicas adecuada para nuestra señal. El pipeline principal es el siguiente: 
 ```c
 # Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |$LPC -l 240 -m $lpc_order > $base.lp
@@ -79,7 +79,7 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 ```c
 sox $inputfile -t raw -e signed -b 16 - 
 ```
->La herramienta sox nos permite convertir la entrada que esta en formato de ley mu a enteros de 16 bits con signo. Este paso es primordial ya que los ficheros .wav estan >codificados con la ley mu pero el posterior paso de parametrización con SPTK solo es capaz de leer señales de float4.
+>La herramienta sox nos permite convertir la entrada que esta en formato de ley mu a enteros de 16 bits con signo. Este paso es primordial ya que los ficheros .wav estan codificados con la ley mu pero el posterior paso de parametrización con SPTK solo es capaz de leer señales de float4.
 ```c
 $X2X +sf
 ```
@@ -87,15 +87,15 @@ $X2X +sf
 ```c
 $FRAME -l 240 -p 80
 ```
->Pasamos al entramado de la señal. El programa frame nos permite configurar la ventana de extración de datos de una secuencia. En este caso nos interesa escoger ventanas de >30ms, que con una frecuencia de muestreo de 8000Hz correspondería a una ventana de 240 muestras. Tambien configuramos un desplazamiento entre ventanas de 10ms, lo que >corresponde a 80 muestras.
+>Pasamos al entramado de la señal. El programa frame nos permite configurar la ventana de extración de datos de una secuencia. En este caso nos interesa escoger ventanas de 30ms, que con una frecuencia de muestreo de 8000Hz correspondería a una ventana de 240 muestras. Tambien configuramos un desplazamiento entre ventanas de 10ms, lo que corresponde a 80 muestras.
 ```c
 $WINDOW -l 240 -L 240
 ```
->Usamos el programa "window" para enventanar la señal. Primero especificamos el número de muestras que entra, que tal y como hemos configurado en el paso previo de la pipeline, >tienen que ser 240 muestras. Luego se especifica la longitud en muestras de lo que sale.
+>Usamos el programa "window" para enventanar la señal. Primero especificamos el número de muestras que entra, que tal y como hemos configurado en el paso previo de la pipeline, tienen que ser 240 muestras. Luego se especifica la longitud en muestras de lo que sale.
 ```c
 $LPC -l 240 -m $lpc_order > $base.lp
 ```
->Y finalmente, pasamos a la parametrización perse. En ella se especifican el número de muestras y el número de coeficientes de predicción lineal que en este caso tal y como >hemos explicado antes, pasaremos como parámetro cuando invoquemos el script.
+>Y finalmente, pasamos a la parametrización perse. En ella se especifican el número de muestras y el número de coeficientes de predicción lineal que en este caso tal y como hemos explicado antes, pasaremos como parámetro cuando invoquemos el script.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
@@ -104,8 +104,8 @@ $LPC -l 240 -m $lpc_order > $base.lp
   ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
   nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
   ```
->Para obtener el número de columnas de la matriz, simplemente lo definimos como el orden escogido del LPC que son el número de coeficientes, y luego tenemos en cuenta una      >unidad más ya que el primer valor de todos es la ganancia. 
->Para calcular el número de filas se usa el comando perl. 
+>Para obtener el número de columnas de la matriz, simplemente lo definimos como el orden escogido del LPC que son el número de coeficientes, y luego tenemos en cuenta una      unidad más ya que el primer valor de todos es la ganancia.
+>Para calcular el número de filas se usa el comando perl.
 >Primero pasamos el contenido de nuestro ficheros temporales los cuales son un conjunto de floats de 4 bytes concatenados a formato ASCII. Se genera asi un fichero con un valor ASCII en cada linea. El comando "wc -l" se encargara de extraer el número de lineas de deste fichero. Así sabremos el número de valores que tenía nuestro fichero temporal y conociendo el número de columnas, simplemente se divide el número de datos totales por el de columnas para obtener asi el número de filas de la matriz.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
@@ -133,9 +133,30 @@ $LPC -l 240 -m $lpc_order > $base.lp
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
   
+  <p align="center">
+   <img src="https://user-images.githubusercontent.com/65824775/120111924-089ff580-c174-11eb-9088-fbec4cfd72b1.png" width="550" align="center">
+  </p>
+   <p align="center">
+    <img src="https://user-images.githubusercontent.com/65824775/120111925-0b024f80-c174-11eb-86bd-b425a2a2935d.png" width="550">
+  </p>
+   <p align="center">
+    <img src="https://user-images.githubusercontent.com/65824775/120111926-0ccc1300-c174-11eb-817a-2dfce81371a7.png" width="550">
+  </p>
+  
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+   
+> Se seleccionan la 4ta y la 5ta columna ya que son las que nos proporcionan la informacion de el 2do y 3er coeficientes tal y como esta construida la "fmatrix". Si hubieramos seleccionado la columna 2 y 3 estariamos cogiendo la ganancia y la representacion no seria adecuada para comprobar la correlacion.
+
+```c
+fmatrix_show work/lp/BLOCK01/SES010/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+fmatrix_show work/lpcc/BLOCK01/SES010/*.lpcc | egrep '^\[' | cut -f4,5 > lpcc_2_3.txt
+fmatrix_show work/mfcc/BLOCK01/SES010/*.mfcc | egrep '^\[' | cut -f4,5 > mfcc_2_3.txt
+```
+
   + ¿Cuál de ellas le parece que contiene más información?
+
+> Analizando las gráficas obtenidas vemos una distribución más o menos lineal en el caso de la parametrización LP. Por otro lado los coeficientes de las parametrizaciones LPCC y MFCC son mucho más dispersas, denotando menos correlación entre sus coeficientes y por lo tanto menos dependencia entre ellos. Si se tuviera que escoger, parece que la que tiene los coeficientes más incorrelados es la parametrización MFCC y es por lo tanto la que contiene más información.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
@@ -186,9 +207,44 @@ Complete el código necesario para entrenar modelos GMM.
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
   
+  <p align="center">
+   <img src="https://user-images.githubusercontent.com/65824775/120112712-376b9b00-c177-11eb-9198-a928153cf06e.png" width="550" align="center">
+  </p>
+  
+  > Se ha obtenido la gráfica con:
+ 
+  ```c
+  plot_gmm_feat work/gmm/mfcc/SES010.gmm &
+  ```
+
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+  
+  > Se ha optado por en primer lugar representar la GMM con las muestras del locutor al que corresponde:
+  
+  ```c
+  plot_gmm_feat work/gmm/mfcc/SES010.gmm work/mfcc/BLOCK01/SES010/SA010S* &
+  ```
+  > Y se obtiene la siguiente gráfica:
+  
+  <p align="center">
+   <img src="https://user-images.githubusercontent.com/65824775/120112973-9aa9fd00-c178-11eb-9730-81079325b942.png" width="550" align="center">
+  </p>
+  
+  > En segundo lugar se representa la GMM anterior con las muestras de un nuevo locutor al que no corresponde:
+  
+  ```c
+  plot_gmm_feat work/gmm/mfcc/SES010.gmm work/mfcc/BLOCK01/SES014/SA014S*
+  ```
+  > La gráfica resultante es:
+  
+  <p align="center">
+   <img src="https://user-images.githubusercontent.com/65824775/120113014-d9d84e00-c178-11eb-8b38-13ba288629d8.png" width="550" align="center">
+  </p>
+  
+  > Como era de esperar, la GMM que corresponde al locutor es la que mejor se adapta a sus muestras. Si se comparan las dos gráficas de las GMM, vemos como claramente la primera modela mucho mejor al locutor que la segunda, ajustando sus bordes y orientación, por lo que tendrá mayor facilidad para distinguir las señales de uno u otro locutor.
+
 
 ### Reconocimiento del locutor.
 
