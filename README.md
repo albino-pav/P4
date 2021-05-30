@@ -214,7 +214,6 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
   |            | LP   | LPCC | MFCC |
   |------------|:----:|:----:|:----:|
   | Nº errores | 100/785 | 27/785 | 5/785 |
-  |------------|:-------:|:------:|:-----:|
   | Tasa de error | 12.74% | 3.44% | 0.64% |
   >
 
