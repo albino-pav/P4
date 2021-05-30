@@ -209,11 +209,12 @@ for cmd in $*; do
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-       # compute_$FEAT $db_verif $lists/final/verif.test 
-       (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/final/verif.test  $lists/final/verif.test.candidates |
-        tee $w/verif_test.res) || exit 1
-       perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 1.69783763241001) {print "1\n"} else {print "0\n"}' $w/verif_test.res |
-       tee verif_test.log
+    compute_$FEAT $db_verif $lists/final/verif.test 
+    (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/final/verif.test  $lists/final/verif.test.candidates |
+    tee $w/verif_test.res) || exit 1
+    perl -ane 'print "$F[0]\t$F[1]\t"; 
+        if ($F[2] > 0.46754565488881) {print "1\n"} 
+        else {print "0\n"}' $w/verif_test.res | tee verif_test.log
    
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
