@@ -148,7 +148,7 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
     | Parametrización |   LP   |  LPCC   |  MFCC  |
     |-----------------|:------:|:-------:|:------:|
-    | Error           | 9,81 % | 12,36 % | 0,89 % |
+    | Error           | 9,81 % | 12,36 % | 0,76 % |
 
 ### Verificación del locutor.
 
@@ -158,7 +158,11 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
- 
+
+    | Parámetro       |   Umbral óptimo   | # falsas alarmas |    # pérdidas   | Score |
+    |-----------------|:-----------------:|:----------------:|:---------------:|:-----:|
+    | Valor           | 0.317649235262001 | 0/1000 = 0.0000  | 38/250 = 0.1520 | 15.2  |
+
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
