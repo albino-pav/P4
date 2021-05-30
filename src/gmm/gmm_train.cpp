@@ -39,7 +39,7 @@ int main(int argc, const char *argv[]) {
   int retv = read_options(argc, argv, input_dir, input_ext, filenames,
 		      nmix, gmm_filename, 
 		      init_iterations, em_iterations, init_threshold, em_threshold,
-		      init_method, verbose);
+		      init_method, verbose); //Obtenemos de aquí los paramétros especificados por consola (script)
   if (retv != 0)
     return usage(argv[0], retv);
 
@@ -54,19 +54,24 @@ int main(int argc, const char *argv[]) {
   /// 
   /// Other alternatives are: vq, em_split... See the options of the program and place each
   /// initicialization accordingly.
+  /// \DONE implementada las incializaciones random, VQ y EM
   switch (init_method) {
-  case 0:
+  case 0: 
+  gmm.random_init(data,nmix); //Inicializacón de las GMM aleatoria
     break;
   case 1:
+  gmm.vq_lbg(data,nmix,init_iterations,init_threshold,verbose); //Inicializacón de las GMM por VQ
     break;
-  case 2:
+  case 2: 
+  gmm.em_split(data,nmix,init_iterations,init_threshold,verbose); //Inicializacón de las GMM por EM split
     break;
   default:
     ;
   }
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
-
+  gmm.em(data, em_iterations, em_threshold, verbose);
+  /// \DONE Implementado el algoitmo de Expectation Maximization para mejorar los modelos
 
   //Create directory, if it is needed
   gmm_filename.checkDir();
