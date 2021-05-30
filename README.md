@@ -259,21 +259,21 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
   >Hemos usado 13 coeficientes cepstrales
 
-  >Hemos usado _ coeficientes Mel-Cepstrales y _ filtros del banco de filtros.
+  >Hemos usado 16 coeficientes Mel-Cepstrales y 24 filtros del banco de filtros. Haber conseguido los mejores resultados con este número de coeficientes nos ha sorprendido un poco. Cierto es que hasta 20 coeficientes Mel-Cepstrales según dicta la teoría aun puede haber información relevante para un sistema de reconocimiento de voz, pero tambien sabemos que la mayor parte de esta se concentra en los 13 primeros. Estos 3 coeficientes de más han supuesto para nosotros llegar a unos resultados aceptables. (Si es deseo del lector conocer un poco más con detalle como hemos llegado a estos resultados y el proceso de pruebas que hay detrás, adjunto a continuación un [enlace](https://1drv.ms/u/s!AsNjnHbjd6Rhk1SH3_QTPAKsHfG-?e=5WajJK) que refleja todo el proceso).
   
   |                        | LP            | LPCC         | MFCC          |
   |------------------------|:-------------:|:------------:|:-------------:|
-  | TASA DE ERROR          |   9.81% (77 errores)  |   3.06% (24 errores)   |   X.XX% (Y errores)   |
+  | TASA DE ERROR          |   9.81% (77 errores)  |   3.06% (24 errores) |   0.51% (4 errores)   |
   
   >Estos resultados se han obtenido gracias a la elección de los siguientes parámetros para el gmm_train:
 
-  > - Inicialización: VQ
-  > - Número de gaussianas: 
-  > - Threshold:  
-  > - Número iteraciones: _ Este número en nuestro caso realmente no es muy relevante más que no entorpezca el threshold establecido ya que ajustamos el entrenamiendo de los modelos a través de este.
   ```c
-  
+  gmm_train  -v 1 -T 0.013 -i 1 -N 60 -m 55 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
   ```
+  > - Inicialización: VQ
+  > - Número de gaussianas: 55
+  > - Threshold: 0.013
+  > - Número iteraciones: 60 Este número en nuestro caso realmente no es muy relevante más que no entorpezca el threshold establecido ya que ajustamos el entrenamiendo de los modelos a través de este
 
 ### Verificación del locutor.
 
@@ -288,19 +288,19 @@ Complete el código necesario para realizar verificación del locutor y optimice
  
   |                        | UMBRAL ÓPTIMO | FALSAS ALARMAS | PÉRDIDAS    | SCORE         |
   |------------------------|:-------------:|:------------:|:-------------:|:-------------:|
-  | Verificación con MFCC  |   0   |   0   |   0   |   0   |
+  | Verificación con MFCC  |   0.339083542536492   |   0/1000   |   22/250   |   8.8   |
   
   >Para obtener estos resultados, sin tocar los modelos de usuarios ya entrenados, pasamos a entrenar el modelo del mundo. Procedemos de esta manera ya que la probabilidad de la GMM del usuario es muy variable igual que la del impostor. Por lo que normalizamos esta probabilidad respecto la de un modelo general como el citado anteriormente.
   
   >Los parámetros de entrenamiento de este modelo son:
-
-  > - Inicialización: VQ
-  > - Número de gaussianas: 
-  > - Threshold:  
-  > - Número iteraciones: _ 
   ```c
-  
+   gmm_train  -v 1 -T 0.02 -i 1 -N 35 -m 60 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
   ```
+  > - Inicialización: VQ
+  > - Número de gaussianas: 60
+  > - Threshold:  0.02
+  > - Número iteraciones: 35
+
  
 ### Test final
 
@@ -310,6 +310,7 @@ Complete el código necesario para realizar verificación del locutor y optimice
 >Tanto para la clasificación como para la verificación final, emplearemos los parámetros que nos han permitido conseguir una mejor puntuación en la base de datos SPEECON. Aunque el número de gaussianas tanto en el train como en el trainworld resulten muy especificos, hemos optimizado el umbral de criterio de parada del algoritmo de Expectation Maximization para evitar en la medida de lo posible un "overtraining" o "overfitting" que haga más difícil aun extrapolar estos parámetros a otras bases de datos u reconocimiento de señales distintas y por lo tanto tener unos modelos más generalizables. 
 
 >Tambien es posible que si ajustamos el número de iteraciones de la inicialización o el threshold de mejora de la misma, podamos obtener un sistema de reconocimiento y de verificación más generalizables y que en algunas ocasiones, funcionen mejor.
+
 
 ### Trabajo de ampliación.
 
