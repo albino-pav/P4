@@ -197,10 +197,10 @@ Complete el código necesario para entrenar modelos GMM.
   > Creando una visualización gráfica para poder comparar el modelo mediante GMM del locutor SES024 con los datos del locutor SES120, y viceversa, podemos observar la capacidad de diferenciación de las señales:
   >
   > Modelado SES024 y datos SES120:
-  > <img src="img/Figure_3.png" width="800" align="center">
+  > <img src="img/Figure_3.png" width="400" align="center">
   >
   > Modelado SES120 y datos SES024:
-  > <img src="img/Figure_4.png" width="800" align="center">
+  > <img src="img/Figure_4.png" width="400" align="center">
 
 ### Reconocimiento del locutor.
 
