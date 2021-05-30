@@ -221,7 +221,7 @@ for cmd in $*; do
        #compute_$FEAT $db_verif $lists/final/verif.test
        (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates |
          tee $w/verif_test.res) || exit 1
-         perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 0.255178076520402) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
+         perl -ane 'print "$F[0]\t$F[1]\t"; if ($F[2] > 0.284349298881802) {print "1\n"} else {print "0\n"}' $w/verif_test.res |   
          tee verif_test.log
         
        #echo "To be implemented ..."
