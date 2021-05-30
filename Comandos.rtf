@@ -1,0 +1,67 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\csgray\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10500\viewh8100\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 wav2lp 12 spk_8mu/speecon/BLOCK00/SES000/SA000S01.wav prova.lp\
+\
+\
+ls -l prova.lp\
+\
+fmatrix_show  \
+\
+wav2lp 12 spk_8mu/speecon/BLOCK00/SES000/SA000S01.wav prova.lp\
+\
+run_spkid     \
+\
+ls spk_8mu/sr_test/spk_ver  \
+\
+ls spk_8mu/sr_test/spk_cls  \
+\
+run_spkid lp  \
+\
+pearson     \
+\
+pearson work/lp/BLOCK00/SES001/SA001S01.lp\
+\
+pearson work/lp/BLOCK00/SES001/SA001S01.lp | less\
+\
+\
+\
+Martes 27 abril:\
+\
+fmatrix_cut -f 2,3,4 work/mfcc/BLOCK01/SES010/SA010S01.mfcc | head\
+\
+fmatrix_cut -f $(echo $(seq 2 13) | sed -e "s/ /,/g") work/mfcc/BLOCK01/SES010/SA010S01.mfcc out2\
+\
+gmm_show work/gmm/mfcc/SES001.gmm\
+\
+FEAT=mfcc run_spkid train\
+\
+FEAT=mfcc run_spkid test \
+\
+FEAT=mfcc run_spkid classerr\
+\
+source ../../../Enviroments/TresOcho/bin/activate\
+\
+plot_gmm_feat work/gmm/mfcc/SES000.gmm \
+\
+plot_gmm_feat work/gmm/mfcc/SES000.gmm work/mfcc/BLOCK00/SES001/*  \
+\
+\
+make doc\
+\
+spk_verif_score -43 work/verif_mfcc_one.log\
+\
+FEAT=lp run_spkid verif_err\
+\
+FEAT=lp run_spkid trainworld\
+\
+CON LP:\
+plot_gmm_feat -x 1 -y 2 work/gmm/lp/SES000.gmm work/lp/BLOCK00/SES001/\
+\
+\
+\
+}
