@@ -170,13 +170,13 @@ ejercicios indicados.
 >
 > Orden: 8
 >
-> Orden del cepstrum: 16
+> Orden del cepstrum: 13-16
 >
 > **MFCC**
 >
-> Orden: 15
+> Orden: 13-15
 > 
-> Número de filtros: 28
+> Número de filtros: 24-40
 
 
 ### Entrenamiento y visualización de los GMM.
@@ -185,10 +185,22 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+  >
+  > A continuación, se muestra el modelado mediante GMM y la parametrización con mfcc, del locutor SES024:
+  >
+  > <img src="img/Figure_1.png" width="800" align="center">
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+  >
+  > Creando una visualización gráfica para poder comparar el modelo mediante GMM del locutor SES024 con los datos del locutor SES120, y viceversa, podemos observar la capacidad de diferenciación de las señales:
+  >
+  > Modelado SES024 y datos SES120:
+  > <img src="img/Figure_3.png" width="800" align="center">
+  >
+  > Modelado SES120 y datos SES024:
+  > <img src="img/Figure_4.png" width="800" align="center">
 
 ### Reconocimiento del locutor.
 
