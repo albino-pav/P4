@@ -239,6 +239,7 @@ Complete el código necesario para realizar verificación del locutor y optimice
   > *30 gaussianas, 20 iteraciones, 20 iteraciones de inicialización y un umbral de 0.001.*
   >
   > Se ha reducido el número de iteraciones y el número de gaussianas con la intención de generalizar un poco el modelo e intentar aproximar el modelo de una forma que no se moldee a algun locutor en específico.
+  >
   > **LP**
   >
   ><img src="img/verif_err_lp.png" width="400" align="center">
@@ -255,9 +256,9 @@ Complete el código necesario para realizar verificación del locutor y optimice
   |            | LP   | LPCC | MFCC |
   |------------|:----:|:----:|:----:|
   | Umbral óptimo| 1.0243683907696 | 0.876277274080092 | 0.6364625939256 |
-  | Nº pérdidas | 228/250 | 158/250 | 38/250 |
-  | Falsas alarmas | 0/1000 | 0/100 | 0/1000 |
-  | Coste de detección | 91.2 | 63.2 | 15.2 |
+  | Nº pérdidas | 208/250 | 130/250 | 38/250 |
+  | Falsas alarmas | 1/1000 | 1/100 | 0/1000 |
+  | Coste de detección | 93.1 | 61.9 | 15.2 |
  
 ### Test final
 
