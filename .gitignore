@@ -1,7 +1,9 @@
-spk_8mu/
+spk_8mu/    
 lp/
 lpcc/
 mfcc/
 gmm/
+
+bin/
 
 !src/gmm
