@@ -1,0 +1,44 @@
+CLASSIFICACIÓ
+- ordres:
+run_spkid mfcc
+FEAT=mfcc run_spkid train
+FEAT=mfcc run_spkid test classerr
+FEAT=mfcc run_spkid finalclass
+
+parametrització: mfcc de 12 coeffs
+train: gmm_train  -v 1 -T 1e-7 -N 100 -m 23 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+error_rate: 0.89
+-------------------------------------------------------------------------------------------------------------------------------------------
+VERIFICACIÓ
+- ordres:
+run_spkid mfcc
+FEAT=mfcc run_spkid train trainworld
+FEAT=mfcc run_spkid verify verifyerr
+FEAT=mfcc run_spkid finalverif
+
+parametrització: mfcc de 13 coeffs
+train: gmm_train -v 1 -T 1e-7 -N 100 -m 31 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train  -v 1 -T 1e-6 -N 100 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+verifyerr: spk_verif_score 0.39230127
+CostDetection: 17.6
+
+parametrització: mfcc de 13 coeffs
+train: gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+verifyerr: 
+CostDetection: 12.8
+
+parametrització mfcc de 13 coeffs i c= 17 
+     $MFCC -c 17 -m $mfcc_order -l 240 > $base.mfcc 
+train:  gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train -v 1 -T 1e-6 -N 120 -t 1e-6 -n 120 -m 96 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+classifyerr: 0.89
+cost detection = 13.2 
+
+parametrització mfcc de 13 coeficients c=17 a=0.96 
+     $MFCC -c 17 -a 0.96 -m $mfcc_order -l 240 > $base.mfcc
+train: gmm_train -v 1 -T 1e-7 -N 100 -m 33 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+trainworld: gmm_train -v 1 -T 1e-7 -N 150 -t 1e-7 -n 150 -m 116 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+classerr: 0.76
+cost detection = 15.2
+

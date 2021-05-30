@@ -1,0 +1,105 @@
+m = 1
+nerr=187	ntot=785	error_rate=23.82%
+
+m = 2
+nerr=98	ntot=785	error_rate=12.48%
+
+m = 3
+nerr=95	ntot=785	error_rate=12.10%
+
+m = 4
+nerr=51	ntot=785	error_rate=6.50%
+
+m = 5
+nerr=34	ntot=785	error_rate=4.33%
+
+m = 6
+nerr=30	ntot=785	error_rate=3.82%
+
+m = 7
+nerr=30	ntot=785	error_rate=3.82%
+
+m = 8
+nerr=20	ntot=785	error_rate=2.55%
+
+m = 9
+nerr=20	ntot=785	error_rate=2.55%
+
+m = 10
+nerr=21	ntot=785	error_rate=2.68%
+
+m = 11
+nerr=19	ntot=785	error_rate=2.42%
+
+m = 12
+nerr=21	ntot=785	error_rate=2.68%
+
+m = 13
+nerr=15	ntot=785	error_rate=1.91%
+
+m = 14
+nerr=15	ntot=785	error_rate=1.91%
+
+m = 15
+nerr=15	ntot=785	error_rate=1.91%
+
+m = 16
+nerr=18	ntot=785	error_rate=2.29%
+
+m = 17
+nerr=16	ntot=785	error_rate=2.04%
+
+m = 18
+nerr=15	ntot=785	error_rate=1.91%
+
+m = 19
+nerr=12	ntot=785	error_rate=1.53%
+
+m = 20
+nerr=14	ntot=785	error_rate=1.78%
+
+m = 21
+nerr=9	ntot=785	error_rate=1.15%
+
+m = 22
+nerr=9	ntot=785	error_rate=1.15%
+
+m = 23
+nerr=7	ntot=785	error_rate=0.89%
+
+m = 24
+nerr=12	ntot=785	error_rate=1.53%
+
+m = 25
+nerr=10	ntot=785	error_rate=1.27%
+
+m = 26
+nerr=12	ntot=785	error_rate=1.53%
+
+m = 27
+nerr=14	ntot=785	error_rate=1.78%
+
+m = 28
+nerr=8	ntot=785	error_rate=1.02%
+
+m = 29
+nerr=9	ntot=785	error_rate=1.15%
+
+m = 30
+nerr=8	ntot=785	error_rate=1.02%
+
+m = 31
+nerr=8	ntot=785	error_rate=1.02%
+
+m = 32
+nerr=11	ntot=785	error_rate=1.40%
+
+m = 33
+nerr=11	ntot=785	error_rate=1.40%
+
+m = 34
+nerr=14	ntot=785	error_rate=1.78%
+
+m = 35
+nerr=10	ntot=785	error_rate=1.27%
+
