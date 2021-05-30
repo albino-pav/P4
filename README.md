@@ -37,24 +37,48 @@ ejercicios indicados.
   $ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp
   ```
   > **sox**: es un programa multifuncional, donde podemos generar una señal del formato deseado a partir de un fichero de entrada. Además, permite modificar la frecuencia de muestreo. **-t** sirve para indicar el formato de audio; **-e** el tipo de dato en la codificación; y **-b** se usa para indicar cuantos bits se usan por muestra.
-
+  >
   > **$X2X (x2x)**: es un programa de SPTK, el cual nos permite la conversión del formato de datos. Con la opción **+sf** indicamos que el input format es short y el de output es float.
-
+  >
   > **$FRAME (frame)**: programa de SPTK, el cual separa la señal de entrada en un cierto número y formato de tramas, especificando con **-l** el número de muestras por trama y con **-p** sus respectivos solapamientos.
-  
-  > 
+  >
+  > **$WINDOW (window)**: programa de SPTK, el cual multiplica las **-l** muestras por una ventana Blackman, y saca **-L** muestras en el output.
+  >
+  > **$LPC (lpc)**: programa de SPTK, el cual calcula los **-m** coeficientes de predicción lineal de **-l** muestras enventanadas.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 47 del script `wav2lp.sh`).
+  ```c
+  ncol=$((lpc_order+1)) # lpcc p =>  (c0 c1 ... cp) 
+  nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  ```
+  > En número de columnas del formato fmatrix viene marcado por el número de coeficientes más otra columna donde se indica el el valor de ganancia. 
+
+  > Para encontrar el número de filas necesarias depende de la duración de la señal y de la longitud y desplazamiento de la ventana. Entonces se opta por extraer este valor del fichero obtenido (base.lp). Se cambia de float a ascii con el comando **x2x +fa**, seguidamente, con **wc -l** se cuenta el número de filas y con **perl** se imprimen las lineas con el formato de fmatrix.
+  >
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
     entrada y cuál es el de resultado.
+    > Es conveniente ya que se presentan los datos de una forma más visual; además, se pueden seleccionar los coeficientes fácilmente ya que están ordenados en tramas y en columnas correspondientes a estos mismos, a los coeficientes.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+  ```c
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order  > $base.lpcc
+  ```
+  > El programa **$LPCC (lpc2c)** se encarga de transformar los **-m** coeficientes de predicción lineal a **-M** coeficientes cepstrales de predicción lineal.
+  >
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+
+  ```c
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$MFCC -l 240 -m $mfcc_order -s 8 -w 1 -n 28 > $base.mfcc
+  ```
+  > En este caso, ya no se usa los coeficientes de predicción lineal, sino que se ha sustituido por el uso del mel-cepstrum mediante **$MFCC (mfcc)**, donde se especifica con **-l** la longitud de las tramas, con **-m** el orden del mel-cepstrum, con **-s** la frecuencia de muestreo, con **-w** se le indica que no use ninguna ventana (ya que previamente ya se le aplica una), y con **-n** se le indica el número de filtros del banco.
 
 ### Extracción de características.
 
