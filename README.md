@@ -58,7 +58,7 @@ ejercicios indicados.
  El número de files es tants com trames generades ($X2X), que guardem en format ASCII (+fa), a l'arxiu $base.lp El wc -l ens serveix per calcular el nombre de files. 
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)? Tenga en cuenta cuál es el formato de
-    entrada y cuál es el de resultado.
+    entrada y cuál es el de resultado.  
     Ens interessa utilitzar aquest format ja que les columnes ens permet separar per coeficients i les files per trames ens permet veure clarament si hi ha algun error gran en un coeficient en concret, o si hi ha algun tros de la senyal que sigui molt diferent dels altres. Ho guardem en format ASCII que facilita la seva obertura en qualsevol ordinador.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
@@ -89,17 +89,17 @@ ejercicios indicados.
     2. LPCC: fmatrix_show work/lp/BLOCK16/SES160/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
     3. MFCC: fmatrix_show work/lp/BLOCK16/SES1600/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
 
-    Les senyals són: 
+    Les senyals són:  
     1. LP
-    <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/lpgrafic.png'>
-
-   2. LPCC
-   <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/lpccgrafic.png'>
+    <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/lpgrafic.png'>  
+  
+    2. LPCC
+    <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/lpccgrafic.png'>
  
     3. MFCC  
-   <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/mfccgrafic.png'> 
+    <img src='https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/mfccgrafic.png'> 
 
-      *Nota: Les imatges no són les que diem a la pipeline de dalt, ja que hem fet el readme un altre dia i no recordem quina sessió vam agafar com a exemple*  
+      *Nota: Les imatges no són les que diem a la pipeline de dalt, ja que hem fet el readme   un altre dia i no recordem quina sessió vam agafar com a exemple*  
       
   + ¿Cuál de ellas le parece que contiene más información?  
   La que sembla que contingui més informació en el nostre cas és el gràfic de MFCC ja que (com comprovarem a la taula de sota) és el que gràfic que té els coeficients més incorrelats.
@@ -111,10 +111,12 @@ ejercicios indicados.
   |------------------------|:----:|:----:|:----:|
   | &rho;<sub>x</sub>[2,3] |-0,442|0,3825|0,2169|
   
-  + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+  + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.  
+
   Podem veure com els valors de lp a lpcc respectivament es van dispersant, i per tant el seu valor de la correlació normalitzada entre els paràmetres 2 i 3 disminueix. 
   
-- Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+- Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?  
+
 Per al LPCC, el Linear Prediction Cepstral Coeficients, ens diu que hem d'utilitzar una prediccio P d'ordre 12 i per la longitud de les trames de entre 20-30ms i entre 10-15ms.  
 Per altra banda, pel MFCC, els Mel Frequency Cepstral Coeficients, es solen utilitzar els primers 13 coeficients per a la tasca de reconeixement de veu i es recomana utilitzar un banc de 24-26 filtres. Per la resta de parametres, són els mateixos que per LPCC.
 
@@ -124,15 +126,19 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-
+<img src = 'https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/DensidadProbabilidadLocutor.png'>
 
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
-  * En el caso de tener el modelo de GMM del locutor 10 y población del locutor 10.
-  * En el caso de tener el modelo de GMM del locutor 11 y población del locutor 10.
+  * En el caso de tener el modelo de GMM del locutor 10 y población del locutor 10.  
+  <img src = 'https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/Densitatprobabilitat1010.png'>
+  * En el caso de tener el modelo de GMM del locutor 11 y población del locutor 10.  
+  <img src = 'https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/DensidadProbabilidad1110.png'>
   * En el caso de tener el modelo de GMM del locutor 10 y población del locutor 11.
+  <img src = 'https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/DensidadProbabilidad1011.png'>
   * En el caso de tener el modelo de GMM del locutor 11 y población del locutor 11.
+  <img src = 'https://github.com/sergiizquierdobas/P4/blob/flotats-izquierdo/grafics/DensidadProbabilidad1111.png'>
 
 ### Reconocimiento del locutor.
 
