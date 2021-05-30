@@ -89,9 +89,69 @@ ejercicios indicados.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
-    > Para el caso de la parametrización con MFCC, y un fichero de audio en concreto:
+    > Hemos observado que con el formato fmatrix, los coeficientes 2 y 3 corresponden con las columnas 4 y 5 en el caso de <code>wav2lp.sh</code> . Esto es debido a que primero hay un contador del numero de trama y además, el primer coeficiente es el de ganancia de los coeficientes.
+    >
+    > En el caso de <code>wav2lpcc.sh</code> y <code>wav2mfcc.sh</code>, no existe este término de ganancia, por lo tanto, los coeficientes 2 y 3 corresponden con el 3 y 4.
     > 
+    > **LP**
+
+    ```c
+    $ fmatrix_show work/lp/BLOCK00/SES000/*.lp | egrep '^\[' | cut -f4,5 > lp_2_3.txt
+    ```
+    >
+    > **LPCC**
+    ```c
+    $ fmatrix_show work/lpcc/BLOCK00/SES000/*.lpcc | egrep '^\[' | cut -f3,4 > lpcc_2_3.txt
+    ```
+    > 
+    > **MFCC**
+    >
+    ```c
+    $ fmatrix_show work/mfcc/BLOCK00/SES000/*.mfcc | egrep '^\[' | cut -f3,4 > mfcc_2_3.txt
+    ```
+    >
+    > Se ha generado el siguiente script de python para representar la figura presentada:
+
+    ```c
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    arxiu = []
+    arxiu1='lp_2_3.txt'
+    arxiu2='lpcc_2_3.txt'
+    arxiu3='mfcc_2_3.txt'
+
+    lp_2 = np.loadtxt(arxiu1, skiprows=0, usecols=0)
+    lp_3 = np.loadtxt(arxiu1, skiprows=0, usecols=1)
+    lpcc_2 = np.loadtxt(arxiu2, skiprows=0, usecols=0)
+    lpcc_3 = np.loadtxt(arxiu2, skiprows=0, usecols=1)
+    mfcc_2 = np.loadtxt(arxiu3, skiprows=0, usecols=0)
+    mfcc_3 = np.loadtxt(arxiu3, skiprows=0, usecols=1)
+
+    plt.subplot(3,1,1)
+    plt.title('LP Parametrization')
+    plt.plot(lp_2,lp_3,'+', mew=0.5) #grueso
+    plt.xlabel('Coefficient 2')
+    plt.ylabel('Coefficient 3')
+    plt.grid(True)
+    plt.subplot(3,1,2)
+    plt.title('LPCC Parametrization')
+    plt.plot(lpcc_2,lpcc_3,'r+', mew=0.5)
+    plt.xlabel('Coefficient 2')
+    plt.ylabel('Coefficient 3')
+    plt.grid(True)
+    plt.subplot(3,1,3)
+    plt.title('MFCC Parametrization')
+    plt.plot(mfcc_2,mfcc_3,'g+', mew=0.5)
+    plt.xlabel('Coefficient 2')
+    plt.ylabel('Coefficient 3')
+    plt.grid(True)
+    plt.show()
+    ```
+
   + ¿Cuál de ellas le parece que contiene más información?
+  >
+  > Como más incorrelación significa que cada coeficiente aporta nueva información. Por lo tanto, como menos ordenado mejor para parametrizar los modelos.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
@@ -101,8 +161,23 @@ ejercicios indicados.
   | &rho;<sub>x</sub>[2,3] |-0.723 | 0.130 | -0.039|
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+  >
+  > Se observa cierta relación. En el caso del LP se observa claramente una tendencia cosa que se ve reflejada en el resultado de pearson. En el caso de LPCC se observa cierta desordenación pero aún tiene algunos de los coeficientes que tienen cierta relación. Y por último, el MFCC no tiene casi ningún patrón de tendencia, entonces se asemeja mucho al resultado presentado.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+>
+> **LPCC**
+>
+> Orden: 8
+>
+> Orden del cepstrum: 16
+>
+> **MFCC**
+>
+> Orden: 15
+> 
+> Número de filtros: 28
+
 
 ### Entrenamiento y visualización de los GMM.
 
