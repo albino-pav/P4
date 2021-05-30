@@ -93,6 +93,9 @@ ejercicios indicados.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
+  Los parámetros adecuados para el LPCC son un orden LPC de 14 y un orden del cepstrum de 21.
+  Para MFCC, los parámetros adecuados, son 14 coeficientes y 40 filtros.
+
 ### Entrenamiento y visualización de los GMM.
 
 Complete el código necesario para entrenar modelos GMM.
