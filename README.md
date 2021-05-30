@@ -158,7 +158,7 @@ ejercicios indicados.
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
 
-  Una vez obtenidos los resultados de los coeficientes de la correlaciones, podemos afirmar que son los esperados en relación a las gráficas previamente observadas. Por ejemplo, en el caso de la parametrización LP aporta poca información y que la mejor es la parametrización MFCC como hemos observado en el apartado anterior.
+  Una vez obtenidos los resultados de los coeficientes de la correlaciones, podemos afirmar que son los esperados en relación a las gráficas previamente observadas. Por ejemplo, en el caso de la parametrización LP observamos que aporta poca información mientras que la LPCC es la que más información transmite.
 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
