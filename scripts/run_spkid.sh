@@ -111,7 +111,7 @@ compute_mfcc(){
 
     for filename in $(sort $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 15 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT" # Ponemos Q=13 ya que en las transparencias indica que son los que se usan para reconocimiento de voz
+        EXEC="wav2mfcc 13 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT" # Ponemos Q=13 ya que en las transparencias indica que son los que se usan para reconocimiento de voz
         echo $EXEC && $EXEC || exit 1
     done
 } # \DONE
@@ -144,7 +144,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -N30 -m60 -n30 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -N25 -m67 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -168,7 +168,7 @@ for cmd in $*; do
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
        
-       gmm_train  -v 1 -T 0.0001 -N20 -m 10 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 0.001 -N20 -m67  -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
        #echo "Implement the trainworld option ..."
    elif [[ $cmd == verify ]]; then
        ## @file
@@ -198,8 +198,9 @@ for cmd in $*; do
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-
-       echo "To be implemented ..."
+    compute_$FEAT $db_verif $lists/final/class.test
+    (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
+       # echo "To be implemented ..."
    
    elif [[ $cmd == finalverif ]]; then
        ## @file

@@ -211,10 +211,12 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
   >
+  ><img src="img/classerr.png" width="400" align="center">
+  >
   |            | LP   | LPCC | MFCC |
   |------------|:----:|:----:|:----:|
-  | Nº errores | 100/785 | 27/785 | 5/785 |
-  | Tasa de error | 12.74% | 3.44% | 0.64% |
+  | Nº errores | 89/785 | 21/785 | 12/785 |
+  | Tasa de error | 11.34% | 2.68% | 1.53% |
   >
 
 ### Verificación del locutor.
@@ -225,6 +227,23 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  > 
+  > **LP**
+  ><img src="img/verif_err_lp.png" width="400" align="center">
+  >
+  > **LPCC**
+  ><img src="img/verif_err_lpcc.png" width="400" align="center">
+  > 
+  > **MFCC**
+  ><img src="img/verif_err_mfcc.png" width="400" align="center">
+  > 
+
+  |            | LP   | LPCC | MFCC |
+  |------------|:----:|:----:|:----:|
+  | Umbral óptimo|  |  |  |
+  | Nº pérdidas | 228/250 | 158/250 | 41/250 |
+  | Falsas alarmas | 0/1000 | 0/100 | 0/1000 |
+  | Coste de detección | 91.2 | 63.2 | 16.4 |
  
 ### Test final
 
