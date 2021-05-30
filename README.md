@@ -208,6 +208,16 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
   |                        | LP            | LPCC         | MFCC          |
   |------------------------|:-------------:|:------------:|:-------------:|
   | TASA DE ERROR          |   9.81% (77 errores)  |   3.06% (24 errores)   |   X.XX% (Y errores)   |
+  
+  >Estos resultados se han obtenido gracias a la elección de los siguientes parámetros para el gmm_train:
+
+  > - Inicialización: VQ
+  > - Número de gaussianas: 
+  > - Threshold:  
+  > - Número iteraciones: _ Este número en nuestro caso realmente no es muy relevante más que no entorpezca el threshold establecido ya que ajustamos el entrenamiendo de los modelos a través de este.
+  ```c
+  
+  ```
 
 ### Verificación del locutor.
 
@@ -224,13 +234,26 @@ Complete el código necesario para realizar verificación del locutor y optimice
   |------------------------|:-------------:|:------------:|:-------------:|:-------------:|
   | Verificación con MFCC  |   0   |   0   |   0   |   0   |
   
+  >Para obtener estos resultados, sin tocar los modelos de usuarios ya entrenados, pasamos a entrenar el modelo del mundo. Procedemos de esta manera ya que la probabilidad de la GMM del usuario es muy variable igual que la del impostor. Por lo que normalizamos esta probabilidad respecto la de un modelo general como el citado anteriormente.
+  
+  >Los parámetros de entrenamiento de este modelo son:
+
+  > - Inicialización: VQ
+  > - Número de gaussianas: 
+  > - Threshold:  
+  > - Número iteraciones: _ 
+  ```c
+  
+  ```
  
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
   correspondientes a la evaluación *ciega* final.
 
->Tanto para la clasificación como para la verificación final, emplearemos los parámetros que nos han permitido conseguir una mejor puntuación en la base de datos SPEECON. Aunque el número de gaussianas tanto en el train como en el trainworld resulten muy especificos, hemos optimizado el umbral de criterio de parada del algoritmo de Expectation Maximization para evitar en la medida de lo posible un "overtraining" que haga más difícil aun extrapolar estos parámetros a otras bases de datos y por lo tanto tener unos modelos más generalizables.
+>Tanto para la clasificación como para la verificación final, emplearemos los parámetros que nos han permitido conseguir una mejor puntuación en la base de datos SPEECON. Aunque el número de gaussianas tanto en el train como en el trainworld resulten muy especificos, hemos optimizado el umbral de criterio de parada del algoritmo de Expectation Maximization para evitar en la medida de lo posible un "overtraining" o "overfitting" que haga más difícil aun extrapolar estos parámetros a otras bases de datos u reconocimiento de señales distintas y por lo tanto tener unos modelos más generalizables. 
+
+>Tambien es posible que si ajustamos el número de iteraciones de la inicialización o el threshold de mejora de la misma, podamos obtener un sistema de reconocimiento y de verificación más generalizables y que en algunas ocasiones, funcionen mejor.
 
 ### Trabajo de ampliación.
 
