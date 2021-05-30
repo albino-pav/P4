@@ -143,7 +143,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # elimina lo anterior a SES
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -i 2 -N 100 -m 128 -n 100 -t 0.001 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -i 2 -N 100 -m 64 -n 100 -t 0.001 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
