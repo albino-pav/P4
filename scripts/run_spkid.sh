@@ -13,12 +13,12 @@
 # - name_exp: name of the experiment
 # - db:       directory of the speecon database 
 lists=lists
-w=work150
+w=work64
 name_exp=one
 db=spk_8mu/speecon
 db_test=spk_8mu/sr_test
 
-world=users_and_others #other, users
+world=others #other, users
 
 # ------------------------
 # Usage
@@ -110,7 +110,7 @@ compute_mfcc() {
     listas=$*
     for filename in $(cat $listas); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 16 40 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 13 40 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -143,7 +143,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/} # elimina lo anterior a SES
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -i 1 -N 100 -m 150 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -i 2 -N 100 -m 128 -n 100 -t 0.001 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -166,7 +166,7 @@ for cmd in $*; do
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       gmm_train  -v 1 -T 0.0002 -N 100 -i 1 -m 100 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
+       gmm_train  -v 1 -T 0.001 -N 100 -i 2 -m 128 -n 100 -t 0.001 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$world.gmm $lists/verif/$world.train || exit 1
    
 
    elif [[ $cmd == verify ]]; then
@@ -197,7 +197,8 @@ for cmd in $*; do
 	   # recognized is lists/final/class.test
         compute_$FEAT $db_test $lists/final/class.test
         (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee $w/final_class_${FEAT}_${name_exp}.log) || exit 1
-   
+        perl -ane 'print "$F[0]\t$F[1]\n";' $w/final_class_${FEAT}_${name_exp}.log | tee class_test.log
+
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
@@ -209,7 +210,7 @@ for cmd in $*; do
         (gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list -w $world $lists/final/verif.test $lists/final/verif.test.candidates |
          tee $w/final_verif_${FEAT}_${name_exp}.log) || exit 1
          perl -ane 'print "$F[0]\t$F[1]\t";
-        if ($F[2] > AQUI VA EL UMBRAL OPTIMO) {print "1\n"}
+        if ($F[2] > 0.395073115006399) {print "1\n"}
         else {print "0\n"}' $w/final_verif_${FEAT}_${name_exp}.log | tee verif_test.log
    
    # If the command is not recognize, check if it is the name
