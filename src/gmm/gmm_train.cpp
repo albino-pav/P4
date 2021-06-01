@@ -55,18 +55,21 @@ int main(int argc, const char *argv[]) {
   /// Other alternatives are: vq, em_split... See the options of the program and place each
   /// initicialization accordingly.
   switch (init_method) {
-  case 0:
+  case 0: //inicialización aleatoria
+    gmm.random_init(data,nmix);
     break;
-  case 1:
-    break;
-  case 2:
+  case 1: //inicializacion VQ
+    gmm.vq_lbg(data, nmix,  init_iterations, init_threshold, verbose);
+  case 2: //inicialización por splitting
+    gmm.em_split(data, nmix, init_iterations, init_threshold,verbose);
     break;
   default:
+    gmm.vq_lbg(data, nmix,  init_iterations, init_threshold, verbose);
     ;
   }
 
   /// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
-
+  gmm.em(data, em_iterations, em_threshold, verbose);
 
   //Create directory, if it is needed
   gmm_filename.checkDir();
